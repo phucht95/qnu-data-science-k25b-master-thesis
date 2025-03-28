@@ -1,0 +1,107 @@
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff[1]{\mathop{}\!\mathrm{d^#1}}
+\newcommand\dboxed[1]{\dbox{\ensuremath{#1}}}
+
+\newcommand{\tcc}[1]{\textcolor{ocre}{#1}}
+\newcommand{\tccd}[1]{\textbf{\textcolor{ocre}{#1}}}
+\newcommand{\tcci}[1]{\textit{\textcolor{ocre}{#1}}}
+\newcommand{\tch}[1]{\textcolor{cl1}{#1}}
+\newcommand{\cmt}[1]{\small{\textcolor{cl4}{#1}}}
+\newcommand{\wh}[1]{\widehat{#1}} 
+\newcommand{\wt}[1]{\widetilde{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\nt}[1]{\left({#1}\right)} 
+\newcommand{\nv}[1]{\left[{#1}\right]}
+\newcommand{\nn}[1]{\left\lbrace {#1}\right\rbrace }
+\newcommand{\nk}[1]{\left[ {#1}\right]}
+\newcommand{\tvh}[1]{\left\langle {#1}\right\rangle }
+\newcommand{\ttd}[1]{\left|  {#1}\right|  }
+\newcommand{\norm}[1]{\left\|  {#1}\right\|  } 
+\newcommand{\nvv}[1]{\nv{\nv{#1}}}
+
+
+\newcommand{\pmt}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\bmt}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand{\bbmt}[2]{\left[
+  \begin{matrix}
+    #1
+  \end{matrix}\;\;\;
+  \left|
+    \;\;\;
+    \begin{matrix}
+     #2
+    \end{matrix}
+  \right.
+\right]}
+\newcommand{\bbbbmt}[4]{\left[
+  \begin{matrix}
+    #1
+  \end{matrix}\;\;\;
+  \left|
+    \;\;\;
+    \begin{matrix}
+     #2
+    \end{matrix}
+    \right.
+    \;\;\;
+  \left|
+    \;\;\;
+    \begin{matrix}
+     #3
+    \end{matrix}
+    \right.
+    \;\;\;
+  \left|
+    \;\;\;
+    \begin{matrix}
+     #4
+    \end{matrix}
+  \right.
+\right]}
+
+\newcommand\eqdef{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\titleclass{\chapter}{straight}
+% \renewcommand{\thechapter}{\Alph{chapter}}
+% \titleformat{\chapter}[block]
+% {\normalfont\huge\bfseries}{Chương \thechapter :}{0.5em}{\huge}
+
+% \titleformat{\chapter}[hang]
+% {\normalfont\fontsize{15}{18}\bfseries}{Chương \thechapter :}{0.5em}{\normalfont\fontsize{15}{18}\bfseries}
+
+\titleformat{\chapter}[hang]
+{\normalfont\fontsize{15}{18}\bfseries}{CHƯƠNG \thechapter :}{0.2em}{\normalfont\fontsize{15}{18}\bfseries}
+\titlespacing{\chapter}{0pt}{*3}{*1}
+
+\titleformat{\section}[hang]
+{\normalfont\fontsize{15}{18}\bfseries}{\thesection.}{0.2em}{\normalfont\fontsize{15}{18}\bfseries}
+\titlespacing{\section}{0pt}{*3}{*1}
+
+\titleformat{\subsection}[hang]
+{\normalfont\fontsize{15}{18}\bfseries\itshape}{\thesubsection.}{0.2em}{\normalfont\fontsize{15}{18}\bfseries\itshape}
+\titlespacing{\subsection}{0pt}{*3}{*1}
+
+% \renewcommand{\thesection}{\Roman{section}}
+% \titleformat{\section}[block]
+% {\normalfont\Large\bfseries}{\thesection.}{0.5em}{}
+% \titleformat{\section}
+% {\normalfont\Large\bfseries}{Chương \thesection:}{0.5em}{}
+
+% \counterwithout{section}{section}
+\counterwithout{figure}{chapter}
+% Loại bỏ section trước đó khỏi số hiệu của subsection
+% \counterwithout{subsection}{section}
+% \titleformat{\subsection}
+% {\normalfont\large\bfseries}{\thesubsection.}{0.2em}{}
+
+% \setcounter{secnumdepth}{3}
+% \titleformat{\subsubsection}
+% {\normalfont\normalsize\bfseries}{\thesubsubsection.}{0.2em}{}
+
+% \titleformat{\subparagraph}[block]
+% {\normalfont\Large\bfseries\centering}{\thesubparagraph}{0.5em}{}
+
+% Đặt khoảng cách giữa chương và phần
+% \titlespacing*{\chapter}{0pt}{0pt}{0pt} % {sang trái}{trên}{dưới}
+% \titlespacing*{\section}{0pt}{0pt}{0pt}
+\pagenumbering{gobble}

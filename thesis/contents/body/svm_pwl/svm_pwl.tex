@@ -1,0 +1,88 @@
+\subsection{SVM với ánh xạ đặc trưng tuyến tính từng phần}
+Biểu diễn bộ phân loại tuyến tính từng phần như một tổ hợp tuyến tính của các hàm cơ sở cho phép sử dụng kỹ thuật SVM để xác định các hệ số tuyến tính của \eqref{eq:pwl_f}. SVM với ánh xạ đặc trưng tuyến tính từng phần cũng có thể được coi là một mạng nơ-ron nhiều lớp (MLP) với các lớp ẩn. Mối quan hệ giữa ánh xạ đặc trưng của SVM và lớp ẩn của MLP đã được mô tả trong [20]. Sử dụng hàm tuyến tính từng phần \eqref{eq:pwl_phi} làm ánh xạ đặc trưng, chúng ta có thể thiết lập một SVM cung cấp biên phân loại tuyến tính từng phần. Ký hiệu \( \tilde{p}_{mi}=p_{mi}-p_{m0} \), \( \tilde{q}_{mi}=q_{mi}-q_{m0} \). Công thức \eqref{eq:pwl_phi} có thể được biến đổi tương đương thành
+\[
+\phi_m(x) = p^T_{m0}x + q_{m0} + \max \{0, \tilde{p}_{m1}x+\tilde{q}_{m1}, \ldots, \tilde{p}_{mn}x+\tilde{q}_{mn}\}.
+\]
+Ký hiệu thành phần thứ \(i\) của \(x\) là \(x(i)\), chúng ta sử dụng ánh xạ đặc trưng tuyến tính từng phần sau đây trong không gian \(n \) chiều:
+\[
+    \phi(x)=[\phi_1(x), \phi_2(x), \ldots, \phi_M(x)]^T,
+\]
+trong đó
+\begin{align}
+    \phi_m(x) = \begin{cases}
+        x(m), \quad m = 1,\ldots,n, \\
+        \max \{0, p^T_{m1}x+q_{m1}, \ldots, p^T_{mn}x+q_{mn}\}, \quad m = n+1,\ldots,M.
+    \end{cases}
+    \label{eq:phi_mx}
+\end{align}
+
+Ta có thể xây dựng một loạt các SVM với ánh xạ đặc trưng tuyến tính từng phần, được gọi là PWL-SVMs. Ví dụ, một ánh xạ đặc trưng tuyến tính từng phần có thể được áp dụng trong C-SVM [21] và ta có công thức sau, được gọi là PWL-C-SVM:
+\[
+\min_{\text{w}, \text{w}_0, e} \quad \frac{1}{2} \sum_{m=1}^{M} \text{w}_m^2 + \gamma \sum_{k=1}^{N} e_k
+\]
+sao cho:
+\[
+y_k \left[ \text{w}_0 + \sum_{m=1}^{M} \text{w}_m \phi_m(x_k) \right] \geq 1 - e_k, \quad \forall k,
+\]
+\begin{align}
+    e_k \geq 0, \quad k = 1, 2, \ldots, N,
+    \label{eq:problem}
+\end{align}
+trong đó \( x_k \in \mathbb{R}^n, k = 1, 2, \ldots, N \) là các dữ liệu đầu vào, \( y_k \in \{+1, -1\} \) là các nhãn tương ứng, và ánh xạ đặc trưng \( \phi(x) = [\phi_1(x), \phi_2(x), \ldots, \phi_M(x)]^T \) có dạng như trong \eqref{eq:phi_mx}. Để tránh nhầm lẫn với các tham số trong ánh xạ đặc trưng, trong đề án này, ta sử dụng ký hiệu \( \text{w}_0 \) để chỉ \textit{bias term} trong SVMs. Bài toán đối ngẫu là:
+\[
+\max_{\alpha} \quad -\frac{1}{2} \sum_{k=1}^{N} \sum_{l=1}^{N} y_k y_l \kappa(x_k, x_l) \alpha_k \alpha_l + \sum_{k=1}^{N} \alpha_k
+\]
+sao cho 
+\begin{align}
+    \sum_{k=1}^{N} \alpha_k y_k = 0, \quad 0 \leq \alpha_k \leq \gamma, \quad k = 1, 2, \ldots, N.
+    \label{eq:dual_problem}
+\end{align}
+trong đó \( \alpha \) là biến đối ngẫu và hạt nhân là
+\begin{align}
+    \kappa(x_k, x_l) = \phi(x_k)^T \phi(x_l) = \sum_{m=1}^{M} \phi_m(x_k) \phi_m(x_l).
+    \label{eq:kernel}
+\end{align}
+Từ bài toán nguyên thủy \eqref{eq:problem}, ta có bộ phân loại tuyến tính từng phần
+\begin{align}
+\text{sign} \left( \text{w}^T \phi(x) + \text{w}_0 \right).
+\label{eq:sign}
+\end{align}
+Số lượng biến trong \eqref{eq:problem} là \( M + N + 1 \), trong khi ở bài toán đối ngẫu \eqref{eq:dual_problem} số lượng biến là \( N \), do đó ta ưu tiên giải \eqref{eq:dual_problem} để có bộ phân loại sau
+\[
+\text{sign} \left( \sum_{k=1}^{N} \alpha_k y_k \kappa(x, x_k) + \text{w}_0 \right).
+\]
+Để xây dựng bộ phân loại sử dụng dạng đối ngẫu trên, cần lưu trữ \( \alpha_k, x_k, \text{w}_0 \) và đối với \eqref{eq:sign} ta chỉ cần nhớ \( \text{w}_m, \text{w}_0 \). Do đó, ta giải \eqref{eq:dual_problem} để thu được các biến đối ngẫu và sau đó tính \( \text{w} \) bằng
+\[
+\text{w}_m = \sum_{k=1}^{N} \alpha_k y_k \phi_m(x_k)
+\]
+và sử dụng \eqref{eq:sign} để phân loại.
+
+Sử dụng ánh xạ đặc trưng tuyến tính từng phần trong SVM, ta có một bộ phân loại cung cấp biên phân loại tuyến tính từng phần và hưởng lợi từ các ưu điểm của SVMs. Trong [13], các nhà nghiên cứu đã xây dựng một bộ phân loại tuyến tính từng phần sử dụng SVM và thu được kết quả tốt. Tuy nhiên, phương pháp của họ chỉ xử lý được các trường hợp phân tách được và còn một số vấn đề quan trọng chưa được giải quyết, bao gồm \textit{"làm thế nào để định nghĩa biên mềm (soft margins) hợp lý?"} và \textit{"làm thế nào để mở rộng cho tập dữ liệu không phân tách?"} như đã đề cập trong [13]. Sử dụng ánh xạ đặc trưng tuyến tính từng phần, chúng ta đã thành công xây dựng một PWL-SVM, cung cấp biên phân loại tuyến tính từng phần và có thể xử lý bất kỳ loại dữ liệu nào.
+
+Tương tự, ta có thể sử dụng ánh xạ đặc trưng tuyến tính từng phần trong SVM bình phương tối thiểu (LS-SVM [22–24]) và thu được PWL-LS-SVM sau:
+\[
+\min_{\text{w}, \text{w}_0, e} \quad \frac{1}{2} \sum_{m=1}^{M} \text{w}_m^2 + \gamma \frac{1}{2} \sum_{k=1}^{N} e_k^2
+\]
+sao cho:
+\begin{align}
+    y_k \left[ \text{w}_0 + \sum_{m=1}^{M} \text{w}_m \phi_m(x_k) \right] = 1 - e_k, \quad k = 1, 2, \ldots, N.
+    \label{eq:problem_ls}
+\end{align}
+Bài toán đối ngẫu của \eqref{eq:problem_ls} là một phương trình tuyến tính của \( \alpha, \text{w}_0 \), tức là
+\begin{align}
+    \begin{bmatrix}
+    0 & y^T \\
+    y & K + \frac{\mathbf{I}}{\gamma}
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{w}_0 \\
+    \alpha
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    0 \\
+    \mathbf{1}
+    \end{bmatrix},
+    \label{eq:dual_problem_ls}
+\end{align}
+trong đó \( \mathbf{I} \in \mathbb{R}^{N \times N} \) là ma trận đơn vị, \( \mathbf{1} \in \mathbb{R}^N \) là vector với các thành phần bằng một, \( \alpha \in \mathbb{R}^N \) là biến đối ngẫu, \( K_{kl} = y_k y_l \kappa(x_k, x_l) \) và hạt nhân giống như \eqref{eq:kernel}. Số lượng biến liên quan trong bài toán nguyên thủy \eqref{eq:problem_ls} và bài toán đối ngẫu \eqref{eq:dual_problem_ls} là \( M + 1 \) và \( N + 1 \), tương ứng. Do đó, chúng ta ưu tiên giải \eqref{eq:problem_ls} để xây dựng bộ phân loại khi \( M \leq N \). Ngược lại, tức là khi \( M > N \), chúng ta giải \eqref{eq:dual_problem_ls} để thu được các biến đối ngẫu \( \alpha_k \), sau đó tính các hệ số \( \text{w}_m \) và sử dụng dạng nguyên thủy làm bộ phân loại.

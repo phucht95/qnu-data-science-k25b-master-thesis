@@ -1,0 +1,23 @@
+\contentsline {section}{Lời cam đoan}{}{Doc-Start}%
+\contentsline {section}{Lời cảm ơn}{}{Doc-Start}%
+\contentsline {section}{Mục lục}{}{Doc-Start}%
+\contentsline {section}{Danh mục các bảng}{1}{Doc-Start}%
+\contentsline {section}{Danh mục các hình}{2}{Doc-Start}%
+\contentsline {chapter}{MỞ ĐẦU}{3}{Doc-Start}%
+\contentsline {section}{Tính cấp thiết của đề tài}{3}{Doc-Start}%
+\contentsline {section}{Mục đích và nhiệm vụ nghiên cứu}{4}{Doc-Start}%
+\contentsline {subsection}{Mục đích nghiên cứu}{4}{Doc-Start}%
+\contentsline {subsection}{Nhiệm vụ nghiên cứu}{4}{Doc-Start}%
+\contentsline {section}{Đối tượng và phạm vi nghiên cứu}{4}{Doc-Start}%
+\contentsline {section}{Cơ sở lí luận và phương pháp nghiên cứu}{5}{Doc-Start}%
+\contentsline {section}{Kết cấu của đề án}{5}{Doc-Start}%
+\contentsline {chapter}{NỘI DUNG}{6}{Doc-Start}%
+\contentsline {chapter}{\numberline {1}KIẾN THỨC CHUẨN BỊ}{6}{chapter.1}%
+\contentsline {chapter}{\numberline {2}THUẬT TOÁN SVM VỚI ÁNH XẠ ĐẶC TRƯNG TUYẾN TÍNH TỪNG PHẦN}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Thuật toán SVM (Support Vector Machine)}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.2}SWM với ánh xạ đặc trưng tuyến tính từng phần}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Biên tuyến tính từng phần}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Phương trình tuyến tính từng phần}{10}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}SVM với ánh xạ đặc trưng tuyến tính từng phần}{12}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Khả năng phân loại của ánh xạ đặc trưng tuyến tính từng phần}{16}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Tham số trong ánh xạ đặc trưng tuyến tính từng phần}{17}{subsection.2.2.5}%

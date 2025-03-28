@@ -1,0 +1,59 @@
+\definecolor{cl1}{HTML}{e75874}
+\definecolor{cl2}{HTML}{1e3d59}
+\definecolor{cl3}{HTML}{ff6e40}
+\definecolor{cl4}{HTML}{1e847f}
+\definecolor{Gray}{gray}{0.9}
+\definecolor{titleblue}{HTML}{4a7aa4}
+\definecolor{ocre}{RGB}{243,102,25} %
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+
+%canh lề trang 
+\renewcommand{\baselinestretch}{1.5}
+% dinh nghia lai kieu description cho dep
+\newcommand{\seq}[1]{\left<#1\right>}
+\makeatletter
+\def\ps@myheadings{%
+\def\@evenhead{\hfil\thepage\hfil}
+\def\@oddhead{\hfil\thepage\hfil}}
+\makeatother 
+% \pagestyle{plain}% so trag o cuoi,giua
+% \pagestyle{myheadings} % so trang o giua,dau
+\begin{document}
+\pagestyle{myheadings}
+% \fancyhf{}
+\lhead{}
+\chead{}
+%\rhead{{\it QLKH-QT01-BM03}}
+\cfoot{\thepage}
+\rfoot{}
+\lfoot{}
+% \pagestyle{fancy}
+% \fancyhead[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%\bf\fontsize{13pt}{13}\selectfont
+
+\def\midd{\;\big|\;}
+\def\Mid{\;\Big|\;}
+
+\newcommand{\dotfillwithoutpage}{\leaders\hbox to .35em{\hss.\hss}\hfill}
+% \DeclareMathOperator{\diag}{\mathsf{diag}}
+% \DeclareMathOperator{\trace}{\mathsf{trace}}
+% \DeclareMathOperator{\zer}{\mathsf{Zer}}
+% \DeclareMathOperator{\sym}{\mathsf{Sym}}
+% \DeclareMathOperator{\pgl}{\mathsf{PGL}}
+% \DeclareMathOperator{\ann}{\mathsf{Ann}}
+% \DeclareMathOperator{\im}{\mathsf{Im}}
+% \DeclareMathOperator{\Ker}{\mathsf{Ker}}
+% \DeclareMathOperator{\Syz}{\mathsf{Syz}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\om}{\mathit{\Omega}}
+
+\newcommand{\mb}[1]{\mathbf{#1}}
+
+\def\rddots#1{\cdot^{\cdot^{\cdot^{#1}}}}
