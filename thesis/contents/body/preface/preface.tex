@@ -24,23 +24,102 @@ Các bộ phân loại tuyến tính từng phần là một mở rộng đơn g
 \section*{Mục đích và nhiệm vụ nghiên cứu}
 \addcontentsline{toc}{section}{Mục đích và nhiệm vụ nghiên cứu}
 \subsection*{Mục đích nghiên cứu}
+Mục đích của đề tài là nghiên cứu và phát triển một phương pháp cải tiến cho thuật toán máy vector hỗ trợ (Support Vector Machines - SVM) thông qua kỹ thuật ánh xạ đặc trưng tuyến tính từng phần (Piecewise Linear Feature Mapping - PLFM), nhằm nâng cao khả năng phân loại của mô hình trong các bài toán có đặc trưng phi tuyến. Đồng thời, đề tài hướng đến việc ứng dụng mô hình này vào các bài toán thực tế như nhận dạng hình ảnh, phân loại văn bản hoặc dữ liệu y sinh.
 \addcontentsline{toc}{subsection}{Mục đích nghiên cứu}
 
 \subsection*{Nhiệm vụ nghiên cứu}
 \addcontentsline{toc}{subsection}{Nhiệm vụ nghiên cứu}
 Nhiệm vụ nghiên cứu của đề án bao gồm:
+\begin{enumerate}
+\item \textbf{Tổng quan lý thuyết}
+\begin{itemize}
+    \item Tìm hiểu cơ sở lý thuyết của thuật toán SVM truyền thống
+    \item Khảo sát các phương pháp ánh xạ đặc trưng trong học máy
+\end{itemize}
+\item \textbf{Phân tích và xây dựng mô hình}
+\begin{itemize}
+    \item Trình bày nguyên lý của ánh xạ đặc trưng tuyến tính từng phần
+    \item Tích hợp PLFM vào khung SVM để xây dựng mô hình phân loại mới
+\end{itemize}
+\item \textbf{Thực nghiệm và đánh giá}
+\begin{itemize}
+    \item Triển khai mô hình trên các tập dữ liệu chuẩn
+    \item So sánh hiệu năng với các phương pháp SVM truyền thống và các biến thể khác
+\end{itemize}
+\item \textbf{Ứng dụng thực tế}
+\begin{itemize}
+    \item Đề xuất các bài toán ứng dụng phù hợp với mô hình
+    \item Phân tích tiềm năng triển khai trong các hệ thống thực tế
+\end{itemize}
+\end{enumerate}
 
 \section*{Đối tượng và phạm vi nghiên cứu}
 \addcontentsline{toc}{section}{Đối tượng và phạm vi nghiên cứu}
-\textbf{Đối tượng nghiên cứu}
+\textbf{Đối tượng nghiên cứu} của đề tài là thuật toán máy vector hỗ trợ (SVM) được cải tiến bằng kỹ thuật ánh xạ đặc trưng tuyến tính từng phần (Piecewise Linear Feature Mapping - PLFM). Cụ thể, đề tài tập trung vào:
+\begin{itemize}
+\item Cấu trúc và nguyên lý hoạt động của SVM truyền thống
+\item Cách thức ánh xạ đặc trưng tuyến tính từng phần được tích hợp vào mô hình SVM
+\item Hiệu năng của mô hình cải tiến trong các bài toán phân loại
+\end{itemize}
 
-\textbf{Phạm vi nghiên cứu}g
+\textbf{Phạm vi nghiên cứu} của đề tài được giới hạn như sau:
+\begin{itemize}
+\item Về mặt lý thuyết: tập trung vào SVM và kỹ thuật ánh xạ đặc trưng tuyến tính từng phần, không đi sâu vào các biến thể khác như SVM kernel phi tuyến, SVM đa lớp, hay các mô hình deep learning.
+
+\item Về mặt thực nghiệm: áp dụng mô hình vào các bài toán phân loại nhị phân; sử dụng các tập dữ liệu chuẩn như UCI, MNIST hoặc các tập dữ liệu có tính phân biệt rõ ràng; so sánh hiệu năng với SVM truyền thống và một số biến thể đơn giản khác
+
+\item Về mặt ứng dụng: đề xuất ứng dụng mô hình trong các lĩnh vực như nhận dạng hình ảnh, phân loại văn bản, hoặc dữ liệu y sinh, nhưng chưa triển khai thực tế trong hệ thống sản phẩm.
+\end{itemize}
 
 \section*{Cơ sở lí luận và phương pháp nghiên cứu}
 \addcontentsline{toc}{section}{Cơ sở lí luận và phương pháp nghiên cứu}
 \textbf{Cơ sở lý luận}
 
+Đề tài được xây dựng trên nền tảng lý thuyết của các lĩnh vực sau:
+\begin{itemize}
+\item \textbf{Học máy (Machine Learning):} Là lĩnh vực nghiên cứu các thuật toán cho phép máy tính học từ dữ liệu để đưa ra dự đoán hoặc quyết định mà không cần được lập trình rõ ràng.
+
+\item \textbf{Support Vector Machines:} Là một trong những thuật toán phân loại mạnh mẽ, có khả năng tìm ra siêu phẳng tối ưu để phân tách các lớp dữ liệu.
+
+\item \textbf{Ánh xạ đặc trưng:} Là kỹ thuật chuyển dữ liệu từ không gian đầu vào sang không gian đặc trưng để làm rõ cấu trúc phân loại. Trong đó, ánh xạ tuyến tính từng phần (Piecewise Linear Feature Mapping – PLFM) là một phương pháp ánh xạ có khả năng biểu diễn các đặc trưng phi tuyến một cách hiệu quả.
+
+\item \textbf{Tối ưu hóa lồi:} Là nền tảng toán học giúp giải bài toán tối ưu trong SVM, đảm bảo tìm được nghiệm toàn cục.
+
+Các tài liệu tham khảo bao gồm các công trình nghiên cứu về SVM, ánh xạ đặc trưng, và các ứng dụng thực tế trong phân loại dữ liệu. Đặc biệt, bài báo “Support Vector Machines with Piecewise Linear Feature Mapping” là tài liệu nền tảng cho đề tài này.
+\end{itemize}
+
 \textbf{Phương pháp nghiên cứu} được áp dụng bao gồm:
+\begin{enumerate}
+\item \textbf{Phân tích - Tổng hợp tài liệu}
+\begin{itemize}
+    \item Khảo sát các tài liệu khoa học liên quan đến SVM và PLFM
+    \item Tổng hợp các hướng tiếp cận và đánh giá ưu nhược điểm
+\end{itemize}
+
+\item \textbf{Mô hình hóa toán học}
+\begin{itemize}
+    \item Biểu diễn thuật toán SVM với ánh xạ đặc trưng tuyến tính từng phần dưới dạng bài toán tối ưu
+    \item Phân tích tính chất toán học của mô hình
+\end{itemize}
+
+\item \textbf{Thực nghiệm mô phỏng}
+\begin{itemize}
+    \item Triển khai mô hình bằng ngôn ngữ lập trình Python
+    \item Sử dụng các tập dữ liệu chuẩn để huấn luyện và kiểm thử mô hình
+\end{itemize}
+
+\item \textbf{So sánh và đánh giá}
+\begin{itemize}
+    \item So sánh hiệu năng của mô hình với SVM truyền thống và các biến thể khác
+    \item Đánh giá độ chính xác, độ ổn định và khả năng tổng quát hóa
+\end{itemize}
+
+\item \textbf{Phân tích ứng dụng}
+\begin{itemize}
+    \item Đề xuất các bài toán thực tế có thể áp dụng mô hình
+    \item Phân tích tiềm năng triển khai trong các hệ thống thông minh
+\end{itemize}
+\end{enumerate}
 
 \section*{Kết cấu của đề án}
 \addcontentsline{toc}{section}{Kết cấu của đề án}

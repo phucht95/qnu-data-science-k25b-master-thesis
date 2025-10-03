@@ -1,0 +1,42 @@
+\subsection{Tập affine và hàm affine}
+\label{section:affine_set}
+Giả sử $x_1 \neq x_2$ là hai điểm trong $\mathbb{R}^n$. Các điểm có dạng
+\begin{equation}
+    y = \theta x_1 + (1-\theta)x_2,
+\end{equation}
+trong đó $\theta \in \R$, tạo thành đường thẳng đi qua $x_1$ và $x_2$. Giá trị tham số $\theta = 0$ tương ứng với $y = x_2$, và giá trị tham số $\theta = 1$ tương ứng với $y = x_1$. Các giá trị của tham số $\theta$ nằm giữa 0 và 1 tương ứng với đoạn thẳng (đóng) giữa $x_1$ và $x_2$.
+
+\noindent Biểu diễn $y$ dưới dạng
+\begin{equation}
+    y = x_2 + \theta(x_1 - x_2)
+\end{equation}
+cho ta một cách hiểu khác: $y$ là tổng của điểm cơ sở $x_2$ (tương ứng với $\theta = 0$) và vector chỉ phương $x_1 - x_2$ (chỉ từ $x_2$ đến $x_1$) được nhân với tham số $\theta$. Do đó, $\theta$ cho biết tỉ lệ khoảng cách từ $x_2$ đến $x_1$ mà điểm $y$ nằm trên đó. Khi $\theta$ tăng từ 0 đến 1, điểm $y$ di chuyển từ $x_2$ đến $x_1$; với $\theta > 1$, điểm $y$ nằm trên đường thẳng vượt qua $x_1$.
+
+\begin{define}
+    \label{define:affine_set}
+    Một tập $C \subseteq \R^n$ được gọi là tập affine nếu đường thẳng đi qua bất kỳ hai điểm phân biệt nào trong $C$ đều nằm trong $C$, nghĩa là với mọi $x_1, x_2 \in C$ và $\theta \in \mathbb{R}$, ta có $\theta x_1 + (1-\theta)x_2 \in C$. Nói cách khác, $C$ chứa tổ hợp tuyến tính của bất kỳ hai điểm nào trong $C$, miễn là các hệ số trong tổ hợp tuyến tính có tổng bằng một.
+\end{define}
+
+Ý tưởng này có thể được tổng quát hóa cho nhiều hơn hai điểm. Ta gọi một điểm có dạng
+$\theta_1 x_1 + \cdots + \theta_k x_k$, trong đó $\theta_1 + \cdots + \theta_k = 1$, là tổ hợp affine của các điểm $x_1, \ldots, x_k$. Sử dụng quy nạp từ định nghĩa của tập affine (tức là tập chứa mọi tổ hợp affine của hai điểm bất kỳ trong nó), có thể chứng minh rằng tập affine chứa mọi tổ hợp affine của các điểm trong nó: nếu $C$ là tập affine, $x_1, \ldots, x_k \in C$, và $\theta_1 + \cdots + \theta_k = 1$, thì điểm $\theta_1 x_1 + \cdots + \theta_k x_k$ cũng thuộc $C$.
+
+\noindent Nếu $C$ là tập affine và $x_0 \in C$, thì tập
+\begin{equation}
+    V = C - x_0 = \{x - x_0 \mid x \in C\}
+\end{equation}
+là một không gian con, tức là đóng với phép cộng và phép nhân với số vô hướng. Để thấy điều này, giả sử $v_1, v_2 \in V$ và $\alpha, \beta \in \mathbb{R}$. Khi đó ta có $v_1 + x_0 \in C$ và $v_2 + x_0 \in C$, và do đó
+\begin{equation}
+    \alpha v_1 + \beta v_2 + x_0 = \alpha(v_1 + x_0) + \beta(v_2 + x_0) + (1-\alpha-\beta)x_0 \in C,
+\end{equation}
+vì $C$ là tập affine và $\alpha + \beta + (1-\alpha-\beta) = 1$. Ta kết luận rằng $\alpha v_1 + \beta v_2 \in V$ vì $\alpha v_1 + \beta v_2 + x_0 \in C$.
+
+Do đó, tập affine $C$ có thể được biểu diễn dưới dạng
+\begin{equation}
+    C = V + x_0 = \{v + x_0 \mid v \in V\},
+\end{equation}
+tức là một không gian con cộng với một điểm dịch chuyển. Không gian con $V$ gắn với tập affine $C$ không phụ thuộc vào việc chọn $x_0$, vì vậy $x_0$ có thể được chọn là bất kỳ điểm nào trong $C$. Ta định nghĩa chiều của tập affine $C$ là chiều của không gian con $V = C - x_0$, trong đó $x_0$ là một phần tử bất kỳ của $C$.
+
+\begin{define}
+    \label{define:affine_func}
+    Một hàm số  $f: \R^n \to \R^m$ được gọi là \textit{hàm affine} nếu và chỉ nếu nó là tổng của hàm tuyến tính và một hằng số, tức là \(f(x)=A^T+b\), trong đó \(A\in \R^{m\times n}\) và \(b\in \R^m\).
+\end{define}
