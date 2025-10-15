@@ -1,5 +1,6 @@
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class DataLoader:
@@ -36,6 +37,18 @@ class DataLoader:
         self.X_test = self.X[test_idx]
         self.y_train = self.y[train_idx]
         self.y_test = self.y[test_idx]
+
+        # self.X_train[:, 0] = (self.X_train[:, 0] - self.X_train[:, 0].min())/ (self.X_train[:, 0].max() - self.X_train[:, 0].min())
+        # self.X_train[:, 1] = (self.X_train[:, 1] - self.X_train[:, 1].min())/ (self.X_train[:, 1].max() - self.X_train[:, 1].min())
+        # plt.scatter(x_train[:, 0], x_train[:, 1], c=y_train, cmap='bwr')
+        # # plt.scatter(x_train[:, 0], x_train[:, 1], color="green", marker="*", cmap='bwr')
+        # # plt.scatter(x_train[:, 0], x_train[:, 1], color="red", marker="+", cmap='bwr')
+        # plt.scatter(self.X_test[self.y_test == 1, 0], self.X_test[self.y_test == 1, 1], c='g', marker="*", label='Class 1')
+        # plt.scatter(self.X_test[self.y_test == 0, 0], self.X_test[self.y_test == 0, 1], c='r', marker="+", label='Class 0')
+        # plt.xlabel('x(1)')
+        # plt.ylabel('x(2)')
+        # # plt.title('Iris Dataset (Setosa vs. Non-Setosa)')
+        # plt.show()
     
 
 

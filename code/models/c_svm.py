@@ -6,6 +6,14 @@ import time
 
 
 class CSVM(ModelRunner):
+    # def run(self):
+    #     start = time.time()
+    #     self.clf = SVC(kernel = 'rbf', C = 100)
+    #     self.clf.fit(self.X_train, self.y_train)
+    #     y_pred = self.clf.predict(self.X_test)
+    #     self.accuracy = accuracy_score(self.y_test, y_pred)
+    #     self.runtime = round(time.time() - start, 4)
+    #     print(f"🎯 C-SVM (RBF) Accuracy on {self.name}: {self.accuracy:.4f} | Time: {self.runtime}s")
     def run(self):
         start = time.time()
 

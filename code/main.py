@@ -14,19 +14,19 @@ from models.pwl_c_svm import PWLCSVM
 
 
 DATASETS = [
-    Clowns(train_size=500, test_size=500),
+    # Clowns(train_size=500, test_size=500),
     CosExp(train_size=500, test_size=500),
-    Pima(train_size=384, test_size=384),
-    Ionosphere(train_size=176, test_size=175),
-    Parkinsons(train_size=98, test_size=97),
-    Breast(train_size=350, test_size=349)
+    # Pima(train_size=384, test_size=384),
+    # Ionosphere(train_size=176, test_size=175),
+    # Parkinsons(train_size=98, test_size=97),
+    # Breast(train_size=350, test_size=349)
 ]
 
 MODELS = [
-    LSSVM,
+    # LSSVM,
     CSVM,
-    AdaBoost,
-    PWLLSSVM,
+    # AdaBoost,
+    # PWLLSSVM,
     PWLCSVM
 ]
 
