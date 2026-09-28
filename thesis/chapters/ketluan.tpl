@@ -1,0 +1,24 @@
+% ============================================================================
+%  KẾT LUẬN
+% ============================================================================
+\unchapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+
+\section*{Kết quả đạt được}
+
+Đề án đã nghiên cứu một cách có hệ thống phương pháp SVM với ánh xạ đặc trưng tuyến tính từng phần của Huang, Mehrkanoon và Suykens~\cite{huang2013}, cài đặt lại phương pháp, đánh giá nó bằng thực nghiệm lặp lại và áp dụng vào bài toán dự báo vỡ nợ thẻ tín dụng. Các kết quả chính như sau.
+
+\emph{Về lý thuyết.} Đề án đã trình bày đầy đủ chuỗi lập luận từ tập lồi, định lý siêu phẳng phân tách và đối ngẫu Lagrange đến SVM lề cứng, lề mềm và LS-SVM, rồi từ các định lý biểu diễn hàm tuyến tính từng phần đến ánh xạ đặc trưng tuyến tính từng phần. Bên cạnh việc viết lại các chứng minh, đề án đã đưa ra một chứng minh ngắn hơn cho định lý biểu diễn tập tuyến tính từng phần, chỉ ra rằng hàm xây dựng trong chứng minh luôn không âm nên chỉ mô tả biên chứ không phải một bộ phân loại, chứng minh rằng phần tuyến tính của SVM hạt nhân giao triệt tiêu nhờ ràng buộc của bài toán đối ngẫu, chứng minh rằng hiệu hai hàm khoảng cách của phương pháp láng giềng gần nhất là hàm tuyến tính từng phần, chỉ ra dạng gốc của PWL-LS-SVM chính là hồi quy ridge, nêu một giới hạn cơ bản của mô hình cộng tính đối với cấu trúc kiểu XOR, và chỉ ra rằng tham số hóa theo hệ số góc cho phép đưa ràng buộc đơn điệu vào PWL-SVM cộng tính mà bài toán vẫn là lồi.
+
+\emph{Về cài đặt.} Đề án cung cấp một cài đặt bằng Python, tương thích với scikit-learn, cho ba dạng ánh xạ và hai mô hình PWL-C-SVM và PWL-LS-SVM, cùng hai tùy chọn mới là đặt nút theo phân vị và chuẩn hóa siêu phẳng, và một biến thể PWL-LS-SVM cộng tính có ràng buộc đơn điệu. Tính đúng đắn của cài đặt được kiểm chứng bằng số: nghiệm gốc và nghiệm đối ngẫu trùng nhau đến sai số làm tròn.
+
+\emph{Về thực nghiệm.} Trên mười bộ dữ liệu chuẩn, PWL-SVM cộng tính chính xác hơn SVM tuyến tính nhưng kém SVM hạt nhân Gauss trung bình {{W_RBF_DIFF}} điểm phần trăm; nhận định về độ chính xác của bài báo gốc, vốn dựa trên một lần chia dữ liệu, chỉ được xác nhận một phần. Ngược lại, lợi thế về kích thước mô hình và tốc độ dự đoán được xác nhận rõ ràng: mô hình nhỏ hơn SVM hạt nhân Gauss từ ${{RATIO_MIN}}$ đến ${{RATIO_MAX}}$ lần trên các bộ dữ liệu chuẩn, và dự đoán nhanh hơn khoảng {{RT_MAGIC}} lần trên Magic. Các thực nghiệm cũng cho thấy ánh xạ cộng tính là lựa chọn mặc định hợp lý, số đặc trưng $M=5n$ đến $10n$ là đủ, còn quy tắc sinh siêu phẳng của bài báo gốc có thể gây sự cố số trên dữ liệu thưa và nên được thay bằng quy tắc chuẩn hóa $\|p\|_2=1$.
+
+\emph{Về ứng dụng.} Trên dữ liệu vỡ nợ của $30.000$ chủ thẻ tín dụng, PWL-LS-SVM cộng tính với nút phân vị đạt AUC {{A_Q}}, {{VS_HGB3}} tổ hợp cây tăng cường ({{A_HGB}}), cao hơn thẻ điểm logistic trên các biến rời rạc hóa ({{A_BIN}}) và cao hơn rõ rệt hồi quy logistic trên biến gốc ({{A_LOGIT}}) cũng như SVM hạt nhân Gauss ({{A_RBF}}). Mô hình chỉ gồm {{P_Q}} số thực, dự đoán mỗi hồ sơ trong khoảng {{T_LS_CREDIT}} micro giây, và mỗi biến có một hàm đóng góp tuyến tính từng phần đọc được, phù hợp với yêu cầu minh bạch của chấm điểm tín dụng. Khi thêm ràng buộc đơn điệu cho các biến trạng thái trả nợ và hạn mức, mô hình trở nên nhất quán với tri thức nghiệp vụ, trong khi {{MONO_EFFECT_SHORT}}.
+
+\section*{Hạn chế}
+
+Các tham số phi tuyến của ánh xạ được chọn theo quy tắc cố định hoặc ngẫu nhiên chứ không được học từ dữ liệu, nên PWL-SVM dạng HH kém hiệu quả trên dữ liệu nhiều chiều. Các định lý biểu diễn chỉ khẳng định sự tồn tại và không cho biết cần bao nhiêu đặc trưng. Thực nghiệm dựa trên mười bộ dữ liệu chuẩn và một bài toán ứng dụng, với các lưới tham số và một thẻ điểm đối chứng được xây dựng theo cách đơn giản; dữ liệu tín dụng được thu thập ở Đài Loan năm 2005 và có thể không đại diện cho khách hàng Việt Nam hiện nay. Đề án chỉ xét bài toán phân loại nhị phân, và dạng siêu phẳng bản lề tổng quát chỉ được thử trên dữ liệu hai chiều.
+
+\section*{Hướng phát triển}
+
+Từ các kết quả và hạn chế trên, có bốn hướng phát triển tự nhiên. Thứ nhất, dùng chính quy hóa $\ell_1$ như trong Mục~5 của~\cite{huang2013} để tự động loại bớt các đặc trưng thừa và thu được những biên gồm ít mảnh hơn. Thứ hai, mở rộng cách tiếp cận ở Mục~\ref{sec:monotone} cho những dạng tri thức nghiệp vụ khác, chẳng hạn ràng buộc lồi (\cref{rem:convex}) hay ràng buộc về độ trơn của các hàm đóng góp, và chọn hằng số $\gamma$ đồng thời với các ràng buộc. Thứ ba, học cả tham số của các siêu phẳng bản lề, chẳng hạn bằng cách xen kẽ giữa tối ưu các siêu phẳng và giải SVM, tiến tới các mạng nơ-ron tuyến tính từng phần~\cite{tao2022}. Thứ tư, mở rộng phương pháp cho bài toán nhiều lớp và hồi quy, và kiểm nghiệm trên dữ liệu tín dụng của Việt Nam khi có điều kiện tiếp cận.

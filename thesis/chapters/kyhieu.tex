@@ -1,0 +1,59 @@
+% ------------------------------------------------------------ Ký hiệu và chữ viết tắt
+\chapter*{DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT}
+\addcontentsline{toc}{chapter}{Danh mục ký hiệu và chữ viết tắt}
+
+\begingroup
+\renewcommand{\arraystretch}{1.18}
+\noindent\textbf{Ký hiệu}
+
+\smallskip
+\noindent\begin{tabularx}{\linewidth}{@{}p{3.1cm}X@{}}
+$\R^n$ & không gian Euclid $n$ chiều; $n$ là số chiều của dữ liệu đầu vào\\
+$x(i)$ & thành phần thứ $i$ của vectơ $x\in\R^n$\\
+$x_k,\ y_k$ & điểm dữ liệu thứ $k$ và nhãn của nó, $y_k\in\{-1,+1\}$, $k=1,\dots,N$\\
+$N$ & số điểm dữ liệu huấn luyện\\
+$(t)_+$ & hàm bản lề $\max\{0,t\}$\\
+$\intr C,\ \conv C$ & phần trong và bao lồi của tập $C$\\
+$\Pi_C(x)$ & hình chiếu của $x$ lên tập lồi đóng $C$\\
+$\Omega,\ \Omega_k$ & miền xác định và các vùng (đa diện) của một phân hoạch\\
+$\B$ & tập (biên) tuyến tính từng phần\\
+$\varphi(x)$ & ánh xạ đặc trưng, $\varphi:\R^n\to\R^M$; $\varphi_m$ là đặc trưng thứ $m$\\
+$M$ & số đặc trưng; $M/n$ là số đặc trưng trên mỗi chiều\\
+$D$ & số đặc trưng bản lề, $D=M-n$\\
+$p_m,\ q_m$ & tham số của siêu phẳng bản lề $p_m^\T x+q_m=0$ của đặc trưng thứ $m$\\
+$w,\ w_0$ & vectơ trọng số và hệ số chặn của bộ phân loại\\
+$\gamma$ & hằng số chính quy hóa (trọng số của hàm mất mát) trong SVM\\
+$\kappa(x,z)$ & hạt nhân, $\kappa(x,z)=\varphi(x)^\T\varphi(z)$\\
+$\alpha$ & vectơ biến đối ngẫu (nhân tử Lagrange)\\
+$e_k$ & biến bù của điểm dữ liệu thứ $k$\\
+$N_s$ & số vectơ hỗ trợ\\
+$h_i$ & hàm đóng góp của biến thứ $i$ trong mô hình cộng tính\\
+$\mathbf 1$ & vectơ có mọi thành phần bằng $1$\\
+$\sgn(t)$ & hàm dấu\\
+\end{tabularx}
+
+\bigskip
+\noindent\textbf{Chữ viết tắt}
+
+\smallskip
+\noindent\begin{tabularx}{\linewidth}{@{}p{3.1cm}X@{}}
+AUC & diện tích dưới đường cong ROC (area under the curve)\\
+C-SVM & SVM lề mềm với hàm mất mát bản lề\\
+ĐCX-CB & độ chính xác cân bằng (balanced accuracy)\\
+F1 & trung bình điều hòa của độ chuẩn xác (precision) và độ nhạy (recall)\\
+GHH & siêu phẳng bản lề tổng quát (generalized hinging hyperplane)\\
+HH & siêu phẳng bản lề (hinging hyperplane)\\
+Ik-SVM & SVM với hạt nhân giao (intersection kernel)\\
+KKT & điều kiện Karush--Kuhn--Tucker\\
+L-BFGS & phương pháp tựa Newton BFGS với bộ nhớ hạn chế\\
+kNN & phương pháp $k$ láng giềng gần nhất\\
+LS-SVM & SVM bình phương tối thiểu (least squares SVM)\\
+MLP & mạng nơ-ron truyền thẳng nhiều lớp (multilayer perceptron)\\
+PWL & tuyến tính từng phần (piecewise linear)\\
+PWL-SVM & SVM với ánh xạ đặc trưng tuyến tính từng phần\\
+RBF & hàm cơ sở bán kính; hạt nhân Gauss\\
+ReLU & đơn vị tuyến tính chỉnh lưu, $\mathrm{ReLU}(t)=\max\{0,t\}$\\
+ROC & đường đặc trưng hoạt động (receiver operating characteristic)\\
+SVM & máy vectơ hỗ trợ (support vector machine)\\
+\end{tabularx}
+\endgroup

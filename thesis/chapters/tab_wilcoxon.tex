@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption[So sánh theo cặp với PWL-C-SVM cộng tính]{So sánh theo cặp giữa PWL-C-SVM cộng tính và từng phương pháp khác trên mười bộ dữ liệu: số bộ mà PWL-C-SVM cao hơn / bằng / thấp hơn (theo độ chính xác trung bình làm tròn đến $0{,}1$ điểm phần trăm), chênh lệch trung bình, và giá trị $p$ của kiểm định dấu hạng Wilcoxon hai phía.}
+\label{tab:wilcoxon}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}l c r r@{}}
+\toprule
+\textbf{Phương pháp so sánh} & \textbf{Cao hơn / bằng / thấp hơn} & \textbf{Chênh lệch TB} & $p$\\
+\midrule
+SVM tuyến tính & 7 / 0 / 3 & $+1{,}66$ & 0{,}037\\
+SVM-RBF & 1 / 0 / 9 & $-1{,}39$ & 0{,}014\\
+LS-SVM-RBF & 0 / 1 / 9 & $-1{,}65$ & 0{,}008\\
+kNN ($k=1$) & 8 / 0 / 2 & $+2{,}79$ & 0{,}105\\
+Ik-SVM & 2 / 1 / 7 & $-0{,}68$ & 0{,}110\\
+MLP-ReLU & 2 / 1 / 7 & $-0{,}82$ & 0{,}154\\
+PWL-LS-SVM cộng tính & 7 / 0 / 3 & $+0{,}05$ & 0{,}432\\
+PWL-C-SVM HH & 7 / 2 / 1 & $+1{,}97$ & 0{,}025\\
+\bottomrule
+\end{tabular}
+\end{table}

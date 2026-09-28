@@ -1,0 +1,18 @@
+rep 0 done
+rep 1 done
+rep 2 done
+rep 3 done
+rep 4 done
+rep 5 done
+rep 6 done
+rep 7 done
+rep 8 done
+rep 9 done
+saved /Users/nguyentranduc/Desktop/Phuc_thesis/Draft_v1/mau_de_an/figures/fig_cosexp_M.pdf
+additive|2 0.7266 ± 0.0201
+additive|12 0.8698 ± 0.0165
+additive|20 0.9002 ± 0.0186
+additive|40 0.9426 ± 0.0149
+hh|20 0.8558 ± 0.0316
+hh|40 0.8912 ± 0.0142
+rbf 0.9424 ± 0.0090

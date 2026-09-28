@@ -1,0 +1,45 @@
+moons 0 {'linear': 0.864, 'additive': 0.986, 'hh': 0.982, 'ghh': 0.98, 'rbf': 0.984}
+moons 1 {'linear': 0.842, 'additive': 0.992, 'hh': 0.994, 'ghh': 0.986, 'rbf': 0.994}
+moons 2 {'linear': 0.88, 'additive': 0.994, 'hh': 0.99, 'ghh': 0.99, 'rbf': 0.992}
+moons 3 {'linear': 0.868, 'additive': 0.99, 'hh': 0.994, 'ghh': 0.996, 'rbf': 0.992}
+moons 4 {'linear': 0.852, 'additive': 0.972, 'hh': 0.974, 'ghh': 0.97, 'rbf': 0.976}
+moons 5 {'linear': 0.88, 'additive': 0.992, 'hh': 0.994, 'ghh': 0.994, 'rbf': 0.992}
+moons 6 {'linear': 0.862, 'additive': 0.982, 'hh': 0.98, 'ghh': 0.978, 'rbf': 0.984}
+moons 7 {'linear': 0.876, 'additive': 0.99, 'hh': 0.99, 'ghh': 0.984, 'rbf': 0.992}
+moons 8 {'linear': 0.898, 'additive': 0.996, 'hh': 0.99, 'ghh': 0.99, 'rbf': 0.996}
+moons 9 {'linear': 0.91, 'additive': 0.988, 'hh': 0.986, 'ghh': 0.988, 'rbf': 0.988}
+circles 0 {'linear': 0.538, 'additive': 0.998, 'hh': 0.996, 'ghh': 0.996, 'rbf': 0.996}
+circles 1 {'linear': 0.482, 'additive': 0.998, 'hh': 0.998, 'ghh': 0.996, 'rbf': 0.998}
+circles 2 {'linear': 0.518, 'additive': 1.0, 'hh': 1.0, 'ghh': 1.0, 'rbf': 1.0}
+circles 3 {'linear': 0.516, 'additive': 0.998, 'hh': 0.996, 'ghh': 0.996, 'rbf': 0.998}
+circles 4 {'linear': 0.484, 'additive': 0.998, 'hh': 1.0, 'ghh': 0.996, 'rbf': 0.998}
+circles 5 {'linear': 0.544, 'additive': 1.0, 'hh': 1.0, 'ghh': 1.0, 'rbf': 1.0}
+circles 6 {'linear': 0.608, 'additive': 0.998, 'hh': 0.996, 'ghh': 0.998, 'rbf': 1.0}
+circles 7 {'linear': 0.516, 'additive': 1.0, 'hh': 1.0, 'ghh': 1.0, 'rbf': 1.0}
+circles 8 {'linear': 0.538, 'additive': 0.996, 'hh': 0.996, 'ghh': 0.994, 'rbf': 0.996}
+circles 9 {'linear': 0.522, 'additive': 1.0, 'hh': 1.0, 'ghh': 1.0, 'rbf': 0.998}
+checker 0 {'linear': 0.514, 'additive': 0.636, 'hh': 0.908, 'ghh': 0.868, 'rbf': 0.932}
+checker 1 {'linear': 0.476, 'additive': 0.548, 'hh': 0.92, 'ghh': 0.87, 'rbf': 0.946}
+checker 2 {'linear': 0.486, 'additive': 0.518, 'hh': 0.878, 'ghh': 0.846, 'rbf': 0.952}
+checker 3 {'linear': 0.556, 'additive': 0.57, 'hh': 0.9, 'ghh': 0.854, 'rbf': 0.94}
+checker 4 {'linear': 0.52, 'additive': 0.542, 'hh': 0.88, 'ghh': 0.802, 'rbf': 0.954}
+checker 5 {'linear': 0.492, 'additive': 0.548, 'hh': 0.912, 'ghh': 0.882, 'rbf': 0.942}
+checker 6 {'linear': 0.486, 'additive': 0.54, 'hh': 0.944, 'ghh': 0.872, 'rbf': 0.958}
+checker 7 {'linear': 0.482, 'additive': 0.538, 'hh': 0.882, 'ghh': 0.856, 'rbf': 0.93}
+checker 8 {'linear': 0.504, 'additive': 0.528, 'hh': 0.928, 'ghh': 0.886, 'rbf': 0.966}
+checker 9 {'linear': 0.488, 'additive': 0.584, 'hh': 0.904, 'ghh': 0.832, 'rbf': 0.962}
+spirals 0 {'linear': 0.674, 'additive': 0.892, 'hh': 0.984, 'ghh': 0.94, 'rbf': 0.992}
+spirals 1 {'linear': 0.608, 'additive': 0.912, 'hh': 0.974, 'ghh': 0.962, 'rbf': 0.984}
+spirals 2 {'linear': 0.622, 'additive': 0.878, 'hh': 0.982, 'ghh': 0.95, 'rbf': 0.992}
+spirals 3 {'linear': 0.638, 'additive': 0.906, 'hh': 0.974, 'ghh': 0.97, 'rbf': 0.988}
+spirals 4 {'linear': 0.7, 'additive': 0.884, 'hh': 0.978, 'ghh': 0.974, 'rbf': 0.994}
+spirals 5 {'linear': 0.648, 'additive': 0.882, 'hh': 0.99, 'ghh': 0.98, 'rbf': 0.994}
+spirals 6 {'linear': 0.666, 'additive': 0.914, 'hh': 0.978, 'ghh': 0.982, 'rbf': 0.994}
+spirals 7 {'linear': 0.652, 'additive': 0.884, 'hh': 0.988, 'ghh': 0.968, 'rbf': 1.0}
+spirals 8 {'linear': 0.634, 'additive': 0.868, 'hh': 0.982, 'ghh': 0.966, 'rbf': 0.988}
+spirals 9 {'linear': 0.64, 'additive': 0.896, 'hh': 0.988, 'ghh': 0.98, 'rbf': 0.992}
+saved /Users/nguyentranduc/Desktop/Phuc_thesis/Draft_v0/mau_de_an/figures/fig_demo_2d.pdf
+moons linear: 87.3±2.0  additive: 98.8±0.7  hh: 98.7±0.7  ghh: 98.6±0.8  rbf: 98.9±0.6
+circles linear: 52.7±3.5  additive: 99.9±0.1  hh: 99.8±0.2  ghh: 99.8±0.2  rbf: 99.8±0.2
+checker linear: 50.0±2.4  additive: 55.5±3.4  hh: 90.6±2.2  ghh: 85.7±2.5  rbf: 94.8±1.2
+spirals linear: 64.8±2.7  additive: 89.2±1.5  hh: 98.2±0.6  ghh: 96.7±1.4  rbf: 99.2±0.4

@@ -1,0 +1,39 @@
+% ============================================================================
+%  ĐỀ ÁN THẠC SĨ — Thuật toán SVM với ánh xạ đặc trưng tuyến tính từng phần và ứng dụng
+%  Huỳnh Trọng Phúc — Khoa học dữ liệu, Trường Đại học Quy Nhơn
+%  Biên dịch:  pdflatex main  (chạy 3 lần để cập nhật mục lục và tham chiếu)
+% ============================================================================
+\documentclass[a4paper,14pt,oneside]{extbook}
+\input{preamble}
+
+\begin{document}
+
+% ------------------------------------------------------------ bìa
+\pagenumbering{gobble}
+\input{chapters/bia}
+
+% ------------------------------------------------------------ phần đầu
+\frontmatter
+\pagenumbering{roman}
+\input{chapters/loi}
+\tableofcontents
+\input{chapters/kyhieu}
+\clearpage\phantomsection\addcontentsline{toc}{chapter}{Danh mục các bảng}
+\listoftables
+\clearpage\phantomsection\addcontentsline{toc}{chapter}{Danh mục các hình}
+\listoffigures
+
+% ------------------------------------------------------------ nội dung
+\mainmatter
+\input{chapters/modau}
+\input{chapters/chuong1}
+\input{chapters/chuong2}
+\input{chapters/chuong3}
+\input{chapters/ketluan}
+
+% ------------------------------------------------------------ phần cuối
+\backmatter
+\input{chapters/tailieu}
+\input{chapters/phuluc}
+
+\end{document}

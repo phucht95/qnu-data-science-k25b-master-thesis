@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption[Chi phí huấn luyện, dự đoán và bộ nhớ]{Chi phí trên Magic ($9.510$ mẫu huấn luyện) và dữ liệu tín dụng ($21.000$ mẫu huấn luyện), đo trên một luồng xử lý: thời gian huấn luyện một mô hình với tham số đã chọn, thời gian dự đoán mỗi mẫu, số thực cần lưu, và độ chính xác (Magic) hoặc AUC (tín dụng) trên tập kiểm tra. Đây là một lần chia riêng, với tham số chọn trên mẫu con (và với Magic, tập huấn luyện lớn hơn nhiều), nên độ chính xác khác với ở \cref{tab:bench,tab:credit}.}
+\label{tab:cost-measured}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}l r r r c r r r c@{}}
+\toprule
+ & \multicolumn{4}{c}{\textbf{Magic}} & \multicolumn{4}{c}{\textbf{Tín dụng}}\\
+\cmidrule(lr){2-5}\cmidrule(l){6-9}
+\textbf{Mô hình} & \begin{tabular}[b]{@{}c@{}}\textbf{Huấn}\\\textbf{luyện (s)}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Dự đoán}\\\textbf{($\mu$s/mẫu)}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Số}\\\textbf{thực}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{ĐCX}\\\textbf{(\%)}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Huấn}\\\textbf{luyện (s)}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Dự đoán}\\\textbf{($\mu$s/mẫu)}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Số}\\\textbf{thực}\end{tabular} & \textbf{AUC}\\
+\midrule
+SVM tuyến tính & 5{,}2 & 0{,}02 & 31 & 78{,}7 & 9{,}3 & 0{,}06 & 79 & 0{,}694\\
+Hồi quy logistic & 0{,}00 & 0{,}02 & 31 & 78{,}7 & 0{,}02 & 0{,}05 & 79 & 0{,}716\\
+Thẻ điểm & 0{,}02 & 0{,}69 & 191 & 84{,}6 & 0{,}07 & 1{,}4 & 379 & 0{,}768\\
+PWL-C-SVM, cộng tính & 4{,}7 & 0{,}33 & 211 & 85{,}7 & 52 & 0{,}58 & 349 & 0{,}685\\
+PWL-LS-SVM, cộng tính & 0{,}01 & 0{,}33 & 211 & 84{,}8 & 0{,}04 & 0{,}56 & 349 & 0{,}768\\
+PWL-LS-SVM, HH & 0{,}01 & 0{,}40 & 1.111 & 85{,}1 & 0{,}07 & 1{,}3 & 6.631 & 0{,}740\\
+SVM-RBF & 0{,}76 & 64{,}7 & 34.462 & 87{,}1 & 4{,}6 & 241 & 239.111 & 0{,}711\\
+MLP-ReLU & 2{,}9 & 0{,}18 & 1.101 & 86{,}5 & 21 & 0{,}57 & 6.605 & 0{,}761\\
+Tổ hợp cây tăng cường & 0{,}11 & 3{,}8 & 12.200 & 88{,}1 & 0{,}15 & 1{,}4 & 4.514 & 0{,}774\\
+\bottomrule
+\end{tabular}
+\end{table}

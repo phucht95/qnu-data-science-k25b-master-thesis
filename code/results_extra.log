@@ -1,0 +1,21 @@
+interpretation saved; C = 32.0
+0 C = 32.0 top-6: ['PAY_0', 'EDU_UNIV', 'EDU_GRAD', 'LIMIT_BAL', 'EDU_HIGH', 'PAY_3']
+1 C = 32.0 top-6: ['PAY_0', 'EDU_UNIV', 'EDU_GRAD', 'EDU_HIGH', 'LIMIT_BAL', 'PAY_6']
+2 C = 8.0 top-6: ['PAY_0', 'EDU_UNIV', 'EDU_GRAD', 'LIMIT_BAL', 'PAY_5', 'EDU_HIGH']
+3 C = 32.0 top-6: ['PAY_0', 'EDU_UNIV', 'EDU_GRAD', 'EDU_HIGH', 'LIMIT_BAL', 'PAY_3']
+4 C = 32.0 top-6: ['PAY_0', 'EDU_GRAD', 'EDU_UNIV', 'LIMIT_BAL', 'BILL_AMT1', 'EDU_HIGH']
+0 free {'auc': 0.7794, 'bacc': 0.7045, 'f1': 0.5377}
+0 monotone {'auc': 0.7786, 'bacc': 0.7029, 'f1': 0.5355}
+   violating segments of the free model: {'PAY_0': 1, 'PAY_2': 1, 'PAY_3': 1, 'PAY_4': 1, 'PAY_5': 0, 'PAY_6': 0, 'LIMIT_BAL': 2}
+1 free {'auc': 0.7833, 'bacc': 0.7123, 'f1': 0.553}
+1 monotone {'auc': 0.7832, 'bacc': 0.7129, 'f1': 0.5537}
+   violating segments of the free model: {'PAY_0': 1, 'PAY_2': 1, 'PAY_3': 0, 'PAY_4': 1, 'PAY_5': 1, 'PAY_6': 0, 'LIMIT_BAL': 2}
+2 free {'auc': 0.7703, 'bacc': 0.6927, 'f1': 0.5213}
+2 monotone {'auc': 0.7695, 'bacc': 0.6918, 'f1': 0.5198}
+   violating segments of the free model: {'PAY_0': 1, 'PAY_2': 0, 'PAY_3': 1, 'PAY_4': 1, 'PAY_5': 0, 'PAY_6': 0, 'LIMIT_BAL': 2}
+3 free {'auc': 0.7757, 'bacc': 0.7061, 'f1': 0.5404}
+3 monotone {'auc': 0.776, 'bacc': 0.7054, 'f1': 0.5402}
+   violating segments of the free model: {'PAY_0': 1, 'PAY_2': 1, 'PAY_3': 1, 'PAY_4': 1, 'PAY_5': 0, 'PAY_6': 0, 'LIMIT_BAL': 2}
+4 free {'auc': 0.7694, 'bacc': 0.7027, 'f1': 0.5354}
+4 monotone {'auc': 0.7691, 'bacc': 0.7024, 'f1': 0.5346}
+   violating segments of the free model: {'PAY_0': 1, 'PAY_2': 1, 'PAY_3': 1, 'PAY_4': 1, 'PAY_5': 0, 'PAY_6': 0, 'LIMIT_BAL': 2}

@@ -1,0 +1,101 @@
+Haberman (306, 3)
+  0 {'linear': 0.732, 'rbf': 0.752, 'lssvm': 0.758, 'knn': 0.654, 'iksvm': 0.732, 'mlp': 0.745, 'pwl_c': 0.732, 'pwl_ls': 0.732, 'pwl_hh': 0.739}
+  1 {'linear': 0.732, 'rbf': 0.771, 'lssvm': 0.745, 'knn': 0.641, 'iksvm': 0.732, 'mlp': 0.719, 'pwl_c': 0.752, 'pwl_ls': 0.732, 'pwl_hh': 0.758}
+  2 {'linear': 0.706, 'rbf': 0.725, 'lssvm': 0.725, 'knn': 0.66, 'iksvm': 0.706, 'mlp': 0.739, 'pwl_c': 0.712, 'pwl_ls': 0.706, 'pwl_hh': 0.719}
+  3 {'linear': 0.732, 'rbf': 0.725, 'lssvm': 0.725, 'knn': 0.673, 'iksvm': 0.719, 'mlp': 0.732, 'pwl_c': 0.732, 'pwl_ls': 0.732, 'pwl_hh': 0.745}
+  4 {'linear': 0.732, 'rbf': 0.739, 'lssvm': 0.725, 'knn': 0.68, 'iksvm': 0.732, 'mlp': 0.732, 'pwl_c': 0.752, 'pwl_ls': 0.752, 'pwl_hh': 0.725}
+  5 {'linear': 0.719, 'rbf': 0.725, 'lssvm': 0.725, 'knn': 0.667, 'iksvm': 0.719, 'mlp': 0.719, 'pwl_c': 0.732, 'pwl_ls': 0.725, 'pwl_hh': 0.725}
+  6 {'linear': 0.732, 'rbf': 0.712, 'lssvm': 0.732, 'knn': 0.66, 'iksvm': 0.732, 'mlp': 0.732, 'pwl_c': 0.758, 'pwl_ls': 0.758, 'pwl_hh': 0.732}
+  7 {'linear': 0.725, 'rbf': 0.732, 'lssvm': 0.745, 'knn': 0.627, 'iksvm': 0.699, 'mlp': 0.719, 'pwl_c': 0.693, 'pwl_ls': 0.725, 'pwl_hh': 0.732}
+  8 {'linear': 0.706, 'rbf': 0.706, 'lssvm': 0.699, 'knn': 0.647, 'iksvm': 0.699, 'mlp': 0.686, 'pwl_c': 0.725, 'pwl_ls': 0.712, 'pwl_hh': 0.719}
+  9 {'linear': 0.732, 'rbf': 0.739, 'lssvm': 0.758, 'knn': 0.66, 'iksvm': 0.725, 'mlp': 0.719, 'pwl_c': 0.732, 'pwl_ls': 0.686, 'pwl_hh': 0.758}
+Transfusion (748, 4)
+  0 {'linear': 0.762, 'rbf': 0.786, 'lssvm': 0.765, 'knn': 0.652, 'iksvm': 0.759, 'mlp': 0.781, 'pwl_c': 0.759, 'pwl_ls': 0.773, 'pwl_hh': 0.762}
+  1 {'linear': 0.762, 'rbf': 0.757, 'lssvm': 0.775, 'knn': 0.69, 'iksvm': 0.767, 'mlp': 0.791, 'pwl_c': 0.77, 'pwl_ls': 0.781, 'pwl_hh': 0.773}
+  2 {'linear': 0.762, 'rbf': 0.759, 'lssvm': 0.778, 'knn': 0.676, 'iksvm': 0.765, 'mlp': 0.778, 'pwl_c': 0.759, 'pwl_ls': 0.773, 'pwl_hh': 0.762}
+  3 {'linear': 0.77, 'rbf': 0.765, 'lssvm': 0.751, 'knn': 0.693, 'iksvm': 0.762, 'mlp': 0.813, 'pwl_c': 0.762, 'pwl_ls': 0.773, 'pwl_hh': 0.791}
+  4 {'linear': 0.767, 'rbf': 0.789, 'lssvm': 0.791, 'knn': 0.666, 'iksvm': 0.765, 'mlp': 0.791, 'pwl_c': 0.762, 'pwl_ls': 0.773, 'pwl_hh': 0.767}
+  5 {'linear': 0.77, 'rbf': 0.791, 'lssvm': 0.781, 'knn': 0.706, 'iksvm': 0.789, 'mlp': 0.797, 'pwl_c': 0.77, 'pwl_ls': 0.786, 'pwl_hh': 0.794}
+  6 {'linear': 0.767, 'rbf': 0.786, 'lssvm': 0.789, 'knn': 0.709, 'iksvm': 0.765, 'mlp': 0.778, 'pwl_c': 0.765, 'pwl_ls': 0.767, 'pwl_hh': 0.765}
+  7 {'linear': 0.762, 'rbf': 0.783, 'lssvm': 0.789, 'knn': 0.671, 'iksvm': 0.762, 'mlp': 0.786, 'pwl_c': 0.765, 'pwl_ls': 0.783, 'pwl_hh': 0.765}
+  8 {'linear': 0.765, 'rbf': 0.783, 'lssvm': 0.791, 'knn': 0.711, 'iksvm': 0.773, 'mlp': 0.786, 'pwl_c': 0.762, 'pwl_ls': 0.77, 'pwl_hh': 0.757}
+  9 {'linear': 0.759, 'rbf': 0.759, 'lssvm': 0.757, 'knn': 0.671, 'iksvm': 0.762, 'mlp': 0.754, 'pwl_c': 0.754, 'pwl_ls': 0.757, 'pwl_hh': 0.695}
+Banknote (1372, 4)
+  0 {'linear': 0.983, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.999, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 0.999, 'pwl_ls': 1.0, 'pwl_hh': 1.0}
+  1 {'linear': 0.988, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.997, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.993, 'pwl_hh': 1.0}
+  2 {'linear': 0.98, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.999, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.991, 'pwl_hh': 1.0}
+  3 {'linear': 0.99, 'rbf': 1.0, 'lssvm': 0.999, 'knn': 0.997, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.997, 'pwl_hh': 1.0}
+  4 {'linear': 0.99, 'rbf': 1.0, 'lssvm': 0.999, 'knn': 0.999, 'iksvm': 0.996, 'mlp': 0.996, 'pwl_c': 1.0, 'pwl_ls': 0.994, 'pwl_hh': 0.999}
+  5 {'linear': 0.988, 'rbf': 1.0, 'lssvm': 0.999, 'knn': 0.997, 'iksvm': 0.996, 'mlp': 0.999, 'pwl_c': 0.996, 'pwl_ls': 0.993, 'pwl_hh': 0.996}
+  6 {'linear': 0.983, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.997, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.997, 'pwl_hh': 0.999}
+  7 {'linear': 0.983, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.997, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.996, 'pwl_hh': 1.0}
+  8 {'linear': 0.985, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 0.999, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.988, 'pwl_hh': 1.0}
+  9 {'linear': 0.993, 'rbf': 1.0, 'lssvm': 1.0, 'knn': 1.0, 'iksvm': 1.0, 'mlp': 1.0, 'pwl_c': 1.0, 'pwl_ls': 0.997, 'pwl_hh': 1.0}
+Pima (768, 8)
+  0 {'linear': 0.766, 'rbf': 0.763, 'lssvm': 0.768, 'knn': 0.719, 'iksvm': 0.763, 'mlp': 0.771, 'pwl_c': 0.758, 'pwl_ls': 0.768, 'pwl_hh': 0.789}
+  1 {'linear': 0.76, 'rbf': 0.727, 'lssvm': 0.763, 'knn': 0.737, 'iksvm': 0.742, 'mlp': 0.779, 'pwl_c': 0.755, 'pwl_ls': 0.742, 'pwl_hh': 0.75}
+  2 {'linear': 0.734, 'rbf': 0.732, 'lssvm': 0.721, 'knn': 0.661, 'iksvm': 0.727, 'mlp': 0.737, 'pwl_c': 0.737, 'pwl_ls': 0.745, 'pwl_hh': 0.74}
+  3 {'linear': 0.773, 'rbf': 0.753, 'lssvm': 0.758, 'knn': 0.706, 'iksvm': 0.763, 'mlp': 0.758, 'pwl_c': 0.768, 'pwl_ls': 0.773, 'pwl_hh': 0.758}
+  4 {'linear': 0.76, 'rbf': 0.755, 'lssvm': 0.768, 'knn': 0.714, 'iksvm': 0.753, 'mlp': 0.768, 'pwl_c': 0.763, 'pwl_ls': 0.763, 'pwl_hh': 0.763}
+  5 {'linear': 0.766, 'rbf': 0.75, 'lssvm': 0.776, 'knn': 0.719, 'iksvm': 0.76, 'mlp': 0.768, 'pwl_c': 0.779, 'pwl_ls': 0.771, 'pwl_hh': 0.758}
+  6 {'linear': 0.786, 'rbf': 0.789, 'lssvm': 0.784, 'knn': 0.724, 'iksvm': 0.776, 'mlp': 0.792, 'pwl_c': 0.771, 'pwl_ls': 0.786, 'pwl_hh': 0.768}
+  7 {'linear': 0.794, 'rbf': 0.792, 'lssvm': 0.789, 'knn': 0.69, 'iksvm': 0.784, 'mlp': 0.784, 'pwl_c': 0.773, 'pwl_ls': 0.784, 'pwl_hh': 0.789}
+  8 {'linear': 0.76, 'rbf': 0.76, 'lssvm': 0.75, 'knn': 0.703, 'iksvm': 0.763, 'mlp': 0.742, 'pwl_c': 0.758, 'pwl_ls': 0.755, 'pwl_hh': 0.745}
+  9 {'linear': 0.766, 'rbf': 0.786, 'lssvm': 0.779, 'knn': 0.708, 'iksvm': 0.771, 'mlp': 0.768, 'pwl_c': 0.768, 'pwl_ls': 0.758, 'pwl_hh': 0.766}
+Breast (699, 9)
+  0 {'linear': 0.963, 'rbf': 0.963, 'lssvm': 0.963, 'knn': 0.969, 'iksvm': 0.966, 'mlp': 0.966, 'pwl_c': 0.963, 'pwl_ls': 0.963, 'pwl_hh': 0.966}
+  1 {'linear': 0.971, 'rbf': 0.971, 'lssvm': 0.971, 'knn': 0.963, 'iksvm': 0.974, 'mlp': 0.974, 'pwl_c': 0.971, 'pwl_ls': 0.966, 'pwl_hh': 0.957}
+  2 {'linear': 0.971, 'rbf': 0.971, 'lssvm': 0.974, 'knn': 0.949, 'iksvm': 0.963, 'mlp': 0.971, 'pwl_c': 0.969, 'pwl_ls': 0.969, 'pwl_hh': 0.963}
+  3 {'linear': 0.966, 'rbf': 0.966, 'lssvm': 0.963, 'knn': 0.954, 'iksvm': 0.966, 'mlp': 0.969, 'pwl_c': 0.963, 'pwl_ls': 0.969, 'pwl_hh': 0.963}
+  4 {'linear': 0.971, 'rbf': 0.977, 'lssvm': 0.971, 'knn': 0.954, 'iksvm': 0.971, 'mlp': 0.977, 'pwl_c': 0.971, 'pwl_ls': 0.96, 'pwl_hh': 0.974}
+  5 {'linear': 0.971, 'rbf': 0.951, 'lssvm': 0.946, 'knn': 0.931, 'iksvm': 0.969, 'mlp': 0.96, 'pwl_c': 0.96, 'pwl_ls': 0.96, 'pwl_hh': 0.951}
+  6 {'linear': 0.96, 'rbf': 0.949, 'lssvm': 0.957, 'knn': 0.949, 'iksvm': 0.96, 'mlp': 0.96, 'pwl_c': 0.951, 'pwl_ls': 0.949, 'pwl_hh': 0.951}
+  7 {'linear': 0.966, 'rbf': 0.974, 'lssvm': 0.971, 'knn': 0.946, 'iksvm': 0.951, 'mlp': 0.977, 'pwl_c': 0.974, 'pwl_ls': 0.957, 'pwl_hh': 0.957}
+  8 {'linear': 0.957, 'rbf': 0.96, 'lssvm': 0.963, 'knn': 0.954, 'iksvm': 0.957, 'mlp': 0.954, 'pwl_c': 0.951, 'pwl_ls': 0.951, 'pwl_hh': 0.954}
+  9 {'linear': 0.963, 'rbf': 0.963, 'lssvm': 0.957, 'knn': 0.96, 'iksvm': 0.963, 'mlp': 0.969, 'pwl_c': 0.954, 'pwl_ls': 0.954, 'pwl_hh': 0.926}
+Parkinsons (195, 22)
+  0 {'linear': 0.888, 'rbf': 0.898, 'lssvm': 0.918, 'knn': 0.939, 'iksvm': 0.898, 'mlp': 0.929, 'pwl_c': 0.827, 'pwl_ls': 0.898, 'pwl_hh': 0.837}
+  1 {'linear': 0.827, 'rbf': 0.857, 'lssvm': 0.949, 'knn': 0.939, 'iksvm': 0.867, 'mlp': 0.888, 'pwl_c': 0.878, 'pwl_ls': 0.878, 'pwl_hh': 0.837}
+  2 {'linear': 0.898, 'rbf': 0.878, 'lssvm': 0.888, 'knn': 0.969, 'iksvm': 0.939, 'mlp': 0.939, 'pwl_c': 0.888, 'pwl_ls': 0.878, 'pwl_hh': 0.898}
+  3 {'linear': 0.847, 'rbf': 0.918, 'lssvm': 0.949, 'knn': 0.939, 'iksvm': 0.908, 'mlp': 0.918, 'pwl_c': 0.898, 'pwl_ls': 0.939, 'pwl_hh': 0.867}
+  4 {'linear': 0.857, 'rbf': 0.878, 'lssvm': 0.867, 'knn': 0.888, 'iksvm': 0.827, 'mlp': 0.847, 'pwl_c': 0.878, 'pwl_ls': 0.827, 'pwl_hh': 0.837}
+  5 {'linear': 0.847, 'rbf': 0.847, 'lssvm': 0.847, 'knn': 0.949, 'iksvm': 0.888, 'mlp': 0.908, 'pwl_c': 0.847, 'pwl_ls': 0.898, 'pwl_hh': 0.827}
+  6 {'linear': 0.857, 'rbf': 0.908, 'lssvm': 0.908, 'knn': 0.949, 'iksvm': 0.908, 'mlp': 0.908, 'pwl_c': 0.867, 'pwl_ls': 0.918, 'pwl_hh': 0.837}
+  7 {'linear': 0.837, 'rbf': 0.929, 'lssvm': 0.908, 'knn': 0.949, 'iksvm': 0.908, 'mlp': 0.898, 'pwl_c': 0.837, 'pwl_ls': 0.898, 'pwl_hh': 0.837}
+  8 {'linear': 0.837, 'rbf': 0.959, 'lssvm': 0.949, 'knn': 0.908, 'iksvm': 0.918, 'mlp': 0.969, 'pwl_c': 0.847, 'pwl_ls': 0.908, 'pwl_hh': 0.888}
+  9 {'linear': 0.847, 'rbf': 0.918, 'lssvm': 0.959, 'knn': 0.939, 'iksvm': 0.878, 'mlp': 0.857, 'pwl_c': 0.857, 'pwl_ls': 0.888, 'pwl_hh': 0.888}
+Ionosphere (351, 33)
+  0 {'linear': 0.875, 'rbf': 0.926, 'lssvm': 0.943, 'knn': 0.892, 'iksvm': 0.915, 'mlp': 0.892, 'pwl_c': 0.92, 'pwl_ls': 0.926, 'pwl_hh': 0.875}
+  1 {'linear': 0.881, 'rbf': 0.915, 'lssvm': 0.92, 'knn': 0.835, 'iksvm': 0.909, 'mlp': 0.898, 'pwl_c': 0.886, 'pwl_ls': 0.892, 'pwl_hh': 0.886}
+  2 {'linear': 0.835, 'rbf': 0.938, 'lssvm': 0.926, 'knn': 0.835, 'iksvm': 0.898, 'mlp': 0.835, 'pwl_c': 0.864, 'pwl_ls': 0.83, 'pwl_hh': 0.835}
+  3 {'linear': 0.852, 'rbf': 0.955, 'lssvm': 0.949, 'knn': 0.852, 'iksvm': 0.915, 'mlp': 0.869, 'pwl_c': 0.886, 'pwl_ls': 0.864, 'pwl_hh': 0.83}
+  4 {'linear': 0.875, 'rbf': 0.909, 'lssvm': 0.92, 'knn': 0.824, 'iksvm': 0.903, 'mlp': 0.858, 'pwl_c': 0.875, 'pwl_ls': 0.892, 'pwl_hh': 0.869}
+  5 {'linear': 0.864, 'rbf': 0.92, 'lssvm': 0.92, 'knn': 0.852, 'iksvm': 0.903, 'mlp': 0.881, 'pwl_c': 0.903, 'pwl_ls': 0.903, 'pwl_hh': 0.847}
+  6 {'linear': 0.841, 'rbf': 0.938, 'lssvm': 0.92, 'knn': 0.835, 'iksvm': 0.886, 'mlp': 0.858, 'pwl_c': 0.898, 'pwl_ls': 0.892, 'pwl_hh': 0.881}
+  7 {'linear': 0.864, 'rbf': 0.938, 'lssvm': 0.955, 'knn': 0.909, 'iksvm': 0.932, 'mlp': 0.875, 'pwl_c': 0.892, 'pwl_ls': 0.807, 'pwl_hh': 0.847}
+  8 {'linear': 0.869, 'rbf': 0.955, 'lssvm': 0.96, 'knn': 0.898, 'iksvm': 0.903, 'mlp': 0.915, 'pwl_c': 0.92, 'pwl_ls': 0.864, 'pwl_hh': 0.886}
+  9 {'linear': 0.869, 'rbf': 0.943, 'lssvm': 0.96, 'knn': 0.903, 'iksvm': 0.949, 'mlp': 0.92, 'pwl_c': 0.92, 'pwl_ls': 0.903, 'pwl_hh': 0.943}
+Sonar (208, 60)
+  0 {'linear': 0.712, 'rbf': 0.837, 'lssvm': 0.933, 'knn': 0.856, 'iksvm': 0.856, 'mlp': 0.808, 'pwl_c': 0.827, 'pwl_ls': 0.846, 'pwl_hh': 0.75}
+  1 {'linear': 0.808, 'rbf': 0.856, 'lssvm': 0.875, 'knn': 0.817, 'iksvm': 0.856, 'mlp': 0.846, 'pwl_c': 0.885, 'pwl_ls': 0.827, 'pwl_hh': 0.76}
+  2 {'linear': 0.808, 'rbf': 0.865, 'lssvm': 0.856, 'knn': 0.827, 'iksvm': 0.875, 'mlp': 0.846, 'pwl_c': 0.788, 'pwl_ls': 0.817, 'pwl_hh': 0.779}
+  3 {'linear': 0.74, 'rbf': 0.885, 'lssvm': 0.817, 'knn': 0.837, 'iksvm': 0.808, 'mlp': 0.837, 'pwl_c': 0.779, 'pwl_ls': 0.788, 'pwl_hh': 0.788}
+  4 {'linear': 0.712, 'rbf': 0.798, 'lssvm': 0.788, 'knn': 0.788, 'iksvm': 0.75, 'mlp': 0.779, 'pwl_c': 0.817, 'pwl_ls': 0.808, 'pwl_hh': 0.769}
+  5 {'linear': 0.769, 'rbf': 0.837, 'lssvm': 0.837, 'knn': 0.798, 'iksvm': 0.875, 'mlp': 0.865, 'pwl_c': 0.808, 'pwl_ls': 0.817, 'pwl_hh': 0.76}
+  6 {'linear': 0.721, 'rbf': 0.817, 'lssvm': 0.827, 'knn': 0.798, 'iksvm': 0.76, 'mlp': 0.75, 'pwl_c': 0.731, 'pwl_ls': 0.769, 'pwl_hh': 0.779}
+  7 {'linear': 0.76, 'rbf': 0.885, 'lssvm': 0.885, 'knn': 0.827, 'iksvm': 0.846, 'mlp': 0.885, 'pwl_c': 0.827, 'pwl_ls': 0.808, 'pwl_hh': 0.779}
+  8 {'linear': 0.808, 'rbf': 0.837, 'lssvm': 0.827, 'knn': 0.817, 'iksvm': 0.798, 'mlp': 0.808, 'pwl_c': 0.779, 'pwl_ls': 0.808, 'pwl_hh': 0.76}
+  9 {'linear': 0.683, 'rbf': 0.817, 'lssvm': 0.808, 'knn': 0.75, 'iksvm': 0.779, 'mlp': 0.769, 'pwl_c': 0.779, 'pwl_ls': 0.692, 'pwl_hh': 0.702}
+Magic (19020, 10)
+  0 {'linear': 0.79, 'rbf': 0.858, 'lssvm': 0.854, 'knn': 0.775, 'iksvm': 0.851, 'mlp': 0.86, 'pwl_c': 0.852, 'pwl_ls': 0.847, 'pwl_hh': 0.85}
+  1 {'linear': 0.789, 'rbf': 0.856, 'lssvm': 0.86, 'knn': 0.781, 'iksvm': 0.842, 'mlp': 0.859, 'pwl_c': 0.846, 'pwl_ls': 0.844, 'pwl_hh': 0.85}
+  2 {'linear': 0.792, 'rbf': 0.857, 'lssvm': 0.86, 'knn': 0.784, 'iksvm': 0.854, 'mlp': 0.86, 'pwl_c': 0.854, 'pwl_ls': 0.85, 'pwl_hh': 0.856}
+  3 {'linear': 0.79, 'rbf': 0.851, 'lssvm': 0.85, 'knn': 0.789, 'iksvm': 0.852, 'mlp': 0.856, 'pwl_c': 0.844, 'pwl_ls': 0.839, 'pwl_hh': 0.847}
+  4 {'linear': 0.793, 'rbf': 0.862, 'lssvm': 0.85, 'knn': 0.777, 'iksvm': 0.849, 'mlp': 0.858, 'pwl_c': 0.844, 'pwl_ls': 0.845, 'pwl_hh': 0.846}
+  5 {'linear': 0.788, 'rbf': 0.848, 'lssvm': 0.859, 'knn': 0.778, 'iksvm': 0.848, 'mlp': 0.854, 'pwl_c': 0.846, 'pwl_ls': 0.842, 'pwl_hh': 0.808}
+  6 {'linear': 0.791, 'rbf': 0.858, 'lssvm': 0.856, 'knn': 0.787, 'iksvm': 0.854, 'mlp': 0.856, 'pwl_c': 0.846, 'pwl_ls': 0.843, 'pwl_hh': 0.832}
+  7 {'linear': 0.789, 'rbf': 0.857, 'lssvm': 0.859, 'knn': 0.784, 'iksvm': 0.845, 'mlp': 0.855, 'pwl_c': 0.849, 'pwl_ls': 0.844, 'pwl_hh': 0.847}
+  8 {'linear': 0.79, 'rbf': 0.858, 'lssvm': 0.856, 'knn': 0.792, 'iksvm': 0.851, 'mlp': 0.857, 'pwl_c': 0.847, 'pwl_ls': 0.844, 'pwl_hh': 0.851}
+  9 {'linear': 0.789, 'rbf': 0.85, 'lssvm': 0.855, 'knn': 0.781, 'iksvm': 0.85, 'mlp': 0.855, 'pwl_c': 0.848, 'pwl_ls': 0.842, 'pwl_hh': 0.842}
+Spambase (4601, 57)
+  0 {'linear': 0.93, 'rbf': 0.938, 'lssvm': 0.927, 'knn': 0.879, 'iksvm': 0.946, 'mlp': 0.937, 'pwl_c': 0.928, 'pwl_ls': 0.921, 'pwl_hh': 0.4}

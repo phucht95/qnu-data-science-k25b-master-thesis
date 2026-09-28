@@ -1,0 +1,19 @@
+% ----------------------------------------------------------------------------
+%  3.3  Thực nghiệm trên dữ liệu chuẩn
+% ----------------------------------------------------------------------------
+\subsection{Tái hiện thí nghiệm trên dữ liệu Cosexp}\label{sec:cosexp}
+
+Bộ dữ liệu Cosexp của hộp công cụ SVM-KM~\cite{canu2005} được bài báo gốc dùng để minh họa ảnh hưởng của số đặc trưng $M$. Các điểm được lấy đều trên miền $[0,5]\times[-1,1]$ và được gán nhãn theo dấu của $\cos\bigl(0{,}5\,e^{0{,}7x(1)}\bigr)-x(2)$; biên thật là đường cong $x(2)=\cos\bigl(0{,}5\,e^{0{,}7x(1)}\bigr)$, dao động ngày càng nhanh khi $x(1)$ tăng (nét đứt ở \cref{fig:cosexp}a,b). Theo đúng thiết lập của~\cite{huang2013}, ta dùng $500$ điểm huấn luyện, $500$ điểm kiểm tra và PWL-C-SVM với ánh xạ cộng tính, cho $M$ chạy từ $2$ đến $40$. Khác với bài báo, mỗi cấu hình được lặp lại trên $10$ bộ dữ liệu sinh độc lập, và ánh xạ HH được chạy song song để so sánh.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_cosexp_M.pdf}
+\caption[Tái hiện thí nghiệm Cosexp: ảnh hưởng của số đặc trưng]{Tái hiện thí nghiệm Cosexp (Hình~3 của~\cite{huang2013}), $10$ lần lặp. (a), (b) Biên của PWL-C-SVM cộng tính với $M=12$ và $M=40$ (nét liền) so với biên thật (nét đứt). (c) Độ chính xác trên tập kiểm tra theo $M$: đường là trung bình, dải màu là $\pm$ một độ lệch chuẩn; đường chấm là SVM hạt nhân Gauss. (d) Thời gian huấn luyện (trung vị) với $\gamma$ đã chọn.}
+\label{fig:cosexp}
+\end{figure}
+
+\Cref{fig:cosexp} tái hiện đúng xu hướng mà bài báo gốc báo cáo. Với $M=2$, bộ phân loại chỉ là tuyến tính và đạt $72{,}7\pm2{,}0\%$ (bài báo: $76{,}83\%$ với một lần chạy). Khi $M$ tăng, biên uốn theo đường cong thật ngày càng sát (\cref{fig:cosexp}a,b); độ chính xác đạt $90{,}0\%$ tại $M=20=10n$ và ổn định quanh $94\%$ từ $M=24$, ngang với SVM hạt nhân Gauss ($94{,}2\pm0{,}9\%$). Ở $M$ nhỏ, đường cong không đơn điệu: mỗi giá trị của $M$ ứng với một lưới nút hoàn toàn khác, và độ chính xác phụ thuộc vào việc các nút có rơi gần những chỗ biên đổi hướng hay không. Thời gian huấn luyện tăng theo $M$ nhưng vẫn dưới $0{,}1$ giây (\cref{fig:cosexp}d).
+
+Đáng chú ý, trên dữ liệu này ánh xạ HH kém hẳn ánh xạ cộng tính ($89{,}1\pm1{,}4\%$ tại $M=40$), dù về lý thuyết nó linh hoạt hơn. Lý do là nhãn của Cosexp được xác định bởi hàm $\cos\bigl(0{,}5\,e^{0{,}7x(1)}\bigr)-x(2)$, một hàm cộng tính: ánh xạ cộng tính khớp đúng cấu trúc đó, còn các siêu phẳng ngẫu nhiên của HH phân tán khả năng biểu diễn vào những hướng không cần thiết. Kết hợp với Mục~\ref{sec:exp2d}, ta rút ra một quy tắc thực hành: nên thử ánh xạ cộng tính trước, vì nó rẻ, dễ diễn giải và đủ tốt khi tương tác giữa các biến yếu; chỉ chuyển sang HH khi có dấu hiệu tương tác mạnh, như trên bàn cờ. Đây cũng là thứ tự mà bài báo gốc khuyến nghị~\cite[Mục~4]{huang2013}.
+
+\input{chapters/chuong3_bench_b}

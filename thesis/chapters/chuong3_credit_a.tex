@@ -1,0 +1,46 @@
+% ----------------------------------------------------------------------------
+\section{Ứng dụng: dự báo vỡ nợ thẻ tín dụng}\label{sec:application}
+
+\subsection{Bài toán và dữ liệu}
+
+Ngân hàng phát hành thẻ tín dụng cần ước lượng khả năng một khách hàng không thanh toán được dư nợ trong kỳ tới, để điều chỉnh hạn mức, ưu tiên nhắc nợ hoặc trích lập dự phòng rủi ro. Đây là một bài toán phân loại nhị phân điển hình của chấm điểm tín dụng~\cite{thomas2002}, và cả ba yêu cầu nêu ở Mở đầu đều có mặt: độ chính xác quyết định trực tiếp chi phí rủi ro; số hồ sơ lớn và việc chấm điểm được lặp lại định kỳ, nên chi phí dự đoán đáng kể; và tổ chức tín dụng cần giải thích được quyết định của mình với khách hàng cũng như với cơ quan quản lý.
+
+Đề án dùng dữ liệu của Yeh và Lien~\cite{yeh2009} về $30.000$ chủ thẻ tín dụng của một ngân hàng ở Đài Loan, trong giai đoạn từ tháng 4 đến tháng 9 năm 2005. Nhãn cho biết khách hàng có vỡ nợ trong tháng tiếp theo hay không; có $6.636$ khách hàng vỡ nợ, tức $22{,}1\%$. Hai mươi ba biến giải thích thuộc bốn nhóm: hạn mức tín dụng, thông tin nhân khẩu học, lịch sử trả nợ sáu tháng gần nhất và các số tiền sao kê, thanh toán tương ứng (\cref{tab:credit-vars}).
+
+\begin{table}[t]
+\centering
+\caption[Các biến của dữ liệu vỡ nợ thẻ tín dụng]{Các biến của dữ liệu vỡ nợ thẻ tín dụng~\cite{yeh2009} và cách xử lý trong đề án. Số tiền tính bằng Đài tệ.}
+\label{tab:credit-vars}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}l X X@{}}
+\toprule
+\textbf{Biến} & \textbf{Ý nghĩa} & \textbf{Xử lý}\\
+\midrule
+LIMIT\_BAL & hạn mức tín dụng của khách hàng và gia đình & giữ nguyên\\
+SEX & giới tính (1 nam, 2 nữ) & một biến chỉ báo “nữ”\\
+EDUCATION & học vấn (1 sau đại học, 2 đại học, 3 trung học, 4 khác) & ba biến chỉ báo; các mã $0,5,6$ không được mô tả, gộp vào “khác”\\
+MARRIAGE & hôn nhân (1 đã kết hôn, 2 độc thân, 3 khác) & hai biến chỉ báo; mã $0$ gộp vào “khác”\\
+AGE & tuổi & giữ nguyên\\
+PAY\_0, PAY\_2, \dots, PAY\_6 & trạng thái trả nợ các tháng 9, 8, \dots, 4: $-1$ trả đúng hạn, $k\ge1$ chậm $k$ tháng; các mã $-2$ và $0$ cũng xuất hiện & giữ nguyên như biến thứ bậc\\
+BILL\_AMT1, \dots, BILL\_AMT6 & dư nợ sao kê các tháng 9, \dots, 4 & giữ nguyên\\
+PAY\_AMT1, \dots, PAY\_AMT6 & số tiền đã thanh toán các tháng 9, \dots, 4 & giữ nguyên\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sau khi mã hóa các biến định danh, mỗi khách hàng được mô tả bởi $n=26$ đặc trưng số. Hai đặc điểm của dữ liệu quyết định thiết kế mô hình (\cref{fig:credit-overview}). Thứ nhất, quan hệ giữa lịch sử trả nợ và rủi ro là phi tuyến rõ rệt: tỉ lệ vỡ nợ gần như không đổi, khoảng $13$--$17\%$, với các trạng thái $-2$, $-1$ và $0$, rồi tăng vọt lên $34\%$ khi chậm một tháng và gần $70\%$ khi chậm hai tháng. Một mô hình tuyến tính theo PAY\_0 không thể mô tả bước nhảy này, trong khi một hàm tuyến tính từng phần với vài điểm gãy thì có thể. Thứ hai, các biến tiền tệ lệch rất mạnh: hạn mức trải từ $10$ nghìn đến $1$ triệu Đài tệ, nhưng một nửa số khách hàng có hạn mức không vượt quá $140$ nghìn. Lưới nút đều của bài báo gốc vì vậy đặt phần lớn các nút ở vùng gần như không có dữ liệu, còn lưới theo phân vị (\cref{rem:quantile}) đặt nút theo mật độ dữ liệu.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_credit_overview.pdf}
+\caption[Hai đặc điểm của dữ liệu tín dụng]{(a) Tỉ lệ vỡ nợ theo trạng thái trả nợ tháng 9 (PAY\_0); cột nhạt ứng với các nhóm có ít hơn $100$ khách hàng. (b) Phân bố hạn mức tín dụng cùng vị trí $9$ nút của lưới đều (nét đứt) và của lưới theo phân vị (nét liền).}
+\label{fig:credit-overview}
+\end{figure}
+
+\subsection{Thiết kế thực nghiệm}
+
+Dữ liệu được chia ngẫu nhiên có phân tầng theo tỉ lệ $70/30$, thành $21.000$ khách hàng huấn luyện và $9.000$ khách hàng kiểm tra, lặp lại $5$ lần. Độ đo chính là diện tích dưới đường cong ROC (AUC)~\cite{fawcett2006}: xác suất để một khách hàng vỡ nợ chọn ngẫu nhiên được mô hình chấm điểm rủi ro cao hơn một khách hàng không vỡ nợ chọn ngẫu nhiên. AUC không phụ thuộc vào ngưỡng quyết định và là độ đo chuẩn trong chấm điểm tín dụng~\cite{lessmann2015}. Để đánh giá thêm chất lượng phân loại, đề án chọn một ngưỡng trên tập huấn luyện sao cho tỉ lệ khách hàng bị dự báo vỡ nợ bằng tỉ lệ vỡ nợ quan sát được, rồi tính độ chính xác cân bằng (trung bình của độ nhạy và độ đặc hiệu) và độ đo F1 của lớp vỡ nợ trên tập kiểm tra. Quy tắc chọn ngưỡng này tương ứng với chính sách “đưa vào diện theo dõi một tỉ lệ khách hàng cố định”.
+
+Mười mô hình được so sánh. Ba mô hình tuyến tính đóng vai trò chuẩn so sánh của ngành: hồi quy logistic trên các biến gốc, SVM tuyến tính, và \emph{thẻ điểm} --- hồi quy logistic trên các biến đã được rời rạc hóa, theo cách xây dựng thẻ điểm truyền thống~\cite{thomas2002}, trong đó mỗi biến liên tục được chia thành mười khoảng theo thập phân vị và mỗi giá trị của các biến PAY là một hạng mục riêng. Bốn biến thể PWL-SVM được thử: PWL-LS-SVM cộng tính với lưới đều (quy tắc của bài báo gốc) và với lưới phân vị, PWL-C-SVM cộng tính với lưới phân vị, và PWL-LS-SVM với ánh xạ HH; mọi biến thể dùng $M/n=10$. Ba mô hình phi tuyến làm đối chứng: SVM hạt nhân Gauss, mạng nơ-ron một lớp ẩn với $9n=234$ nơ-ron ReLU, huấn luyện bằng L-BFGS~\cite{liu1989}, và tổ hợp cây tăng cường~\cite{friedman2001} với thiết lập mặc định của scikit-learn, là một đại diện cho nhóm mô hình thường chính xác nhất trên dữ liệu dạng bảng~\cite{lessmann2015}. Tham số của mỗi mô hình được chọn bằng kiểm định chéo $5$ phần trên tập huấn luyện với tiêu chí AUC; riêng SVM hạt nhân Gauss và mạng nơ-ron được tinh chỉnh trên một mẫu con phân tầng gồm $5.000$ và $7.000$ khách hàng với kiểm định chéo $3$ phần, rồi huấn luyện lại trên toàn bộ tập huấn luyện, vì chi phí huấn luyện của chúng lớn hơn nhiều. Các lưới tham số là: $\gamma\in\{2^{-9},2^{-7},\dots,2^{7}\}$ cho SVM tuyến tính và mọi biến thể PWL-SVM; $\gamma\in\{2^{-2},2^{0},2^{2},2^{4}\}$ và $1/\sigma^2\in\{2^{-7},2^{-5},2^{-3},2^{-1}\}$ cho SVM hạt nhân Gauss; hệ số phạt $L_2$ trong $\{10^{-2},10^{-1},1,10\}$ cho mạng nơ-ron; nghịch đảo của hệ số phạt trong $\{10^{-3},10^{-2},\dots,10\}$ cho hồi quy logistic và thẻ điểm. Tổ hợp cây tăng cường dùng thiết lập mặc định, có cơ chế dừng sớm trên một phần dữ liệu kiểm định nội bộ.
+

@@ -1,0 +1,169 @@
+% ============================================================================
+%  PHỤ LỤC
+% ============================================================================
+\unchapter{PHỤ LỤC}
+\setcounter{table}{0}\renewcommand{\thetable}{PL.\arabic{table}}
+
+\section*{A. Mã nguồn chính}
+\phantomsection\addcontentsline{toc}{section}{A. Mã nguồn chính}
+
+Toàn bộ mã nguồn của đề án gồm mô-đun \texttt{pwlsvm.py} (ánh xạ đặc trưng và mô hình), mô-đun \texttt{baselines.py} (LS-SVM hạt nhân Gauss, SVM hạt nhân giao), các tệp nạp dữ liệu và các tệp thực nghiệm; mỗi hình và bảng của Chương~\ref{chap:3} được sinh bởi một tệp riêng, với hạt giống ngẫu nhiên cố định. Dưới đây là phần cốt lõi của \texttt{pwlsvm.py}, đã lược bớt phần kiểm tra đầu vào và chú thích.
+
+\begin{lstlisting}
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.svm import SVC, LinearSVC
+
+def random_hyperplane(rng, lo, hi):
+    """p^T x + q = 0 through n uniform points of [lo, hi],
+    with p(1) = +1 or -1."""
+    n = lo.size
+    while True:
+        U = rng.uniform(lo, hi, size=(n, n))   # rows u_j
+        s = rng.choice([-1.0, 1.0])            # p(1)
+        A = np.hstack([U[:, 1:], np.ones((n, 1))])
+        if abs(np.linalg.det(A)) > 1e-12:
+            sol = np.linalg.solve(A, -s * U[:, 0])
+            return np.r_[s, sol[:-1]], sol[-1]
+
+class PWLFeatures:
+    """phi(x) = [x(1..n), hinge features]."""
+    def __init__(self, kind, m_per_dim, knots="uniform",
+                 normalize=False, random_state=None): ...
+
+    def fit(self, X):
+        n = X.shape[1]; lo, hi = X.min(0), X.max(0)
+        if self.kind == "additive":        # additive map
+            S = int(self.m_per_dim); f = np.arange(1, S) / S
+            axes, knots = [], []
+            for i in range(n):
+                if self.knots == "uniform":
+                    q = lo[i] + (hi[i] - lo[i]) * f
+                else:                       # quantile knots
+                    q = np.unique(np.quantile(X[:, i], f))
+                    q = q[(q > lo[i]) & (q < hi[i])]
+                axes.append(np.full(q.size, i)); knots.append(q)
+            self.axis_ = np.concatenate(axes)
+            self.knot_ = np.concatenate(knots)
+        else:                               # HH or GHH map
+            rng = np.random.default_rng(self.random_state)
+            D = int(round((self.m_per_dim - 1) * n))
+            k = 1 if self.kind == "hh" else n
+            P, q = np.empty((D, k, n)), np.empty((D, k))
+            for m in range(D):
+                for j in range(k):
+                    P[m, j], q[m, j] = random_hyperplane(rng, lo, hi)
+            if self.normalize:              # ||p||_2 = 1
+                s = np.linalg.norm(P, axis=2)
+                P, q = P / s[..., None], q / s
+            self.P_, self.q_ = P, q
+        return self
+
+    def transform(self, X):
+        if self.kind == "additive":
+            H = np.maximum(0.0, X[:, self.axis_] - self.knot_)
+        else:
+            D, k, n = self.P_.shape
+            Z = X @ self.P_.reshape(D * k, n).T + self.q_.ravel()
+            H = np.maximum(0.0, Z.reshape(len(X), D, k).max(2))
+        return np.hstack([X, H])
+
+class PWLSVM:
+    """PWL-C-SVM (loss="hinge") or PWL-LS-SVM ("squared")."""
+    def fit(self, X, y):
+        self.scaler_ = MinMaxScaler().fit(X)
+        Xs = self.scaler_.transform(X)
+        self.features_ = PWLFeatures(self.kind, self.m_per_dim,
+            self.knots, self.normalize, self.random_state).fit(Xs)
+        Phi = self.features_.transform(Xs)
+        if self.loss == "squared":           # ridge primal
+            t = np.where(y == y.max(), 1.0, -1.0)
+            mu, tb = Phi.mean(0), t.mean()
+            Pc = Phi - mu
+            A = Pc.T @ Pc + np.eye(Phi.shape[1]) / self.C
+            self.coef_ = np.linalg.solve(A, Pc.T @ (t - tb))
+            self.intercept_ = tb - mu @ self.coef_
+        elif self.solver == "libsvm":        # exact dual
+            m = SVC(kernel="linear", C=self.C).fit(Phi, y)
+            self.coef_, self.intercept_ = m.coef_[0], m.intercept_[0]
+        else:                                # LIBLINEAR
+            m = LinearSVC(loss="hinge", C=self.C, dual=True,
+                          intercept_scaling=10.0).fit(Phi, y)
+            self.coef_, self.intercept_ = m.coef_[0], m.intercept_[0]
+        return self
+
+    def decision_function(self, X):
+        Phi = self.features_.transform(self.scaler_.transform(X))
+        return Phi @ self.coef_ + self.intercept_
+\end{lstlisting}
+
+\noindent Ví dụ sử dụng, với cú pháp quen thuộc của scikit-learn:
+
+\begin{lstlisting}
+model = PWLSVM(kind="additive", m_per_dim=10, loss="squared",
+               knots="quantile", C=2.0).fit(X_train, y_train)
+scores = model.decision_function(X_test)
+\end{lstlisting}
+
+\noindent Phần cốt lõi của \texttt{pwlsvm\_monotone.py} (Mục~\ref{sec:monotone}): mỗi biến được tham số hóa bởi các hệ số góc $s_{ij}$ theo~\eqref{eq:slope-param}, và ràng buộc đơn điệu trở thành ràng buộc cận trên các $s_{ij}$.
+
+\begin{lstlisting}
+from scipy.linalg import block_diag
+from scipy.optimize import lsq_linear
+
+def fit_monotone(Xs, t, knots, C, sign):
+    """Xs: inputs in [0, 1]; t: labels +-1; knots[i]: sorted
+    knots of input i; sign[i]: +1, -1 or 0 for each segment."""
+    G, D, lb, ub = [], [], [], []
+    for i, tk in enumerate(knots):
+        x, K = Xs[:, i], len(tk)
+        g = np.empty((len(x), K + 1))      # the G_ij
+        g[:, 0] = np.minimum(x, tk[0]) if K else x
+        for j in range(1, K):
+            g[:, j] = np.clip(x - tk[j-1], 0, tk[j] - tk[j-1])
+        if K:
+            g[:, K] = np.maximum(0, x - tk[K-1])
+        G.append(g)
+        D.append(np.eye(K + 1) - np.eye(K + 1, k=-1))   # s -> (a, c)
+        lb.append(np.where(sign[i] > 0, 0.0, -np.inf))
+        ub.append(np.where(sign[i] < 0, 0.0, np.inf))
+    G, D = np.hstack(G), block_diag(*D)
+    gbar, tbar = G.mean(0), t.mean()           # unpenalized bias
+    A = np.vstack([np.sqrt(C) * (G - gbar), D])
+    b = np.r_[np.sqrt(C) * (t - tbar), np.zeros(len(D))]
+    s = lsq_linear(A, b, bounds=(np.concatenate(lb),
+                   np.concatenate(ub)), method="bvls").x
+    return s, tbar - gbar @ s                  # slopes, bias
+\end{lstlisting}
+
+\section*{B. Kết quả đầy đủ trên mười bộ dữ liệu chuẩn}
+\phantomsection\addcontentsline{toc}{section}{B. Kết quả đầy đủ trên mười bộ dữ liệu chuẩn}
+
+\Cref{tab:appendix-bench} bổ sung cho \cref{tab:bench} độ lệch chuẩn của độ chính xác qua mười lần chia (năm lần với Spambase) và kích thước của từng mô hình. Kích thước được tính là số thực cần lưu để dự đoán, gồm cả hai vectơ giá trị nhỏ nhất và lớn nhất dùng để chuẩn hóa: với SVM hạt nhân và kNN là các điểm được lưu cùng hệ số của chúng; với MLP là mọi trọng số và độ lệch; với PWL-SVM là các nút hoặc tham số của siêu phẳng cùng vectơ $w$ và $w_0$.
+
+\input{chapters/tab_appendix_bench}
+
+\section*{C. Nguồn dữ liệu}
+\phantomsection\addcontentsline{toc}{section}{C. Nguồn dữ liệu}
+
+Mọi bộ dữ liệu đều là bản sao trên kho OpenML~\cite{vanschoren2013} của các bộ dữ liệu trong kho UCI~\cite{kelly_uci}, được tải bằng hàm \texttt{fetch\_openml} của scikit-learn theo mã số ở \cref{tab:sources}. Với Breast, $16$ giá trị thiếu của biến \emph{Bare Nuclei} được thay bằng trung vị; với Ionosphere, cột thứ hai (hằng số) được loại bỏ.
+
+\begin{table}[h]
+\centering
+\caption[Mã số OpenML của các bộ dữ liệu]{Mã số OpenML và nhãn được coi là lớp $+1$.}
+\label{tab:sources}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}l r l@{\qquad}l r l@{}}
+\toprule
+\textbf{Dữ liệu} & \textbf{Mã số} & \textbf{Lớp $+1$} & \textbf{Dữ liệu} & \textbf{Mã số} & \textbf{Lớp $+1$}\\
+\midrule
+Haberman & 43 & \texttt{2} & Magic & 1120 & \texttt{h}\\
+Transfusion & 1464 & \texttt{2} & Parkinsons & 1488 & \texttt{2}\\
+Banknote & 1462 & \texttt{2} & Ionosphere & 59 & \texttt{g}\\
+Pima & 37 & \texttt{tested\_positive} & Spambase & 44 & \texttt{1}\\
+Breast & 15 & \texttt{malignant} & Sonar & 40 & \texttt{Mine}\\
+Tín dụng & 42477 & \texttt{1} (vỡ nợ) & & & \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption[Mười bộ dữ liệu chuẩn]{Mười bộ dữ liệu chuẩn, sắp theo số chiều $n$ (sau khi bỏ các cột hằng). $N$ là số mẫu, cột cuối là số mẫu huấn luyện/kiểm tra trong mỗi lần chia.}
+\label{tab:datasets}
+\small
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}l l r r r r@{}}
+\toprule
+\textbf{Tên} & \textbf{Nội dung} & $N$ & $n$ & \begin{tabular}[b]{@{}c@{}}\textbf{\% lớp}\\ \textbf{$+1$}\end{tabular} & \begin{tabular}[b]{@{}c@{}}\textbf{Huấn luyện/}\\ \textbf{kiểm tra}\end{tabular}\\
+\midrule
+Haberman & sống sót sau phẫu thuật ung thư vú & 306 & 3 & 26{,}5 & 153/153\\
+Transfusion & hiến máu tình nguyện & 748 & 4 & 23{,}8 & 374/374\\
+Banknote & xác thực tiền giấy & 1.372 & 4 & 44{,}5 & 686/686\\
+Pima & bệnh tiểu đường & 768 & 8 & 34{,}9 & 384/384\\
+Breast & ung thư vú Wisconsin (bản gốc) & 699 & 9 & 34{,}5 & 349/350\\
+Magic & kính thiên văn tia gamma & 19.020 & 10 & 35{,}2 & 2.000/17.020\\
+Parkinsons & bệnh Parkinson (giọng nói) & 195 & 22 & 75{,}4 & 97/98\\
+Ionosphere & tín hiệu radar tầng điện li & 351 & 33 & 64{,}1 & 175/176\\
+Spambase & thư rác & 4.601 & 57 & 39{,}4 & 2.300/2.301\\
+Sonar & tín hiệu sonar (đá hay mìn) & 208 & 60 & 53{,}4 & 104/104\\
+\bottomrule
+\end{tabular}
+\end{table}

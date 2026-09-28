@@ -1,0 +1,73 @@
+% ============================================================================
+%  MỞ ĐẦU
+% ============================================================================
+\unchapter{MỞ ĐẦU}
+
+\section*{1. Tính cấp thiết của đề tài}
+\phantomsection\addcontentsline{toc}{section}{1. Tính cấp thiết của đề tài}
+
+Phân loại là một trong những bài toán cơ bản nhất của học máy: từ một tập mẫu đã được gán nhãn, ta cần xây dựng một quy tắc gán nhãn cho những mẫu mới. Trong nhiều ứng dụng hiện nay, độ chính xác không còn là yêu cầu duy nhất. Bộ phân loại thường phải chạy trên các thiết bị có tài nguyên hạn chế như điện thoại, cảm biến, camera thông minh hay hệ thống nhúng thời gian thực, hoặc phải chấm điểm hàng triệu hồ sơ mỗi ngày; khi đó thời gian dự đoán và dung lượng bộ nhớ trở thành những ràng buộc cứng. Ở các lĩnh vực như y tế hay tài chính, người sử dụng còn cần hiểu vì sao mô hình đưa ra một quyết định cụ thể.
+
+Các bộ phân loại tuyến tính đáp ứng tốt hai yêu cầu sau. Mô hình chỉ gồm một vectơ trọng số, việc dự đoán chỉ cần một tích vô hướng, và mỗi hệ số cho biết ảnh hưởng của một biến đầu vào. Tuy nhiên, biên quyết định của chúng là một siêu phẳng, nên chúng không tách được cả những cấu trúc phi tuyến rất đơn giản, chẳng hạn hai lớp đan vào nhau như hai mảnh trăng khuyết hay hai vòng tròn đồng tâm. Ở thái cực ngược lại, máy vectơ hỗ trợ (SVM) với hạt nhân Gauss hay mạng nơ-ron nhiều lớp tạo ra những biên quyết định rất linh hoạt. Cái giá phải trả là SVM hạt nhân phải lưu toàn bộ các vectơ hỗ trợ và tính một hàm mũ cho từng vectơ mỗi khi dự đoán, còn huấn luyện mạng nơ-ron là một bài toán tối ưu không lồi mà kết quả phụ thuộc vào cách khởi tạo.
+
+Bộ phân loại tuyến tính từng phần (piecewise linear, viết tắt là PWL) là một lời giải trung gian tự nhiên. Biên quyết định của nó gồm nhiều mảnh siêu phẳng ghép lại với nhau: trên mỗi vùng của không gian, bộ phân loại vẫn là tuyến tính, nhưng nhìn tổng thể thì biên có thể uốn theo hình dạng của dữ liệu. Vì mọi đường cong liên tục đều xấp xỉ được bằng những đường gấp khúc, bộ phân loại PWL có khả năng phân loại phi tuyến đáng kể, trong khi việc dự đoán chỉ gồm các phép nhân, cộng và so sánh --- rất thuận lợi cho cài đặt trên phần cứng~\cite{kostin2006,webb2010}. Khó khăn nằm ở khâu huấn luyện: nếu tham số hóa trực tiếp các mảnh của biên, bài toán xác định tham số là không lồi, không trơn, và trên thực tế chỉ giải được với số mảnh nhỏ~\cite{bagirov2005}.
+
+Huang, Mehrkanoon và Suykens~\cite{huang2013} đề xuất một cách tiếp cận khác. Dựa trên các kết quả biểu diễn hàm tuyến tính từng phần liên tục của Breiman~\cite{breiman1993} và của Wang và Sun~\cite{wang2005}, các tác giả xây dựng một \emph{ánh xạ đặc trưng tuyến tính từng phần} sao cho mọi biên PWL đều là tập nghiệm của một phương trình \emph{tuyến tính} theo các đặc trưng mới. Nhờ đó, việc xây dựng bộ phân loại PWL được quy về một SVM tuyến tính trong không gian đặc trưng: bài toán tối ưu là lồi, có nghiệm toàn cục, và mô hình thừa hưởng các tính chất tốt của SVM. Mô hình thu được, gọi là PWL-SVM, đóng vai trò cầu nối giữa phân loại tuyến tính và phân loại phi tuyến.
+
+Hướng tiếp cận này càng có ý nghĩa trong bối cảnh hiện nay. Hàm kích hoạt ReLU, nền tảng của phần lớn các mạng nơ-ron sâu, chính là hàm bản lề $\max\{0,t\}$; hơn nữa, một hàm số biểu diễn được bởi mạng ReLU khi và chỉ khi nó là hàm tuyến tính từng phần liên tục~\cite{arora2018}. Vì vậy, hiểu rõ PWL-SVM cũng là hiểu cấu trúc của một lớp mô hình học sâu quan trọng, nhưng trong một khung lý thuyết đơn giản hơn nhiều~\cite{tao2022}. Bên cạnh đó, có những lĩnh vực mà khả năng diễn giải là yêu cầu bắt buộc. Trong chấm điểm tín dụng, tổ chức cho vay cần giải thích được vì sao một hồ sơ bị đánh giá rủi ro cao, và các mô hình dạng “thẻ điểm” tuyến tính vẫn được ưa chuộng chính vì lý do này~\cite{thomas2002}. Một mô hình tuyến tính từng phần cộng tính, trong đó ảnh hưởng của mỗi biến là một đường gấp khúc đọc được, là một lựa chọn trung gian hấp dẫn giữa thẻ điểm tuyến tính và các mô hình hộp đen.
+
+Tuy vậy, bài báo gốc trình bày các chứng minh khá vắn tắt, chỉ đánh giá trên một lần chia dữ liệu, không đo chi phí dự đoán một cách hệ thống và không công bố mã nguồn. Các tài liệu tiếng Việt về SVM mà tác giả tìm hiểu được chủ yếu đề cập đến SVM tuyến tính và SVM hạt nhân~\cite{vuhuutiep2018}; phương pháp PWL-SVM chưa được giới thiệu một cách hệ thống. Vì những lý do trên, tác giả chọn đề tài “\textbf{Thuật toán SVM với ánh xạ đặc trưng tuyến tính từng phần và ứng dụng}”, với ứng dụng là bài toán dự báo vỡ nợ của khách hàng sử dụng thẻ tín dụng.
+
+\section*{2. Tổng quan tình hình nghiên cứu}
+\phantomsection\addcontentsline{toc}{section}{2. Tổng quan tình hình nghiên cứu}
+
+\emph{Các bộ phân loại tuyến tính từng phần.} Ý tưởng tách hai tập điểm bằng nhiều siêu phẳng đã có từ phương pháp nhiều mặt của Mangasarian~\cite{mangasarian1968}, trong đó mỗi siêu phẳng được tìm bằng một bài toán quy hoạch tuyến tính. Các nghiên cứu tiếp theo huấn luyện những bộ phân loại tuyến tính cục bộ rồi ghép lại~\cite{sklansky1980}, hoặc tìm cách chọn số siêu phẳng phù hợp với dữ liệu~\cite{tenmoto1998}. Một hướng khác tham số hóa trực tiếp biên dưới dạng max--min của các hàm affine và tối ưu các tham số đó; phương pháp tách max--min của Bagirov~\cite{bagirov2005} là đại diện tiêu biểu, nhưng bài toán tối ưu thu được không lồi, không trơn và chỉ giải được với vài vùng. Kostin~\cite{kostin2006} đề xuất một bộ phân loại tuyến tính từng phần nhiều lớp đơn giản và nhanh; multiconlitron của Li và cộng sự~\cite{li2011} xây dựng biên PWL dựa trên SVM nhưng chỉ áp dụng được cho dữ liệu tách được. Luận án của Webb~\cite{webb2010} tổng kết hướng nghiên cứu này và nhấn mạnh lợi thế của bộ phân loại PWL trên các hệ thống có tài nguyên hạn chế.
+
+\emph{Biểu diễn hàm tuyến tính từng phần.} Song song với bài toán phân loại, lý thuyết mạch điện và nhận dạng hệ thống đã phát triển các biểu diễn tường minh cho hàm PWL liên tục: biểu diễn chính tắc của Chua và Kang~\cite{chua1977}, mô hình siêu phẳng bản lề của Breiman~\cite{breiman1993}, biểu diễn dàn max--min~\cite{tarela1999,ovchinnikov2002} và mô hình siêu phẳng bản lề tổng quát của Wang và Sun~\cite{wang2005}. Điểm chung quan trọng của các biểu diễn dạng tổng bản lề là chúng tuyến tính theo các hệ số khi các tham số của bản lề đã cố định --- đây chính là tính chất mà PWL-SVM khai thác.
+
+\emph{SVM và các ánh xạ đặc trưng tường minh.} SVM được Cortes và Vapnik~\cite{cortes1995} đề xuất cho dữ liệu không tách được, dựa trên thủ thuật hạt nhân~\cite{boser1992} và lý thuyết học thống kê~\cite{vapnik1998}; LS-SVM~\cite{suykens1999ls,suykens2002} thay bài toán quy hoạch toàn phương bằng một hệ phương trình tuyến tính. Để giảm chi phí của SVM hạt nhân trên dữ liệu lớn, nhiều công trình thay hạt nhân bằng một ánh xạ đặc trưng tường minh hữu hạn chiều rồi giải SVM tuyến tính bằng các bộ giải hiệu quả như LIBLINEAR~\cite{fan2008}; tiêu biểu là đặc trưng ngẫu nhiên~\cite{rahimi2007} và máy học cực trị~\cite{huanggb2006}. PWL-SVM~\cite{huang2013} thuộc về họ này, với các đặc trưng là những hàm bản lề. Huang và cộng sự cũng chỉ ra rằng các bộ phân loại láng giềng gần nhất, AdaBoost với bộ phân loại yếu tuyến tính~\cite{freund1995} và SVM hạt nhân giao~\cite{maji2008} đều biểu diễn được bằng ánh xạ đặc trưng tuyến tính từng phần.
+
+\emph{Mạng nơ-ron tuyến tính từng phần.} Mạng nơ-ron với hàm kích hoạt ReLU hay maxout~\cite{goodfellow2013} biểu diễn đúng lớp hàm PWL liên tục~\cite{arora2018}. Tổng quan của Tao và cộng sự~\cite{tao2022} trình bày mạng nơ-ron tuyến tính từng phần như một cầu nối giữa các mô hình PWL cổ điển và học sâu. Từ góc nhìn này, PWL-SVM là một mạng hai lớp với lớp ẩn cố định, được huấn luyện bằng nguyên lý cực đại lề~\cite{suykens1999mlp}.
+
+\emph{Chấm điểm tín dụng.} Các nghiên cứu so sánh quy mô lớn của Baesens và cộng sự~\cite{baesens2003} và Lessmann và cộng sự~\cite{lessmann2015} cho thấy SVM và LS-SVM nằm trong nhóm phương pháp tốt nhất cho bài toán chấm điểm tín dụng, còn các tổ hợp mô hình dạng cây thường cho độ chính xác cao nhất. Dù vậy, trong thực tế ngành, thẻ điểm xây dựng bằng hồi quy logistic trên các biến đã được rời rạc hóa vẫn là công cụ chuẩn, chính vì tính minh bạch của nó~\cite{thomas2002}. Dữ liệu vỡ nợ thẻ tín dụng của Yeh và Lien~\cite{yeh2009} là một trong những bộ dữ liệu công khai được dùng nhiều nhất cho bài toán này.
+
+\emph{Tình hình nghiên cứu trong nước.} SVM đã được giới thiệu rộng rãi trong các tài liệu tiếng Việt, chẳng hạn~\cite{vuhuutiep2018}. Đỗ Thanh Nghị và Poulet~\cite{do2017} nghiên cứu SVM cục bộ cho dữ liệu lớn: dữ liệu được chia thành các cụm và một SVM được huấn luyện trên từng cụm, cũng là một cách tạo ra bộ phân loại ghép từ nhiều mô hình cục bộ. Theo tìm hiểu của tác giả, phương pháp PWL-SVM chưa được trình bày hay đánh giá trong các công trình trong nước.
+
+\emph{Khoảng trống.} Từ tổng quan trên, đề án hướng tới ba khoảng trống: chưa có một trình bày hệ thống bằng tiếng Việt về PWL-SVM với các chứng minh đầy đủ; kết quả thực nghiệm của bài báo gốc dựa trên một lần chia dữ liệu và chưa có phép đo chi phí dự đoán một cách hệ thống; và phương pháp chưa được kiểm nghiệm trên một bài toán ứng dụng mà ở đó cả độ chính xác, tốc độ lẫn khả năng diễn giải đều quan trọng.
+
+\section*{3. Mục tiêu và câu hỏi nghiên cứu}
+\phantomsection\addcontentsline{toc}{section}{3. Mục tiêu và câu hỏi nghiên cứu}
+
+Đề án không nhằm đề xuất một thuật toán mới. Mục đích là hiểu sâu, cài đặt đúng và đánh giá trung thực một phương pháp đã được công bố, rồi đưa nó vào một bài toán cụ thể. Cụ thể, đề án đặt ra bốn mục tiêu:
+\begin{enumerate}[label=(\roman*)]
+\item hệ thống hóa cơ sở toán học của PWL-SVM, từ tập lồi và đối ngẫu Lagrange đến các định lý biểu diễn hàm tuyến tính từng phần, và trình bày đầy đủ các chứng minh mà bài báo gốc viết vắn tắt;
+\item cài đặt PWL-SVM bằng Python, tương thích với thư viện scikit-learn, và kiểm chứng tính đúng đắn của cài đặt bằng các phép thử số;
+\item đánh giá PWL-SVM trên dữ liệu tổng hợp và dữ liệu chuẩn, với nhiều lần chia dữ liệu, xét đồng thời độ chính xác, thời gian dự đoán và dung lượng mô hình;
+\item áp dụng PWL-SVM vào bài toán dự báo vỡ nợ thẻ tín dụng và phân tích khả năng diễn giải cũng như khả năng triển khai của mô hình.
+\end{enumerate}
+Tương ứng, đề án tìm câu trả lời cho bốn câu hỏi. (CH1) PWL-SVM chính xác đến đâu so với SVM tuyến tính và SVM hạt nhân Gauss? (CH2) Đổi lại, nó tiết kiệm được bao nhiêu thời gian dự đoán và bộ nhớ? (CH3) Loại ánh xạ đặc trưng, số đặc trưng $M$ và quy tắc chọn tham số ảnh hưởng thế nào đến kết quả? (CH4) Trong bài toán dự báo vỡ nợ thẻ tín dụng, PWL-SVM có đạt được độ chính xác cạnh tranh, dự đoán nhanh và cho một mô hình diễn giải được hay không?
+
+\section*{4. Đối tượng và phạm vi nghiên cứu}
+\phantomsection\addcontentsline{toc}{section}{4. Đối tượng và phạm vi nghiên cứu}
+
+\emph{Đối tượng nghiên cứu} là các mô hình PWL-C-SVM và PWL-LS-SVM với ba dạng ánh xạ đặc trưng (cộng tính, siêu phẳng bản lề và siêu phẳng bản lề tổng quát), cùng cơ sở toán học của chúng. \emph{Phạm vi nghiên cứu} được giới hạn như sau. Về lý thuyết, đề án tập trung vào bài toán phân loại nhị phân; các tham số của siêu phẳng bản lề được chọn theo quy tắc cố định chứ không được học từ dữ liệu. Về thực nghiệm, đề án dùng dữ liệu dạng bảng công khai từ kho UCI qua OpenML, với số chiều từ $2$ đến $60$; dạng siêu phẳng bản lề tổng quát chỉ được thử trên dữ liệu hai chiều vì chi phí tăng nhanh theo số chiều; mạng nơ-ron và tổ hợp cây tăng cường chỉ đóng vai trò đối chứng. Về ứng dụng, đề án dùng dữ liệu công khai của Yeh và Lien~\cite{yeh2009}, không dùng dữ liệu nội bộ của tổ chức tín dụng nào.
+
+\section*{5. Phương pháp nghiên cứu}
+\phantomsection\addcontentsline{toc}{section}{5. Phương pháp nghiên cứu}
+
+Đề án kết hợp nghiên cứu lý thuyết và thực nghiệm. Về lý thuyết, tác giả tổng hợp tài liệu, tự chứng minh lại các kết quả chính và bổ sung những bước mà bài báo gốc bỏ qua. Về cài đặt, mô hình được lập trình bằng Python trên nền NumPy và scikit-learn~\cite{pedregosa2011}, và các đẳng thức lý thuyết (chẳng hạn sự trùng nhau giữa nghiệm gốc và nghiệm đối ngẫu) được kiểm tra bằng số. Về thực nghiệm, mỗi cấu hình được lặp lại trên nhiều lần chia dữ liệu ngẫu nhiên với hạt giống cố định, tham số được chọn bằng kiểm định chéo chỉ trên phần huấn luyện, kết quả được báo cáo dưới dạng trung bình $\pm$ độ lệch chuẩn, và các so sánh chính được kiểm định bằng phép kiểm định dấu hạng Wilcoxon theo cặp~\cite{demsar2006}. Cuối cùng, một nghiên cứu tình huống trên dữ liệu tín dụng đánh giá đồng thời độ chính xác, chi phí và khả năng diễn giải.
+
+\section*{6. Đóng góp của đề án}
+\phantomsection\addcontentsline{toc}{section}{6. Đóng góp của đề án}
+
+\begin{enumerate}[label=(\arabic*)]
+\item Trình bày có hệ thống bằng tiếng Việt cơ sở toán học của PWL-SVM. Ngoài các chứng minh được viết lại đầy đủ, đề án đưa ra một chứng minh ngắn hơn cho định lý biểu diễn tập tuyến tính từng phần (\cref{thm:pwl-set}), chỉ ra rằng hàm xây dựng trong chứng minh đó luôn không âm (\cref{rem:nonneg}), chứng minh chặt các quan hệ giữa PWL-SVM với SVM hạt nhân giao, AdaBoost và phương pháp láng giềng gần nhất (Mục~\ref{sec:relations}), và nêu một giới hạn cơ bản của mô hình cộng tính (\cref{prop:xor}).
+\item Một cài đặt mã nguồn mở, tái lập được toàn bộ hình và bảng của đề án, kèm các phép kiểm chứng số.
+\item Một đánh giá thực nghiệm lặp lại trên mười bộ dữ liệu chuẩn với chín phương pháp, có kiểm định thống kê và phép đo chi phí dự đoán, qua đó làm rõ phần nào trong các nhận định của bài báo gốc được xác nhận.
+\item Một nghiên cứu ứng dụng cho bài toán dự báo vỡ nợ thẻ tín dụng, trong đó biến thể đặt nút theo phân vị (\cref{rem:quantile}) cho một mô hình tuyến tính từng phần cộng tính có thể đọc được như một thẻ điểm, được so sánh với thẻ điểm logistic truyền thống, và một cách đưa ràng buộc đơn điệu vào mô hình mà bài toán huấn luyện vẫn là lồi (Mục~\ref{sec:monotone}).
+\end{enumerate}
+
+\section*{7. Cấu trúc của đề án}
+\phantomsection\addcontentsline{toc}{section}{7. Cấu trúc của đề án}
+
+Ngoài Mở đầu, Kết luận, Tài liệu tham khảo và Phụ lục, đề án gồm ba chương. Chương~\ref{chap:1} trình bày cơ sở toán học: tập lồi, siêu phẳng phân tách, tối ưu lồi, đối ngẫu Lagrange và hàm tuyến tính từng phần. Chương~\ref{chap:2} trình bày SVM và xây dựng PWL-SVM, gồm các định lý biểu diễn, hai mô hình PWL-C-SVM và PWL-LS-SVM, ba dạng ánh xạ đặc trưng và quan hệ với các bộ phân loại tuyến tính từng phần khác. Chương~\ref{chap:3} trình bày cài đặt, các thực nghiệm trên dữ liệu tổng hợp và dữ liệu chuẩn, phân tích chi phí và nghiên cứu ứng dụng trên dữ liệu tín dụng.

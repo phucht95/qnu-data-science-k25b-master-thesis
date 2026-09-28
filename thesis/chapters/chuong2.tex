@@ -1,0 +1,653 @@
+% ============================================================================
+%  CHƯƠNG 2. SVM VÀ SVM VỚI ÁNH XẠ ĐẶC TRƯNG TUYẾN TÍNH TỪNG PHẦN
+% ============================================================================
+\chapter{SVM và SVM với ánh xạ đặc trưng tuyến tính từng phần}\label{chap:2}
+
+Đây là chương chính của đề án. \Cref{sec:hardmargin,sec:softmargin,sec:kernel} trình bày SVM theo trình tự lề cứng, lề mềm, ánh xạ đặc trưng và LS-SVM, dựa trên các công cụ tối ưu của Chương~\ref{chap:1}. \Cref{sec:pwlset,sec:pwlsvm,sec:maps} trình bày phương pháp của Huang, Mehrkanoon và Suykens~\cite{huang2013}: từ khái niệm tập tuyến tính từng phần, qua ánh xạ đặc trưng tuyến tính từng phần và các mô hình PWL-SVM, đến các dạng ánh xạ cụ thể và cách chọn tham số. \Cref{sec:relations} chỉ ra rằng một số bộ phân loại tuyến tính từng phần quen thuộc là trường hợp riêng của PWL-SVM.
+
+Trong suốt chương, dữ liệu huấn luyện là $\{(x_k,y_k)\}_{k=1}^{N}$ với $x_k\in\R^n$ và nhãn $y_k\in\{-1,+1\}$; $x(i)$ là thành phần thứ $i$ của vectơ $x$. Một bộ phân loại là một hàm $f:\R^n\to\R$ cùng quy tắc gán nhãn $\hat y(x)=\sgn f(x)$; tập $\{x:\ f(x)=0\}$ là \emph{biên quyết định}. Ta luôn giả thiết cả hai lớp đều có mặt trong dữ liệu.
+
+% ----------------------------------------------------------------------------
+\section{Bài toán phân loại nhị phân và SVM lề cứng}\label{sec:hardmargin}
+
+Bộ phân loại tuyến tính có dạng $f(x)=w^\T x+w_0$ với $w\in\R^n$ và hệ số chặn $w_0\in\R$; biên quyết định của nó là siêu phẳng $H=\{x:\ w^\T x+w_0=0\}$. Giả sử trước hết dữ liệu tách tuyến tính được. Khi đó thường có vô số siêu phẳng phân loại đúng toàn bộ dữ liệu huấn luyện (\cref{fig:hardmargin}a), và câu hỏi đặt ra là nên chọn siêu phẳng nào. Ý tưởng của SVM~\cite{cortes1995,vapnik1998} là chọn siêu phẳng cách xa dữ liệu nhất: một biên nằm sát một điểm huấn luyện sẽ dễ phân loại sai những điểm mới ở gần điểm đó, còn một biên có khoảng trống rộng hai bên thì chịu được các nhiễu loạn nhỏ của dữ liệu.
+
+\paragraph{Lề và bài toán tối ưu.} Theo \cref{ex:distance}, khoảng cách từ $x_k$ đến $H$ là $|w^\T x_k+w_0|/\|w\|$. Nếu $H$ phân loại đúng $x_k$ thì $y_k(w^\T x_k+w_0)>0$, nên khoảng cách này bằng $y_k(w^\T x_k+w_0)/\|w\|$. \emph{Lề} của siêu phẳng là khoảng cách từ điểm gần nhất đến nó:
+\[
+\rho(w,w_0)=\min_{1\le k\le N}\frac{y_k(w^\T x_k+w_0)}{\|w\|}.
+\]
+SVM tìm $(w,w_0)$ cực đại hóa $\rho$. Hai cặp $(w,w_0)$ và $(cw,cw_0)$ với $c>0$ xác định cùng một siêu phẳng và cùng một lề, nên ta được phép chuẩn hóa sao cho $\min_ky_k(w^\T x_k+w_0)=1$; khi đó $\rho=1/\|w\|$. Cực đại hóa $1/\|w\|$ tương đương với cực tiểu hóa $\|w\|$, và do đó tương đương với cực tiểu hóa $\frac12\|w\|^2$, một hàm khả vi và lồi chặt theo $w$ (hệ số $\frac12$ chỉ để gradient gọn hơn). Cuối cùng, điều kiện chuẩn hóa có thể nới thành $y_k(w^\T x_k+w_0)\ge1$ với mọi $k$: nếu ở một nghiệm của bài toán nới mà giá trị nhỏ nhất $\mu=\min_ky_k(w^\T x_k+w_0)$ lớn hơn $1$ thì $(w,w_0)/\mu$ vẫn chấp nhận được và có chuẩn nhỏ hơn, vô lý. Ta được \emph{bài toán SVM lề cứng}
+\begin{equation}\label{eq:hard-primal}
+\min_{w,\,w_0}\ \frac12\|w\|^2\quad\text{với điều kiện}\quad y_k\bigl(w^\T x_k+w_0\bigr)\ge1,\quad k=1,\dots,N .
+\end{equation}
+Đây là một quy hoạch toàn phương với miền ràng buộc là một đa diện trong $\R^{n+1}$ (Mục~\ref{sec:convex}).
+
+\begin{proposition}\label{prop:hard-exist}
+Bài toán~\eqref{eq:hard-primal} có điểm chấp nhận được khi và chỉ khi $\conv\{x_k:\ y_k=1\}\cap\conv\{x_k:\ y_k=-1\}=\emptyset$. Khi đó bài toán có nghiệm duy nhất $(w^\ast,w_0^\ast)$, và tồn tại ít nhất một điểm mỗi lớp mà tại đó ràng buộc chặt.
+\end{proposition}
+
+\begin{proof}
+Khẳng định đầu là \cref{cor:separable}. Giả sử bài toán chấp nhận được. Lấy $k$ với $y_k=1$ và $l$ với $y_l=-1$; các ràng buộc cho $1-w^\T x_k\le w_0\le-1-w^\T x_l$, nên với $w$ bị chặn thì $w_0$ bị chặn. Do đó ta có thể hạn chế bài toán trên một tập con compact khác rỗng của miền ràng buộc, và nghiệm tồn tại. Nếu tại một nghiệm không có ràng buộc chặt nào thuộc lớp $+1$, thì giảm $w_0$ một lượng nhỏ làm mọi ràng buộc của lớp $-1$ trở thành không chặt; khi đó mọi ràng buộc đều không chặt, và ta có thể thu nhỏ $(w,w_0)$ như trong lập luận chuẩn hóa ở trên, mâu thuẫn. Lập luận tương tự cho lớp $-1$. Nếu hai nghiệm có $w$ khác nhau thì trung điểm của chúng chấp nhận được và, do $\frac12\|w\|^2$ lồi chặt, cho giá trị mục tiêu nhỏ hơn giá trị tối ưu, vô lý; vậy mọi nghiệm có cùng $w^\ast$. Nếu $(w^\ast,w_0)$ và $(w^\ast,w_0')$ đều là nghiệm thì trung điểm $(w^\ast,\frac{w_0+w_0'}2)$ cũng là nghiệm, nên có một điểm $x_k$ thuộc lớp $+1$ với $w^{\ast\T}x_k+\frac{w_0+w_0'}2=1$; vì $w^{\ast\T}x_k+w_0\ge1$ và $w^{\ast\T}x_k+w_0'\ge1$, cả hai đều phải bằng $1$, tức $w_0=w_0'$.
+\end{proof}
+
+\paragraph{Bài toán đối ngẫu.} Với nhân tử $\alpha_k\ge0$ cho ràng buộc thứ $k$, hàm Lagrange của~\eqref{eq:hard-primal} là
+\[
+L(w,w_0,\alpha)=\frac12\|w\|^2-\sum_{k=1}^{N}\alpha_k\bigl[y_k(w^\T x_k+w_0)-1\bigr].
+\]
+Hàm này lồi theo $(w,w_0)$; cho các đạo hàm riêng bằng $0$ ta được
+\begin{equation}\label{eq:hard-stationarity}
+w=\sum_{k=1}^{N}\alpha_ky_kx_k,\qquad \sum_{k=1}^{N}\alpha_ky_k=0 .
+\end{equation}
+Nếu $\sum_k\alpha_ky_k\neq0$ thì $L$ không bị chặn dưới theo $w_0$, nên $g(\alpha)=-\infty$. Thế~\eqref{eq:hard-stationarity} vào $L$ ta được bài toán đối ngẫu
+\begin{equation}\label{eq:hard-dual}
+\begin{aligned}
+\max_{\alpha}\quad & \sum_{k=1}^{N}\alpha_k-\frac12\sum_{k=1}^{N}\sum_{l=1}^{N}\alpha_k\alpha_ly_ky_l\,x_k^\T x_l\\
+\text{với điều kiện}\quad & \alpha_k\ge0,\ \ k=1,\dots,N;\qquad \sum_{k=1}^{N}\alpha_ky_k=0 .
+\end{aligned}
+\end{equation}
+Vì các ràng buộc của~\eqref{eq:hard-primal} là affine, theo \cref{thm:slater} có đối ngẫu mạnh, và theo \cref{thm:kkt} nghiệm của hai bài toán liên hệ với nhau qua điều kiện KKT. Điều kiện bù
+\[
+\alpha_k\bigl[y_k(w^{\ast\T}x_k+w_0^\ast)-1\bigr]=0,\qquad k=1,\dots,N,
+\]
+cho thấy $\alpha_k>0$ chỉ khi $x_k$ nằm đúng trên một trong hai siêu phẳng $w^{\ast\T}x+w_0^\ast=\pm1$. Những điểm này được gọi là các \emph{vectơ hỗ trợ} (\cref{fig:hardmargin}b). Theo~\eqref{eq:hard-stationarity}, $w^\ast$ là tổ hợp tuyến tính của riêng các vectơ hỗ trợ: các điểm khác có thể bị xóa khỏi dữ liệu mà nghiệm không thay đổi. Hệ số chặn được tính từ một vectơ hỗ trợ bất kỳ $x_s$ bởi $w_0^\ast=y_s-w^{\ast\T}x_s$; trong tính toán số, người ta lấy trung bình theo mọi vectơ hỗ trợ để giảm sai số. Bộ phân loại thu được là
+\begin{equation}\label{eq:hard-classifier}
+\hat y(x)=\sgn\Bigl(\sum_{k=1}^{N}\alpha_ky_k\,x_k^\T x+w_0^\ast\Bigr).
+\end{equation}
+Cả~\eqref{eq:hard-dual} và~\eqref{eq:hard-classifier} chỉ phụ thuộc vào dữ liệu qua các tích vô hướng $x_k^\T x_l$ và $x_k^\T x$; tính chất này là cơ sở của thủ thuật hạt nhân ở Mục~\ref{sec:kernel}.
+
+\paragraph{Diễn giải hình học của bài toán đối ngẫu.} Bài toán đối ngẫu có một ý nghĩa hình học rõ ràng, gắn với \cref{thm:separation}.
+
+\begin{proposition}[\cite{bennett2000}]\label{prop:hull-dual}
+Giả sử dữ liệu tách tuyến tính được, và gọi $A=\{x_k:\ y_k=1\}$, $B=\{x_k:\ y_k=-1\}$. Bài toán~\eqref{eq:hard-dual} tương đương với bài toán tìm hai điểm gần nhau nhất của hai bao lồi,
+\[
+\min\ \|u-v\|\quad\text{với}\quad u\in\conv A,\ v\in\conv B .
+\]
+Nếu $(u^\ast,v^\ast)$ là nghiệm thì $w^\ast=2(u^\ast-v^\ast)/\|u^\ast-v^\ast\|^2$, và lề cực đại bằng $\frac12\|u^\ast-v^\ast\|$.
+\end{proposition}
+
+\begin{proof}
+Với $\alpha$ chấp nhận được và khác $0$, đặt $s=\sum_{y_k=1}\alpha_k$; ràng buộc $\sum_k\alpha_ky_k=0$ cho $\sum_{y_k=-1}\alpha_k=s$, nên $\sum_k\alpha_k=2s$. Các điểm $u=\sum_{y_k=1}(\alpha_k/s)x_k$ và $v=\sum_{y_k=-1}(\alpha_k/s)x_k$ là tổ hợp lồi, tức $u\in\conv A$, $v\in\conv B$, và $\sum_k\alpha_ky_kx_k=s(u-v)$. Ngược lại, mọi bộ $(s,u,v)$ với $s>0$, $u\in\conv A$, $v\in\conv B$ đều ứng với một $\alpha$ chấp nhận được. Hàm mục tiêu đối ngẫu trở thành $2s-\frac12s^2\|u-v\|^2$; với $u,v$ cố định (và $u\neq v$ vì hai bao lồi rời nhau theo \cref{cor:separable}), nó đạt cực đại tại $s=2/\|u-v\|^2$ với giá trị $2/\|u-v\|^2$. Vì vậy cực đại hóa hàm mục tiêu đối ngẫu tương đương với cực tiểu hóa $\|u-v\|$. Tại nghiệm, $w^\ast=s(u^\ast-v^\ast)=2(u^\ast-v^\ast)/\|u^\ast-v^\ast\|^2$, nên lề bằng $1/\|w^\ast\|=\frac12\|u^\ast-v^\ast\|$.
+\end{proof}
+
+Như vậy siêu phẳng tối ưu vuông góc với đoạn nối hai điểm gần nhau nhất của hai bao lồi. Nó còn đi qua trung điểm của đoạn đó: tại nghiệm, $u^\ast$ là tổ hợp lồi của các vectơ hỗ trợ lớp $+1$, là những điểm thỏa $w^{\ast\T}x+w_0^\ast=1$, nên $w^{\ast\T}u^\ast+w_0^\ast=1$; tương tự $w^{\ast\T}v^\ast+w_0^\ast=-1$. Đó chính là siêu phẳng dựng trong chứng minh \cref{thm:separation} (\cref{fig:hardmargin}c).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_hard_margin.pdf}
+\caption[SVM lề cứng]{SVM lề cứng. (a) Dữ liệu tách được thường có nhiều siêu phẳng phân loại đúng. (b) Siêu phẳng lề cực đại (nét liền), hai siêu phẳng $w^\T x+w_0=\pm1$ (nét đứt) và các vectơ hỗ trợ (khoanh tròn); khoảng cách giữa hai nét đứt là $2/\|w\|$. (c) Cách nhìn đối ngẫu: siêu phẳng tối ưu là trung trực của đoạn nối hai điểm gần nhau nhất của hai bao lồi.}
+\label{fig:hardmargin}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\section{SVM lề mềm và hàm mất mát bản lề}\label{sec:softmargin}
+
+Khi hai bao lồi giao nhau, bài toán~\eqref{eq:hard-primal} vô nghiệm (\cref{prop:hard-exist}). Dữ liệu thực tế hầu như luôn ở trong trường hợp này, do nhiễu hoặc do bản chất chồng lấn của hai lớp. Cortes và Vapnik~\cite{cortes1995} nới các ràng buộc bằng các \emph{biến bù} $e_k\ge0$ và phạt tổng các biến bù trong hàm mục tiêu:
+\begin{equation}\label{eq:soft-primal}
+\begin{aligned}
+\min_{w,\,w_0,\,e}\quad & \frac12\|w\|^2+\gamma\sum_{k=1}^{N}e_k\\
+\text{với điều kiện}\quad & y_k\bigl(w^\T x_k+w_0\bigr)\ge1-e_k,\ \ e_k\ge0,\qquad k=1,\dots,N,
+\end{aligned}
+\end{equation}
+trong đó $\gamma>0$ là hằng số chính quy hóa, thường được gọi là $C$ trong các thư viện phần mềm; mô hình này được gọi là \emph{C-SVM}. Điểm $x_k$ với $e_k=0$ thỏa mãn ràng buộc lề như trước; điểm với $0<e_k<1$ nằm trong dải lề nhưng vẫn được phân loại đúng; điểm với $e_k>1$ bị phân loại sai (\cref{fig:softmargin}a).
+
+\begin{proposition}\label{prop:hinge-form}
+Bài toán~\eqref{eq:soft-primal} tương đương với bài toán không ràng buộc
+\begin{equation}\label{eq:hinge-risk}
+\min_{w,\,w_0}\ \frac12\|w\|^2+\gamma\sum_{k=1}^{N}\max\bigl\{0,\ 1-y_k(w^\T x_k+w_0)\bigr\}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Với $(w,w_0)$ cố định, giá trị nhỏ nhất của $e_k$ thỏa hai ràng buộc $e_k\ge1-y_k(w^\T x_k+w_0)$ và $e_k\ge0$ là $\max\{0,\,1-y_k(w^\T x_k+w_0)\}$; vì hàm mục tiêu tăng theo $e_k$, tại nghiệm $e_k$ nhận đúng giá trị đó.
+\end{proof}
+
+Hàm $\ell(t)=\max\{0,1-t\}=(1-t)_+$ được gọi là \emph{hàm mất mát bản lề}; nó chính là hàm bản lề của Mục~\ref{sec:pwl-functions}, dịch và lật. Dạng~\eqref{eq:hinge-risk} cho thấy C-SVM là một bài toán \emph{cực tiểu hóa rủi ro thực nghiệm có chính quy hóa}: số hạng thứ hai đo sai số trên dữ liệu, số hạng thứ nhất khống chế độ phức tạp của mô hình qua độ rộng của lề. Vì $(1-t)_+\ge\mathbf 1\{t\le0\}$, tổng các mất mát bản lề là một cận trên của số điểm huấn luyện bị phân loại sai; khác với mất mát $0$--$1$, nó là hàm lồi, nên bài toán~\eqref{eq:hinge-risk} là bài toán lồi (\cref{prop:convex-fn-ops}). \Cref{fig:softmargin}b so sánh ba hàm mất mát thường gặp.
+
+\paragraph{Bài toán đối ngẫu.} Với các nhân tử $\alpha_k\ge0$ và $\mu_k\ge0$ cho hai nhóm ràng buộc, hàm Lagrange của~\eqref{eq:soft-primal} là
+\[
+L=\frac12\|w\|^2+\gamma\sum_ke_k-\sum_k\alpha_k\bigl[y_k(w^\T x_k+w_0)-1+e_k\bigr]-\sum_k\mu_ke_k .
+\]
+Điều kiện dừng theo $w$ và $w_0$ vẫn là~\eqref{eq:hard-stationarity}; điều kiện dừng theo $e_k$ cho $\gamma-\alpha_k-\mu_k=0$. Vì $\mu_k\ge0$, ta có $\alpha_k\le\gamma$, và các số hạng chứa $e_k$ triệt tiêu. Bài toán đối ngẫu của C-SVM vì vậy có cùng hàm mục tiêu với~\eqref{eq:hard-dual}, chỉ khác ở ràng buộc hộp:
+\begin{equation}\label{eq:soft-dual}
+\begin{aligned}
+\max_{\alpha}\quad & \sum_{k=1}^{N}\alpha_k-\frac12\sum_{k=1}^{N}\sum_{l=1}^{N}\alpha_k\alpha_ly_ky_l\,x_k^\T x_l\\
+\text{với điều kiện}\quad & 0\le\alpha_k\le\gamma,\ \ k=1,\dots,N;\qquad \sum_{k=1}^{N}\alpha_ky_k=0 .
+\end{aligned}
+\end{equation}
+Bài toán gốc~\eqref{eq:soft-primal} luôn chấp nhận được (chọn $w=0$, $w_0=0$, $e_k=1$) và có ràng buộc affine, nên có đối ngẫu mạnh.
+
+\paragraph{Ba loại điểm dữ liệu.} Hai điều kiện bù $\alpha_k\bigl[y_kf(x_k)-1+e_k\bigr]=0$ và $(\gamma-\alpha_k)e_k=0$, với $f(x)=w^{\ast\T}x+w_0^\ast$, chia dữ liệu thành ba loại:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item $\alpha_k=0$: khi đó $\mu_k=\gamma>0$ nên $e_k=0$ và $y_kf(x_k)\ge1$. Điểm được phân loại đúng và nằm ngoài (hoặc trên) dải lề; nó không ảnh hưởng đến nghiệm.
+\item $0<\alpha_k<\gamma$: khi đó $e_k=0$ và $y_kf(x_k)=1$. Điểm nằm đúng trên lề; các điểm loại này được dùng để tính $w_0^\ast=y_k-w^{\ast\T}x_k$.
+\item $\alpha_k=\gamma$: khi đó $y_kf(x_k)=1-e_k\le1$. Điểm nằm trong dải lề hoặc bị phân loại sai.
+\end{enumerate}
+Các điểm loại (ii) và (iii) là các vectơ hỗ trợ. Hằng số $\gamma$ cân bằng giữa độ rộng của lề và số điểm vi phạm lề: $\gamma$ lớn phạt nặng các vi phạm và cho lề hẹp; khi dữ liệu tách được và $\gamma\to\infty$, ta trở lại SVM lề cứng. $\gamma$ nhỏ cho lề rộng và nhiều vectơ hỗ trợ hơn. Trong thực hành, $\gamma$ được chọn bằng kiểm định chéo (Chương~\ref{chap:3}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_soft_margin.pdf}
+\caption[SVM lề mềm và các hàm mất mát]{(a) SVM lề mềm trên dữ liệu chồng lấn: các điểm vi phạm lề được nối bằng nét chấm tới siêu phẳng lề của lớp mình, độ dài nét chấm bằng $e_k/\|w\|$; khoanh tròn là các vectơ hỗ trợ nằm đúng trên lề. (b) Mất mát $0$--$1$, mất mát bản lề của C-SVM và mất mát bình phương của LS-SVM, theo $t=y\,f(x)$.}
+\label{fig:softmargin}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\section{Ánh xạ đặc trưng, hạt nhân và LS-SVM}\label{sec:kernel}
+
+\subsection{Ánh xạ đặc trưng và thủ thuật hạt nhân}
+
+Một bộ phân loại tuyến tính không thể tách hai vòng tròn đồng tâm (\cref{fig:lifting}a). Tuy nhiên, nếu thêm vào mỗi điểm tọa độ thứ ba $z=x(1)^2+x(2)^2$, tức là dùng ánh xạ $\varphi(x)=\bigl(x(1),x(2),x(1)^2+x(2)^2\bigr)$, thì trong $\R^3$ hai lớp được tách bởi một mặt phẳng $z=\text{hằng số}$ (\cref{fig:lifting}b). Tổng quát, cho một \emph{ánh xạ đặc trưng} $\varphi$ từ $\R^n$ vào một không gian đặc trưng $\mathcal F$ (hữu hạn hoặc vô hạn chiều, có tích vô hướng), ta áp dụng SVM tuyến tính cho dữ liệu $\{(\varphi(x_k),y_k)\}$. Bộ phân loại thu được, $\sgn\bigl(w^\T\varphi(x)+w_0\bigr)$, tuyến tính trong $\mathcal F$ nhưng phi tuyến trong $\R^n$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_lifting.pdf}
+\caption[Ánh xạ đặc trưng biến dữ liệu không tách được thành tách được]{(a) Hai vòng tròn đồng tâm không tách tuyến tính được trong $\R^2$. (b) Sau ánh xạ $\varphi(x)=\bigl(x(1),x(2),z\bigr)$ với $z=x(1)^2+x(2)^2$, một mặt phẳng tách được hai lớp.}
+\label{fig:lifting}
+\end{figure}
+
+Như đã nhận xét ở Mục~\ref{sec:hardmargin}, bài toán đối ngẫu~\eqref{eq:soft-dual} và bộ phân loại chỉ phụ thuộc vào dữ liệu qua các tích vô hướng. Vì vậy, sau khi thay $x_k$ bởi $\varphi(x_k)$, ta chỉ cần biết hàm
+\begin{equation}\label{eq:kernel-def}
+\kappa(x,z)=\varphi(x)^\T\varphi(z),
+\end{equation}
+gọi là \emph{hạt nhân}, mà không cần tính $\varphi$ một cách tường minh. Bài toán đối ngẫu có dạng~\eqref{eq:soft-dual} với $x_k^\T x_l$ thay bởi $\kappa(x_k,x_l)$, và bộ phân loại là
+\begin{equation}\label{eq:kernel-classifier}
+\hat y(x)=\sgn\Bigl(\sum_{k=1}^{N}\alpha_ky_k\,\kappa(x,x_k)+w_0\Bigr).
+\end{equation}
+Đây là \emph{thủ thuật hạt nhân}~\cite{boser1992,scholkopf2002}. Một hàm đối xứng $\kappa$ là hạt nhân, tức là viết được dưới dạng~\eqref{eq:kernel-def} với một ánh xạ $\varphi$ nào đó, khi và chỉ khi với mọi tập hữu hạn điểm $x_1,\dots,x_N$, ma trận $\bigl[\kappa(x_k,x_l)\bigr]_{k,l}$ là nửa xác định dương (điều kiện Mercer, xem~\cite[Chương~2]{scholkopf2002}). Ba hạt nhân thông dụng nhất là hạt nhân tuyến tính $\kappa(x,z)=x^\T z$, hạt nhân đa thức $\kappa(x,z)=(x^\T z+c)^d$ và hạt nhân Gauss (còn gọi là hạt nhân RBF)
+\[
+\kappa(x,z)=\exp\bigl(-\|x-z\|^2/\sigma^2\bigr),\qquad\sigma>0 .
+\]
+
+Với hạt nhân Gauss, không gian đặc trưng là vô hạn chiều, nên vectơ $w=\sum_k\alpha_ky_k\varphi(x_k)$ không thể được lưu một cách tường minh. Bộ phân loại~\eqref{eq:kernel-classifier} vì vậy phải lưu toàn bộ $N_s$ vectơ hỗ trợ, và mỗi lần dự đoán cần tính $N_s$ khoảng cách và $N_s$ hàm mũ. Với dữ liệu lớn, $N_s$ thường tỉ lệ với $N$, nên chi phí dự đoán và bộ nhớ tăng theo kích thước dữ liệu huấn luyện. Ngược lại, khi $\varphi$ tường minh và hữu hạn chiều, ta có thể tính $w$ một lần sau khi huấn luyện và dự đoán bằng một tích vô hướng trong $\R^M$. Nhận xét này là điểm xuất phát của PWL-SVM (Mục~\ref{sec:pwlsvm}).
+
+\subsection{SVM bình phương tối thiểu}
+
+Suykens và Vandewalle~\cite{suykens1999ls} đề xuất một biến thể của SVM trong đó ràng buộc bất đẳng thức được thay bằng đẳng thức và mất mát tuyến tính của biến bù được thay bằng mất mát bình phương:
+\begin{equation}\label{eq:ls-primal}
+\begin{aligned}
+\min_{w,\,w_0,\,e}\quad & \frac12\|w\|^2+\frac{\gamma}{2}\sum_{k=1}^{N}e_k^2\\
+\text{với điều kiện}\quad & y_k\bigl(w^\T\varphi(x_k)+w_0\bigr)=1-e_k,\qquad k=1,\dots,N .
+\end{aligned}
+\end{equation}
+Mô hình này được gọi là \emph{LS-SVM}. Hàm Lagrange là
+\[
+L(w,w_0,e,\alpha)=\frac12\|w\|^2+\frac\gamma2\sum_ke_k^2-\sum_k\alpha_k\bigl[y_k\bigl(w^\T\varphi(x_k)+w_0\bigr)-1+e_k\bigr],
+\]
+với các nhân tử $\alpha_k\in\R$ không bị ràng buộc dấu (vì các ràng buộc là đẳng thức). Bài toán lồi với ràng buộc affine nên điều kiện KKT là cần và đủ (\cref{thm:kkt}):
+\[
+\begin{gathered}
+w=\sum_k\alpha_ky_k\varphi(x_k),\qquad \sum_k\alpha_ky_k=0,\\
+\alpha_k=\gamma e_k,\qquad y_k\bigl(w^\T\varphi(x_k)+w_0\bigr)=1-e_k,\qquad k=1,\dots,N.
+\end{gathered}
+\]
+Thế đẳng thức thứ nhất và thứ ba vào đẳng thức cuối, ta được
+\[
+\sum_{l=1}^{N}y_ky_l\,\kappa(x_k,x_l)\,\alpha_l+y_kw_0+\frac{\alpha_k}{\gamma}=1,\qquad k=1,\dots,N;
+\]
+cùng với đẳng thức thứ hai, đó là hệ tuyến tính $(N+1)$ ẩn
+\begin{equation}\label{eq:ls-dual}
+\begin{bmatrix}0 & y^\T\\ y & \Theta+\gamma^{-1}I\end{bmatrix}
+\begin{bmatrix}w_0\\ \alpha\end{bmatrix}
+=\begin{bmatrix}0\\ \mathbf 1\end{bmatrix},\qquad \Theta_{kl}=y_ky_l\,\kappa(x_k,x_l),
+\end{equation}
+với $y=(y_1,\dots,y_N)^\T$ và $\mathbf 1\in\R^N$ là vectơ gồm toàn số $1$. Ma trận $\Theta$ nửa xác định dương, nên $H=\Theta+\gamma^{-1}I$ xác định dương; phần bù Schur $-y^\T H^{-1}y$ của khối $H$ âm, do đó ma trận của hệ~\eqref{eq:ls-dual} khả nghịch và hệ có nghiệm duy nhất. Bộ phân loại có dạng~\eqref{eq:kernel-classifier}.
+
+So với C-SVM, LS-SVM đổi một bài toán quy hoạch toàn phương lấy một hệ phương trình tuyến tính, dễ giải và dễ cài đặt hơn. Đổi lại, vì $\alpha_k=\gamma e_k$ và $e_k$ nói chung khác $0$, gần như mọi điểm huấn luyện đều có nhân tử khác $0$: nghiệm không còn thưa, và với hạt nhân Gauss, bộ phân loại phải lưu toàn bộ $N$ điểm huấn luyện. \Cref{tab:csvm-lssvm} tóm tắt sự khác biệt giữa hai mô hình.
+
+\begin{table}[t]
+\centering
+\caption[So sánh C-SVM và LS-SVM]{So sánh C-SVM và LS-SVM với một hạt nhân tổng quát.}
+\label{tab:csvm-lssvm}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l X X@{}}
+\toprule
+& \textbf{C-SVM} & \textbf{LS-SVM}\\
+\midrule
+Ràng buộc & bất đẳng thức, $e_k\ge0$ & đẳng thức\\
+Mất mát & bản lề $(1-t)_+$ & bình phương $(1-t)^2$\\
+Bài toán đối ngẫu & quy hoạch toàn phương với ràng buộc hộp & hệ tuyến tính $(N+1)$ ẩn\\
+Tính thưa của nghiệm & chỉ các vectơ hỗ trợ có $\alpha_k\neq0$ & nói chung mọi $\alpha_k\neq0$\\
+Công cụ giải điển hình & SMO~\cite{platt1999}, LIBSVM~\cite{chang2011} & phân tích Cholesky, gradient liên hợp\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\section{Tập tuyến tính từng phần và phương trình tuyến tính từng phần}\label{sec:pwlset}
+
+Trong bài toán phân loại hai lớp, miền dữ liệu được chia làm hai phần bởi một biên. Với bộ phân loại tuyến tính, biên là một siêu phẳng, tức là tập nghiệm của một phương trình tuyến tính $f(x)=0$, và điểm $x$ được xếp vào lớp $\sgn f(x)$. Theo Huang và cộng sự~\cite{huang2013}, ta gọi \emph{khả năng phân loại} của một họ bộ phân loại là mức độ phong phú về kiểu dáng của các biên mà họ đó tạo ra được. Theo nghĩa này, khả năng phân loại của bộ phân loại tuyến tính là rất hạn chế. Mở rộng đơn giản nhất của một siêu phẳng là một \emph{tập tuyến tính từng phần}: trên mỗi vùng của miền, tập đó trùng với một siêu phẳng.
+
+Xét dữ liệu hai mặt trăng ở \cref{fig:moons}a. Hai lớp đan vào nhau nên không một đường thẳng nào tách được chúng, nhưng một đường gấp khúc gồm ba đoạn thẳng thì tách gần như hoàn hảo. Ta có thể mô tả đường gấp khúc này như sau. Chia hình vuông đơn vị thành ba dải ngang
+\[
+\Omega_k=\Bigl\{x\in[0,1]^2:\ \frac{k-1}{3}\le x(2)\le\frac{k}{3}\Bigr\},\qquad k=1,2,3;
+\]
+trên mỗi dải, biên là một đoạn của đường thẳng $c_k^\T x+d_k=0$ (\cref{fig:moons}b). Do đó
+\[
+\B=\bigcup_{k=1}^{3}\bigl\{x\in\Omega_k:\ c_k^\T x+d_k=0\bigr\}.
+\]
+Cách tìm các hệ số $c_k,d_k$ trong hình sẽ được trình bày ở Mục~\ref{sec:maps}; ở đây ta chỉ quan tâm đến cấu trúc của biên.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_moons_pwl.pdf}
+\caption[Biên tuyến tính từng phần cho dữ liệu hai mặt trăng]{Một biên tuyến tính từng phần cho dữ liệu hai mặt trăng ($N=600$). (a) Biên gồm ba đoạn thẳng, tách đúng $599/600$ điểm. (b) Trên mỗi dải $\Omega_k$, biên trùng với một đoạn của đường thẳng $c_k^\T x+d_k=0$ (các phần kéo dài được vẽ bằng nét chấm). Dữ liệu và biên được tính bằng mã của đề án; ý tưởng theo Hình~1 của~\cite{huang2013}.}
+\label{fig:moons}
+\end{figure}
+
+\begin{definition}[Tập tuyến tính từng phần~\cite{huang2013}]\label{def:pwlset}
+Cho $\Omega\subseteq\R^n$. Tập $\B\subseteq\Omega$ được gọi là một \emph{tập tuyến tính từng phần} (tập PWL) nếu
+\begin{enumerate}[label=(\roman*)]
+\item có một phân hoạch đa diện $\{\Omega_1,\dots,\Omega_K\}$ của $\Omega$ (\cref{def:partition}), và
+\item với mỗi $k$, tồn tại $c_k\in\R^n$ và $d_k\in\R$, không đồng thời bằng $0$, sao cho
+\[
+\B\cap\Omega_k=\bigl\{x\in\Omega_k:\ c_k^\T x+d_k=0\bigr\}.
+\]
+\end{enumerate}
+\end{definition}
+
+\begin{remark}\label{rem:pwlset}
+Điều kiện “$x\in\Omega_k$” trong (ii) là cần thiết: thiếu nó, vế phải là cả một siêu phẳng, thường không nằm trong $\Omega_k$. Nếu $c_k=0$ thì $d_k\neq0$ và $\B\cap\Omega_k=\emptyset$, tức là biên không đi qua vùng $\Omega_k$; điều này cho phép các vùng “trống”. Điều kiện $(c_k,d_k)\neq(0,0)$ loại trừ trường hợp $\B$ chứa trọn một vùng, vì khi đó $\B$ không còn là một biên theo nghĩa thông thường.
+\end{remark}
+
+Định lý sau cho thấy mọi tập PWL đều là tập nghiệm của một phương trình tuyến tính từng phần, tương tự như siêu phẳng là tập nghiệm của một phương trình tuyến tính.
+
+\begin{theorem}[\cite{huang2013}, Định lý~1]\label{thm:pwl-set}
+Mọi tập tuyến tính từng phần $\B$ đều là tập nghiệm của một phương trình tuyến tính từng phần: tồn tại hàm PWL $f:\R^n\to\R$ sao cho $\B=\{x\in\R^n:\ f(x)=0\}$.
+\end{theorem}
+
+\begin{proof}
+Dùng các ký hiệu của \cref{def:pwlset} và viết mỗi đa diện dưới dạng
+\[
+\Omega_k=\bigl\{x:\ a_{ki}^\T x+b_{ki}\le 0,\ i=1,\dots,I_k\bigr\},\qquad k=1,\dots,K .
+\]
+Với mỗi $k$, đặt
+\begin{equation}\label{eq:gk}
+g_k(x)=\max\Bigl\{\,|c_k^\T x+d_k|,\ \max_{1\le i\le I_k}\bigl(a_{ki}^\T x+b_{ki}\bigr)\Bigr\},
+\qquad
+f(x)=\min_{1\le k\le K} g_k(x).
+\end{equation}
+Theo \cref{prop:closure}, các hàm $g_k$ và $f$ là hàm PWL trên $\R^n$. Ta chứng minh hai khẳng định.
+
+\emph{(a) $g_k(x)\ge0$ với mọi $x$, và $g_k(x)=0$ khi và chỉ khi $x\in\B\cap\Omega_k$.} Thật vậy, $g_k(x)\ge|c_k^\T x+d_k|\ge0$. Hơn nữa, $g_k(x)=0$ khi và chỉ khi $|c_k^\T x+d_k|\le0$ và $a_{ki}^\T x+b_{ki}\le0$ với mọi $i$, tức là khi và chỉ khi $c_k^\T x+d_k=0$ và $x\in\Omega_k$. Theo \cref{def:pwlset}(ii), điều đó tương đương với $x\in\B\cap\Omega_k$.
+
+\emph{(b) $\{f=0\}=\B$.} Vì mọi $g_k$ đều không âm nên $f(x)=0$ khi và chỉ khi $g_k(x)=0$ với ít nhất một $k$. Kết hợp với (a) và việc $\B\subseteq\Omega=\bigcup_k\Omega_k$, ta được
+\[
+\{x:\ f(x)=0\}=\bigcup_{k=1}^{K}\bigl(\B\cap\Omega_k\bigr)=\B\cap\Omega=\B. \qedhere
+\]
+\end{proof}
+
+\begin{remark}\label{rem:proof}
+Chứng minh trong~\cite{huang2013} xét riêng hai chiều bao hàm và dùng thêm lập luận về phần trong của các vùng $\Omega_k$ để chỉ ra $g_k(x_0)\ge0$ khi $k\neq k_0$. Nhận xét đơn giản $g_k\ge|c_k^\T x+d_k|\ge0$ làm lập luận đó trở nên không cần thiết. Cũng từ chứng minh trên ta thấy điều kiện phần trong rời nhau của phân hoạch không được dùng đến; chỉ cần các vùng phủ $\Omega$.
+\end{remark}
+
+\begin{remark}\label{rem:nonneg}
+Hàm $f$ trong~\eqref{eq:gk} không âm trên toàn $\R^n$, nên nó \emph{mô tả} biên $\B$ nhưng không phân biệt được hai phía của biên: $\sgn f$ không phải là một bộ phân loại. Để phân loại, ta cần một hàm đổi dấu khi đi qua $\B$. Nếu $\Omega\setminus\B$ gồm hai phần ứng với hai lớp và mỗi điểm của $\B$ đều là điểm biên chung của hai phần đó, thì đổi dấu $f$ trên phần ứng với lớp $-1$ ta được một hàm PWL liên tục, dương ở lớp $+1$, âm ở lớp $-1$ và có cùng tập không điểm $\B$. Trong PWL-SVM, hàm đổi dấu này không được xây dựng tường minh mà được tìm trực tiếp bằng một bài toán tối ưu; các định lý biểu diễn chỉ bảo đảm rằng họ hàm được tìm kiếm là đủ giàu.
+\end{remark}
+
+Vì $|t|=\max\{t,-t\}$ và $\max\{t_1,\max\{t_2,t_3\}\}=\max\{t_1,t_2,t_3\}$, hàm $f$ trong~\eqref{eq:gk} viết được dưới dạng min--max
+\begin{equation}\label{eq:minmax}
+f(x)=\min_{1\le k\le K}\ \max\bigl\{c_k^\T x+d_k,\ -c_k^\T x-d_k,\ a_{k1}^\T x+b_{k1},\dots,a_{kI_k}^\T x+b_{kI_k}\bigr\}.
+\end{equation}
+Từ dạng min--max, người ta có thể xây dựng bộ phân loại PWL bằng cách coi các hệ số $c_k,d_k,a_{ki},b_{ki}$ là ẩn và cực tiểu hóa một hàm mất mát trên dữ liệu. Tuy nhiên, bài toán thu được là không lồi và không trơn; trong thực nghiệm của phương pháp tách max--min, số vùng chỉ được xét đến $K\le5$~\cite{bagirov2005}. Để xác định tham số một cách hiệu quả và có khả năng tổng quát hóa tốt, Huang và cộng sự chuyển sang một dạng biểu diễn khác, tuyến tính theo tham số, dựa trên \cref{thm:wangsun}.
+
+\begin{theorem}[\cite{huang2013}, Định lý~2]\label{thm:ghh-set}
+Với mọi tập tuyến tính từng phần $\B\subseteq\R^n$, tồn tại số nguyên dương $D$, các hệ số $w_1,\dots,w_D\in\R$ và các tham số $p_{mi}\in\R^n$, $q_{mi}\in\R$ ($m=1,\dots,D$; $i=0,\dots,n$) sao cho
+\begin{equation}\label{eq:ghh-set}
+\B=\Bigl\{x:\ \sum_{m=1}^{D}w_m\,g_m(x)=0\Bigr\},\qquad
+g_m(x)=\max_{0\le i\le n}\bigl\{p_{mi}^\T x+q_{mi}\bigr\}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Theo \cref{thm:pwl-set}, $\B=\{f=0\}$ với một hàm PWL $f$. Theo \cref{thm:wangsun}, $f=\sum_{m=1}^{D}\sigma_m\max\{\ell_{m,0},\dots,\ell_{m,n}\}$ với $\sigma_m\in\{-1,1\}$. Đặt $w_m=\sigma_m$ và gọi $p_{mi},q_{mi}$ là các hệ số của $\ell_{m,i}$, ta được~\eqref{eq:ghh-set}.
+\end{proof}
+
+Trong~\cite{huang2013}, định lý được suy ra qua một bước trung gian: biến dạng min--max~\eqref{eq:minmax} thành dạng max--min nhờ đẳng thức
+$\min_k\max_i t_{ik}=-\max_k\min_i\,(-t_{ik})$,
+rồi áp dụng kết quả của Wang và Sun cho dạng max--min. Hai cách lập luận là tương đương, vì theo \cref{thm:lattice}, mọi hàm PWL đều có dạng max--min.
+
+% ----------------------------------------------------------------------------
+\section{Ánh xạ đặc trưng tuyến tính từng phần và PWL-SVM}\label{sec:pwlsvm}
+
+\subsection{Từ định lý biểu diễn đến ánh xạ đặc trưng}
+
+\Cref{thm:ghh-set} biểu diễn biên PWL như tập không điểm của một \emph{tổ hợp tuyến tính} các hàm cơ sở $g_m$. Đó chính là dạng mà SVM có thể xử lý: nếu coi các $g_m$ là đặc trưng, thì việc tìm các hệ số $w_m$ là một bài toán phân loại tuyến tính. Trước khi làm điều đó, ta tách phần affine ra khỏi mỗi hàm cơ sở. Với mọi số thực $a_0,\dots,a_n$ ta có $\max_i a_i=a_0+\max\{0,\,a_1-a_0,\dots,a_n-a_0\}$. Áp dụng cho $g_m$, với $\tilde p_{mi}=p_{mi}-p_{m0}$ và $\tilde q_{mi}=q_{mi}-q_{m0}$:
+\[
+g_m(x)=\bigl(p_{m0}^\T x+q_{m0}\bigr)+\max\bigl\{0,\ \tilde p_{m1}^\T x+\tilde q_{m1},\ \dots,\ \tilde p_{mn}^\T x+\tilde q_{mn}\bigr\}.
+\]
+Lấy tổng theo $m$, phần affine gộp lại thành $\bigl(\sum_m w_m p_{m0}\bigr)^\T x+\sum_m w_m q_{m0}$, tức là một tổ hợp tuyến tính của các tọa độ $x(1),\dots,x(n)$ cộng với một hằng số. Hằng số này sẽ được hấp thụ vào hệ số chặn của SVM. Vì vậy, thay vì giữ nguyên các $g_m$, ta dùng ánh xạ đặc trưng $\varphi:\R^n\to\R^M$ với $M=n+D$ thành phần
+\begin{equation}\label{eq:feature-map}
+\varphi_m(x)=
+\begin{cases}
+x(m), & m=1,\dots,n,\\[2pt]
+\max\bigl\{0,\,p_{m1}^\T x+q_{m1},\dots,p_{mn}^\T x+q_{mn}\bigr\}, & m=n+1,\dots,M,
+\end{cases}
+\end{equation}
+trong đó, để đơn giản ký hiệu, ta viết lại $\tilde p,\tilde q$ thành $p,q$. Đây là ánh xạ (4) của bài báo gốc. Từ \cref{thm:ghh-set} ta suy ra ngay:
+
+\begin{corollary}\label{cor:boundary}
+Với mọi tập tuyến tính từng phần $\B\subseteq\R^n$, tồn tại số đặc trưng $M$, các tham số $p_{mi},q_{mi}$ của ánh xạ~\eqref{eq:feature-map} và các hệ số $w\in\R^M$, $w_0\in\R$ sao cho $\B=\{x:\ w^\T\varphi(x)+w_0=0\}$.
+\end{corollary}
+
+Ý nghĩa của hệ quả nằm ở chỗ: \emph{khi các tham số phi tuyến $p_{mi},q_{mi}$ đã được cố định, hàm quyết định $w^\T\varphi(x)+w_0$ là tuyến tính theo các ẩn $(w,w_0)$}. Toàn bộ tính phi tuyến nằm trong $\varphi$, còn việc học là tuyến tính. Vì vậy ta có thể dùng nguyên vẹn SVM tuyến tính trong không gian đặc trưng $\R^M$, với mọi ưu điểm của nó: bài toán lồi, nghiệm toàn cục, lý thuyết lề và các bộ giải hiệu quả.
+
+\subsection{PWL-C-SVM}
+
+Thay $x_k$ bởi $\varphi(x_k)$ trong bài toán SVM lề mềm (Mục~\ref{sec:softmargin}), ta được bài toán gốc của PWL-C-SVM:
+\begin{equation}\label{eq:pwl-c-svm}
+\begin{aligned}
+\min_{w,\,w_0,\,e}\quad & \frac12\sum_{m=1}^{M}w_m^2+\gamma\sum_{k=1}^{N}e_k\\
+\text{với điều kiện}\quad & y_k\Bigl(w_0+\sum_{m=1}^{M}w_m\varphi_m(x_k)\Bigr)\ge 1-e_k,\ \ e_k\ge0,\ \ k=1,\dots,N.
+\end{aligned}
+\end{equation}
+Để tránh nhầm với các tham số của ánh xạ, hệ số chặn được ký hiệu là $w_0$. Lặp lại đúng các bước dẫn bài toán đối ngẫu ở Mục~\ref{sec:softmargin}, ta được
+\begin{equation}\label{eq:pwl-c-dual}
+\begin{aligned}
+\max_{\alpha}\quad & \sum_{k=1}^{N}\alpha_k-\frac12\sum_{k=1}^{N}\sum_{l=1}^{N}y_ky_l\,\kappa(x_k,x_l)\,\alpha_k\alpha_l\\
+\text{với điều kiện}\quad & \sum_{k=1}^{N}\alpha_ky_k=0,\qquad 0\le\alpha_k\le\gamma,\quad k=1,\dots,N,
+\end{aligned}
+\end{equation}
+với hạt nhân hữu hạn hạng
+\begin{equation}\label{eq:kernel}
+\kappa(x,z)=\varphi(x)^\T\varphi(z)=\sum_{m=1}^{M}\varphi_m(x)\varphi_m(z).
+\end{equation}
+Từ nghiệm đối ngẫu, ta khôi phục $w=\sum_{k}\alpha_ky_k\varphi(x_k)$ và dùng bộ phân loại dạng gốc
+\begin{equation}\label{eq:classifier}
+\hat y(x)=\sgn\bigl(w^\T\varphi(x)+w_0\bigr).
+\end{equation}
+
+Bài toán gốc~\eqref{eq:pwl-c-svm} có $M+N+1$ biến, bài toán đối ngẫu~\eqref{eq:pwl-c-dual} có $N$ biến; vì vậy Huang và cộng sự đề nghị giải bài toán đối ngẫu rồi khôi phục $w$. Điểm khác biệt căn bản so với SVM hạt nhân Gauss nằm ở khâu \emph{dự đoán}: vì $\varphi$ là tường minh và hữu hạn chiều, bộ phân loại~\eqref{eq:classifier} chỉ cần lưu $w$, $w_0$ và các tham số của ánh xạ, không cần lưu các vectơ hỗ trợ. \Cref{tab:cost} so sánh chi phí lưu trữ và chi phí tính toán khi dự đoán một điểm mới.
+
+\begin{table}[t]
+\centering
+\caption[Chi phí lưu trữ và chi phí dự đoán của các mô hình]{Số thực cần lưu và số phép tính khi dự đoán một điểm, không kể $2n$ số của phép chuẩn hóa dữ liệu mà mọi mô hình đều cần; $D=M-n$ là số đặc trưng bản lề (với dạng cộng tính, $D$ cũng là số nút), $N_s$ là số vectơ hỗ trợ.}
+\label{tab:cost}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l c X@{}}
+\toprule
+\textbf{Mô hình} & \textbf{Số thực cần lưu} & \textbf{Phép tính khi dự đoán}\\
+\midrule
+SVM tuyến tính & $n+1$ & $n$ phép nhân--cộng\\
+PWL-SVM cộng tính & $M+D+1$ & $D$ phép trừ và $D$ phép $\max$; $M$ phép nhân--cộng\\
+PWL-SVM HH & $D(n+1)+M+1$ & $Dn$ phép nhân--cộng và $D$ phép $\max$; $M$ phép nhân--cộng\\
+PWL-SVM GHH & $Dn(n+1)+M+1$ & $Dn^2$ phép nhân--cộng và $Dn$ phép $\max$; $M$ phép nhân--cộng\\
+SVM hạt nhân Gauss & $N_s(n+1)+1$ & $N_s$ khoảng cách ($\approx 2N_sn$ phép tính) và $N_s$ hàm mũ\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Với dữ liệu Magic ($n=10$), bài báo gốc cho biết SVM hạt nhân Gauss cần $1013$ vectơ hỗ trợ, tức khoảng $1013\times11$ số thực, trong khi PWL-C-SVM với ánh xạ cộng tính chỉ cần khoảng $100$ số, với độ chính xác gần như nhau ($0{,}839$ so với $0{,}837$)~\cite{huang2013}. Chương~\ref{chap:3} sẽ đo lại các con số này bằng thực nghiệm của đề án.
+
+\subsection{PWL-LS-SVM}
+
+Áp dụng LS-SVM (Mục~\ref{sec:kernel}) cho ánh xạ~\eqref{eq:feature-map}, ta được PWL-LS-SVM:
+\begin{equation}\label{eq:pwl-ls-svm}
+\begin{aligned}
+\min_{w,\,w_0,\,e}\quad & \frac12\sum_{m=1}^{M}w_m^2+\frac{\gamma}{2}\sum_{k=1}^{N}e_k^2\\
+\text{với điều kiện}\quad & y_k\Bigl(w_0+\sum_{m=1}^{M}w_m\varphi_m(x_k)\Bigr)=1-e_k,\qquad k=1,\dots,N.
+\end{aligned}
+\end{equation}
+Theo Mục~\ref{sec:kernel}, bài toán đối ngẫu của~\eqref{eq:pwl-ls-svm} là hệ tuyến tính $(N+1)$ ẩn
+\begin{equation}\label{eq:pwl-ls-dual}
+\begin{bmatrix}0 & y^\T\\ y & \Theta+\gamma^{-1}I\end{bmatrix}
+\begin{bmatrix}w_0\\ \alpha\end{bmatrix}
+=\begin{bmatrix}0\\ \mathbf 1\end{bmatrix},\qquad \Theta_{kl}=y_ky_l\,\kappa(x_k,x_l),
+\end{equation}
+với hạt nhân hữu hạn hạng~\eqref{eq:kernel}. Sau khi khử $e$, bài toán gốc có $M+1$ ẩn, còn bài toán đối ngẫu có $N+1$ ẩn; vì vậy dạng gốc có lợi hơn khi $M\le N$~\cite{huang2013}. Mệnh đề sau cho thấy dạng gốc thực chất là một bài toán quen thuộc.
+
+\begin{proposition}\label{prop:ridge}
+Với $y_k\in\{-1,1\}$, bài toán~\eqref{eq:pwl-ls-svm} tương đương với bài toán hồi quy ridge trên nhãn $\pm1$ với hệ số chặn không bị phạt:
+\begin{equation}\label{eq:ridge}
+\min_{w,\,w_0}\ \ \frac12\|w\|^2+\frac{\gamma}{2}\sum_{k=1}^{N}\bigl(y_k-w^\T\varphi(x_k)-w_0\bigr)^2 .
+\end{equation}
+Bài toán này có nghiệm duy nhất
+\[
+w=\bigl(\Phi_c^\T\Phi_c+\gamma^{-1}I\bigr)^{-1}\Phi_c^\T y_c,\qquad w_0=\bar y-\bar\varphi^\T w,
+\]
+trong đó $\bar\varphi=\frac1N\sum_k\varphi(x_k)$, $\bar y=\frac1N\sum_k y_k$, $\Phi_c$ là ma trận cỡ $N\times M$ có hàng thứ $k$ là $(\varphi(x_k)-\bar\varphi)^\T$ và $y_c$ là vectơ có thành phần thứ $k$ là $y_k-\bar y$.
+\end{proposition}
+
+\begin{proof}
+Khử $e_k=1-y_k(w^\T\varphi(x_k)+w_0)$ từ ràng buộc. Vì $y_k^2=1$,
+\[
+e_k^2=y_k^2\,e_k^2=\bigl(y_k-y_k^2(w^\T\varphi(x_k)+w_0)\bigr)^2=\bigl(y_k-w^\T\varphi(x_k)-w_0\bigr)^2,
+\]
+nên~\eqref{eq:pwl-ls-svm} trở thành~\eqref{eq:ridge}. Gọi $J(w,w_0)$ là hàm mục tiêu của~\eqref{eq:ridge}. Với mọi $(u,v)\neq(0,0)$, dạng toàn phương của ma trận Hessian bằng $\|u\|^2+\gamma\sum_k(u^\T\varphi(x_k)+v)^2>0$, nên $J$ lồi chặt và có không quá một điểm cực tiểu. Cho đạo hàm theo $w_0$ bằng $0$ ta được $w_0=\bar y-\bar\varphi^\T w$; khi đó $y_k-w^\T\varphi(x_k)-w_0=(y_k-\bar y)-w^\T(\varphi(x_k)-\bar\varphi)$ và $J$ trở thành $\frac12\|w\|^2+\frac\gamma2\|y_c-\Phi_cw\|^2$. Cho gradient theo $w$ bằng $0$ ta được $(\Phi_c^\T\Phi_c+\gamma^{-1}I)w=\Phi_c^\T y_c$; ma trận vế trái xác định dương nên khả nghịch.
+\end{proof}
+
+Như vậy, khi $M\ll N$, PWL-LS-SVM chỉ cần lập ma trận $\Phi_c^\T\Phi_c$ cỡ $M\times M$ (chi phí $O(NM^2)$) và giải một hệ $M$ ẩn (chi phí $O(M^3)$), rẻ hơn nhiều so với hệ đối ngẫu cỡ $(N+1)\times(N+1)$. Mục~\ref{sec:impl} kiểm tra bằng số rằng hai cách giải cho cùng một nghiệm.
+
+\subsection{Một cách nhìn khác: PWL-SVM như một mạng nơ-ron hai lớp}
+
+Khi mỗi đặc trưng trong~\eqref{eq:feature-map} chỉ dùng một siêu phẳng, ta có $\varphi_m(x)=\max\{0,\,p_m^\T x+q_m\}$, tức là $\varphi_m(x)=\mathrm{ReLU}(p_m^\T x+q_m)$: đó chính là đầu ra của một nơ-ron ReLU; với dạng tổng quát, $\varphi_m$ là một nơ-ron maxout có một mảnh bằng $0$~\cite{goodfellow2013}. Do đó bộ phân loại~\eqref{eq:classifier} là một mạng nơ-ron hai lớp (\cref{fig:network}): lớp ẩn gồm $D$ nơ-ron với trọng số \emph{cố định}, cộng thêm các kết nối tắt từ đầu vào đến đầu ra; chỉ lớp ra được huấn luyện, và được huấn luyện bằng nguyên lý cực đại lề. Quan hệ giữa ánh xạ đặc trưng của SVM và lớp ẩn của mạng nơ-ron đã được Suykens và Vandewalle chỉ ra từ sớm~\cite{suykens1999mlp}. Cách nhìn này đặt PWL-SVM vào cùng họ với các mô hình có lớp ẩn ngẫu nhiên như máy học cực trị~\cite{huanggb2006} và đặc trưng ngẫu nhiên~\cite{rahimi2007}, và làm rõ sự đánh đổi so với mạng ReLU huấn luyện bằng lan truyền ngược: cố định lớp ẩn giúp bài toán trở nên lồi, nhưng mỗi nơ-ron đóng góp ít hơn vì không được điều chỉnh theo dữ liệu.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2.2mm]},
+  inp/.style={circle,draw=inktwo,fill=white,minimum size=9.5mm,inner sep=0pt,font=\small},
+  hid/.style={circle,draw=inktwo,fill=planback,minimum size=9.5mm,inner sep=0pt,font=\small},
+  lab/.style={font=\footnotesize,align=center}]
+  % inputs
+  \node[inp] (x1) at (0,3.0) {$x(1)$};
+  \node[inp] (x2) at (0,1.85) {$x(2)$};
+  \node at (0,1.0) {$\vdots$};
+  \node[inp] (xn) at (0,0) {$x(n)$};
+  % hidden layer
+  \node[hid] (h1) at (4,3.15) {$\varphi_{n+1}$};
+  \node[hid] (h2) at (4,2.0) {$\varphi_{n+2}$};
+  \node at (4,1.12) {$\vdots$};
+  \node[hid] (hD) at (4,0.0) {$\varphi_{M}$};
+  % output
+  \node[circle,draw=inktwo,minimum size=11mm] (s) at (8.2,1.5) {$\Sigma$};
+  \node[draw=inktwo,rounded corners=2pt,minimum height=8mm,font=\small] (sg) at (10.4,1.5) {$\sgn(\cdot)$};
+  \node[font=\small] (y) at (12.2,1.5) {$\hat y(x)$};
+  % input -> hidden (fixed weights)
+  \foreach \a in {x1,x2,xn}{\foreach \b in {h1,h2,hD}{\draw[inktwo!45,line width=0.4pt] (\a) -- (\b);}}
+  % hidden -> output (learned weights)
+  \foreach \b in {h1,h2,hD}{\draw[->,line width=0.9pt] (\b) -- (s);}
+  % skip connections routed around the hidden layer
+  \draw[->,dashed,line width=0.8pt] (x1.north east) .. controls (1.6,4.55) and (6.4,4.55) .. (s.north west);
+  \draw[->,dashed,line width=0.8pt] (xn.south east) .. controls (1.6,-1.45) and (6.4,-1.45) .. (s.south west);
+  \draw[->] (s) -- (sg);
+  \draw[->] (sg) -- (y);
+  \node[font=\small] at (8.2,0.55) {$+\,w_0$};
+  % hidden-layer frame and labels
+  \begin{scope}[on background layer]
+    \node[draw=planframe,dashed,rounded corners=3pt,fit=(h1)(hD),inner xsep=6pt,inner ysep=5pt] (box) {};
+  \end{scope}
+  \node[lab] at (4,4.72) {kết nối tắt: $x(1),\dots,x(n)$ đi thẳng tới đầu ra};
+  \node[lab,text=planframe] at (4,-1.62) {lớp ẩn cố định: $p_m,q_m$ sinh ngẫu nhiên};
+  \node[lab] at (6.15,-0.1) {trọng số $w$\\học bằng SVM};
+\end{tikzpicture}
+\caption[PWL-SVM nhìn như một mạng nơ-ron hai lớp]{PWL-SVM với ánh xạ siêu phẳng bản lề nhìn như một mạng nơ-ron hai lớp: lớp ẩn gồm các nơ-ron ReLU với tham số cố định; các tọa độ $x(1),\dots,x(n)$ đi thẳng đến đầu ra (nét đứt); chỉ các trọng số của lớp ra được học, bằng bài toán lồi~\eqref{eq:pwl-c-svm} hoặc~\eqref{eq:pwl-ls-svm}.}
+\label{fig:network}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\section{Các dạng ánh xạ đặc trưng và cách chọn tham số}\label{sec:maps}
+
+Khả năng phân loại của PWL-SVM phụ thuộc vào dạng cụ thể của các đặc trưng $\varphi_m$ và vào cách chọn tham số của chúng. Mục này trình bày ba dạng ánh xạ được đề xuất trong~\cite{huang2013}, từ đơn giản đến tổng quát, và các quy tắc sinh tham số.
+
+\subsection{Ba dạng ánh xạ}
+
+\paragraph{Dạng cộng tính.} Đơn giản nhất là cho mỗi đặc trưng chỉ phụ thuộc vào một tọa độ:
+\begin{equation}\label{eq:additive}
+\varphi_m(x)=\max\{0,\ x(i_m)-q_m\},\qquad i_m\in\{1,\dots,n\},\ q_m\in\R .
+\end{equation}
+Gộp các số hạng theo từng tọa độ, hàm quyết định có dạng $w_0+\sum_{i=1}^{n}h_i\bigl(x(i)\bigr)$, trong đó theo \cref{prop:1d}, mỗi $h_i$ là một hàm PWL một biến với các điểm gãy là những $q_m$ ứng với $i_m=i$. Đây là một \emph{mô hình cộng tính} theo nghĩa của thống kê học~\cite{hastie1990}: ảnh hưởng của từng biến có thể vẽ ra và đọc được, một ưu điểm lớn về khả năng diễn giải. Đổi lại, biên các vùng tuyến tính là các siêu phẳng song song với trục tọa độ (\cref{fig:regions}a), và mô hình không biểu diễn được tương tác giữa các biến; Chương~\ref{chap:3} sẽ chỉ ra một hệ quả cụ thể của hạn chế này (\cref{prop:xor}).
+
+\paragraph{Dạng siêu phẳng bản lề (HH).} Cho phép hướng tùy ý:
+\begin{equation}\label{eq:hh}
+\varphi_m(x)=\max\{0,\ p_m^\T x+q_m\},\qquad p_m\in\R^n,\ q_m\in\R .
+\end{equation}
+Mỗi đặc trưng đổi trạng thái trên cả một siêu phẳng $p_m^\T x+q_m=0$ cắt ngang miền, nên $D$ đặc trưng chia miền thành các ô của một \emph{sắp xếp siêu phẳng} (\cref{fig:regions}b). Trên mỗi ô, mọi hàm $w^\T\varphi(x)+w_0$ đều affine, nên số ô là một thước đo độ linh hoạt của biên. Trong mặt phẳng, $D$ đường thẳng ở vị trí tổng quát tạo ra đúng $1+D+\binom{D}{2}$ ô: đường thẳng thứ $j$ cắt $j-1$ đường trước tại $j-1$ điểm phân biệt nên bị chia thành $j$ đoạn, mỗi đoạn tách một ô cũ làm hai. Với $D=6$ như trong hình, ta được $22$ ô, nhiều hơn hẳn $16$ ô của dạng cộng tính với cùng số đặc trưng.
+
+\paragraph{Dạng siêu phẳng bản lề tổng quát (GHH).} Dùng đúng dạng của~\eqref{eq:feature-map}:
+\begin{equation}\label{eq:ghh-map}
+\varphi_m(x)=\max\bigl\{0,\ p_{m1}^\T x+q_{m1},\ \dots,\ p_{mn}^\T x+q_{mn}\bigr\}.
+\end{equation}
+Mỗi đặc trưng có $n+1$ mảnh, và vùng tuyến tính của nó là các tập mà trên đó một mảnh xác định đạt cực đại (\cref{fig:regions}c). Theo \cref{cor:boundary}, đây là dạng đủ để biểu diễn mọi biên PWL; cái giá là số tham số của mỗi đặc trưng tăng gấp $n$ lần so với dạng HH (\cref{tab:cost}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_regions_maps.pdf}
+\caption[Phân vùng tuyến tính do ba dạng ánh xạ đặc trưng sinh ra]{Phân vùng tuyến tính của hình vuông đơn vị do ba dạng ánh xạ sinh ra: (a) cộng tính với lưới $4\times4$ (6 đặc trưng bản lề); (b) HH với 6 siêu phẳng ngẫu nhiên; (c) GHH với 3 đặc trưng, mỗi đặc trưng có 2 siêu phẳng. Trên mỗi vùng, mọi hàm quyết định $w^\T\varphi(x)+w_0$ đều là hàm affine.}
+\label{fig:regions}
+\end{figure}
+
+\subsection{Chọn tham số}
+
+Giống như tham số độ rộng của hạt nhân Gauss, các tham số phi tuyến của ánh xạ ảnh hưởng lớn đến kết quả nhưng khó tối ưu trực tiếp. Theo~\cite{huang2013}, ta chọn chúng dựa trên ý nghĩa hình học: các tham số của ánh xạ quyết định cấu trúc của các vùng, còn siêu phẳng trong từng vùng do SVM xác định. Trước hết, mỗi thành phần của dữ liệu được chuẩn hóa về đoạn $[0,1]$.
+
+\emph{Với dạng cộng tính}, các nút $q_m$ được đặt đều trên mỗi trục: chia $[0,1]$ thành $S$ đoạn bằng nhau, ta được $S-1$ nút trên mỗi trục và $M=Sn$ đặc trưng (kể cả $n$ tọa độ). Bài báo gốc đề nghị $S=10$, tức $M=10n$~\cite{huang2013}.
+
+\begin{remark}\label{rem:quantile}
+Lưới đều ngầm giả định rằng dữ liệu trải tương đối đều trên mỗi trục. Với những biến lệch mạnh, chẳng hạn các số tiền trong dữ liệu tín dụng ở Mục~\ref{sec:application}, phần lớn dữ liệu dồn vào một hai đoạn đầu và các nút còn lại gần như vô dụng. Một lựa chọn tự nhiên là đặt nút tại các phân vị mẫu mức $s/S$, $s=1,\dots,S-1$, của từng biến, bỏ đi các nút trùng nhau ở những biến chỉ nhận ít giá trị. Mọi kết quả ở các mục trước vẫn giữ nguyên, vì các nút vẫn được cố định trước khi giải SVM.
+\end{remark}
+
+\emph{Với dạng HH và GHH}, các siêu phẳng được sinh ngẫu nhiên sao cho chắc chắn cắt qua miền dữ liệu. Để sinh một siêu phẳng $p^\T x+q=0$, ta lấy $n$ điểm $u_1,\dots,u_n$ theo phân phối đều trên $[0,1]^n$, chọn $p(1)\in\{-1,1\}$ với xác suất bằng nhau, rồi giải hệ $n$ phương trình
+\begin{equation}\label{eq:random-plane}
+\sum_{i=2}^{n}p(i)\,u_j(i)+q=-p(1)\,u_j(1),\qquad j=1,\dots,n,
+\end{equation}
+với $n$ ẩn $p(2),\dots,p(n),q$. Hàng thứ $j$ của ma trận hệ số trong~\eqref{eq:random-plane} là $\bigl(u_j(2),\dots,u_j(n),1\bigr)$. Ma trận này khả nghịch khi và chỉ khi các điểm $\tilde u_j=\bigl(u_j(2),\dots,u_j(n)\bigr)$, $j=1,\dots,n$, độc lập affine trong $\R^{n-1}$, điều xảy ra với xác suất $1$ vì các điểm được lấy theo một phân phối liên tục. Siêu phẳng thu được đi qua $n$ điểm của miền nên luôn cắt miền --- điều mà các siêu phẳng có hệ số lấy ngẫu nhiên tùy ý không bảo đảm. Dấu của $p(1)$ quyết định nửa không gian nào là nơi bản lề hoạt động. Với GHH, mỗi đặc trưng dùng $n$ siêu phẳng sinh độc lập theo cách này.
+
+\begin{remark}\label{rem:scale}
+Việc cố định $|p(1)|=1$ làm cho độ lớn $\|p\|$ rất khác nhau giữa các đặc trưng: một siêu phẳng gần song song với trục $x(1)$ có $|p(2)|,\dots,|p(n)|$ lớn, nên đặc trưng tương ứng có biên độ lớn. Do số hạng chính quy $\frac12\|w\|^2$ phạt mọi trọng số như nhau, đặc trưng có biên độ lớn thực chất bị phạt nhẹ hơn. Một lựa chọn khác là chuẩn hóa $\|p\|_2=1$; ảnh hưởng của lựa chọn này sẽ được kiểm tra ở Chương~\ref{chap:3}.
+\end{remark}
+
+\subsection{Hai ví dụ}
+
+\emph{Trở lại dữ liệu hai mặt trăng.} Biết trước rằng biên cần đổi hướng khi $x(2)$ đi qua $\tfrac13$ và $\tfrac23$, ta dùng ánh xạ cộng tính với các nút chỉ đặt trên trục thứ hai:
+\[
+\varphi_1(x)=x(1),\quad \varphi_2(x)=x(2),\quad \varphi_3(x)=\bigl(x(2)-\tfrac13\bigr)_+,\quad \varphi_4(x)=\bigl(x(2)-\tfrac23\bigr)_+ .
+\]
+Giải PWL-C-SVM~\eqref{eq:pwl-c-svm} với $\gamma=100$ trên dữ liệu của \cref{fig:moons}, ta được hàm quyết định
+\[
+f(x)=7{,}98-8{,}76\,x(1)-16{,}33\,x(2)+29{,}03\bigl(x(2)-\tfrac13\bigr)_+-30{,}06\bigl(x(2)-\tfrac23\bigr)_+ .
+\]
+Trên mỗi dải $\Omega_k$, các số hạng bản lề hoặc bằng $0$ hoặc là hàm affine, nên $f$ là affine và biên $\{f=0\}\cap\Omega_k$ là một đoạn thẳng. Chẳng hạn trên $\Omega_2$ chỉ $\varphi_3$ hoạt động và $f(x)=-1{,}69-8{,}76\,x(1)+12{,}70\,x(2)$; đó là đường thẳng $c_2^\T x+d_2=0$ ở \cref{fig:moons}b. Bộ phân loại dùng $32$ vectơ hỗ trợ và phân loại đúng $599/600$ điểm huấn luyện. Ở ví dụ này, vị trí các nút được chọn nhờ biết trước hình dạng của dữ liệu; với dữ liệu “hộp đen”, ta dùng lưới đều hoặc siêu phẳng ngẫu nhiên như trên.
+
+\emph{Một ánh xạ ngẫu nhiên, nhiều biên khác nhau.} Để thấy một ánh xạ cố định có thể sinh ra những biên đa dạng thế nào, xét ánh xạ HH trong $\R^2$ gồm $\varphi_1=x(1)$, $\varphi_2=x(2)$ và bốn đặc trưng bản lề được sinh theo quy trình~\eqref{eq:random-plane}:
+\begin{equation}\label{eq:flex-map}
+\begin{aligned}
+\varphi_3(x)&=\bigl(x(1)+0{,}567\,x(2)-0{,}919\bigr)_+, \\
+\varphi_4(x)&=\bigl(-x(1)-3{,}676\,x(2)+1{,}604\bigr)_+,\\
+\varphi_5(x)&=\bigl(x(1)-3{,}171\,x(2)-0{,}089\bigr)_+, \\
+\varphi_6(x)&=\bigl(-x(1)+0{,}654\,x(2)+0{,}074\bigr)_+.
+\end{aligned}
+\end{equation}
+\Cref{fig:flex} vẽ biên $\{x:\ w_0+\sum_{m=1}^{6}w_m\varphi_m(x)=0\}$ với ba vectơ trọng số ở \cref{tab:flex}. Cùng một ánh xạ, chỉ thay đổi trọng số, ta được một biên lồi, một biên không lồi và một biên không liên thông. Nhiệm vụ của SVM là chọn ra, trong họ các biên đó, biên có lề lớn nhất trên dữ liệu.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_flexibility.pdf}
+\caption[Ba biên phân loại khác nhau sinh bởi cùng một ánh xạ HH]{Cùng ánh xạ~\eqref{eq:flex-map}, ba vectơ trọng số ở \cref{tab:flex} cho ba biên (nét liền) có hình dạng rất khác nhau. Nét đứt là bốn đường $\varphi_m(x)=0$, $m=3,\dots,6$; vùng tô cam là $\{f\le0\}$. Ví dụ được dựng lại theo ý tưởng của Hình~2 trong~\cite{huang2013}.}
+\label{fig:flex}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption[Ba vectơ trọng số cho cùng một ánh xạ HH]{Ba vectơ trọng số dùng ở \cref{fig:flex}.}
+\label{tab:flex}
+\small
+\begin{tabular}{@{}l *{7}{S[table-format=-1.1]}@{}}
+\toprule
+& {$w_0$} & {$w_1$} & {$w_2$} & {$w_3$} & {$w_4$} & {$w_5$} & {$w_6$}\\
+\midrule
+(a) biên lồi & 0.4 & -3.0 & 1.6 & 2.9 & 0.5 & 1.1 & 1.9\\
+(b) biên không lồi & 0.3 & -1.1 & 2.3 & -1.4 & -3.0 & 1.3 & 1.1\\
+(c) biên không liên thông & 1.7 & -2.3 & 1.6 & -2.9 & -1.6 & 2.2 & -0.9\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}\label{rem:convex}
+Biên ở \cref{fig:flex}a lồi không phải do tình cờ. Khi mọi hệ số của các đặc trưng bản lề đều không âm, $f$ là tổng của một hàm affine và các hàm lồi, nên $f$ lồi và tập $\{x:\ f(x)\le0\}$ là tập lồi. Vì vậy, thêm ràng buộc $w_m\ge0$ với $m>n$ vào~\eqref{eq:pwl-c-svm} là một cách đưa tri thức tiên nghiệm “một lớp nằm trong một tập lồi” vào mô hình mà vẫn giữ bài toán lồi, như đã được gợi ý trong~\cite[Mục~5]{huang2013}. Cần lưu ý rằng với $f$ lồi, tập lồi là tập mức dưới $\{f\le0\}$ chứ không phải $\{f\ge0\}$ như được viết trong~\cite{huang2013}; vì vậy lớp được biết là nằm trong một tập lồi phải được gán nhãn $-1$.
+\end{remark}
+
+% ----------------------------------------------------------------------------
+% ----------------------------------------------------------------------------
+\section{Quan hệ với các bộ phân loại tuyến tính từng phần khác}\label{sec:relations}
+
+Nhiều bộ phân loại quen thuộc cho biên tuyến tính từng phần. Theo Mục~3 của~\cite{huang2013}, mục này chỉ ra rằng biên của ba bộ phân loại như vậy là biên của một PWL-SVM với tham số thích hợp. Các kết quả khẳng định \emph{khả năng biểu diễn} của họ PWL-SVM; chúng không nói rằng PWL-SVM với tham số sinh theo Mục~\ref{sec:maps} sẽ tìm được đúng các biên đó.
+
+\subsection{SVM hạt nhân giao}
+
+Hạt nhân giao $\kappa_\cap(x,z)=\sum_{i=1}^{n}\min\{x(i),z(i)\}$, xác định cho các vectơ có thành phần không âm, được dùng rộng rãi trong phân loại ảnh dựa trên lược đồ tần suất~\cite{maji2008}. Theo~\eqref{eq:kernel-classifier}, hàm quyết định của SVM với hạt nhân này (Ik-SVM) là $f(x)=\sum_k\alpha_ky_k\,\kappa_\cap(x,x_k)+w_0$.
+
+\begin{proposition}\label{prop:iksvm}
+Hàm quyết định của Ik-SVM là một hàm cộng tính tuyến tính từng phần:
+\begin{equation}\label{eq:iksvm}
+f(x)=w_0-\sum_{i=1}^{n}\sum_{k=1}^{N}\alpha_ky_k\,\bigl(x(i)-x_k(i)\bigr)_+ .
+\end{equation}
+Do đó mọi Ik-SVM là một PWL-SVM với ánh xạ cộng tính~\eqref{eq:additive}, trong đó các nút trên trục thứ $i$ là các giá trị $x_k(i)$ của dữ liệu huấn luyện.
+\end{proposition}
+
+\begin{proof}
+Với mọi $a,b\in\R$ ta có $\min\{a,b\}=a-(a-b)_+$. Do đó
+\[
+\sum_k\alpha_ky_k\,\kappa_\cap(x,x_k)=\sum_{i=1}^{n}x(i)\sum_{k=1}^{N}\alpha_ky_k-\sum_{i=1}^{n}\sum_{k=1}^{N}\alpha_ky_k\bigl(x(i)-x_k(i)\bigr)_+ ,
+\]
+và số hạng thứ nhất bằng $0$ vì $\sum_k\alpha_ky_k=0$ là một ràng buộc của bài toán đối ngẫu~\eqref{eq:soft-dual}.
+\end{proof}
+
+Như vậy Ik-SVM thừa hưởng cả ưu điểm lẫn hạn chế của mô hình cộng tính: dễ diễn giải, nhưng không biểu diễn được tương tác giữa các biến. Hệ quả của hạn chế này sẽ được quan sát ở Mục~\ref{sec:exp2d}.
+
+\subsection{AdaBoost với bộ phân loại yếu tuyến tính}
+
+AdaBoost~\cite{freund1995} kết hợp các bộ phân loại yếu thành
+\[
+F(x)=\sum_{m=1}^{D}\eta_m\sgn(a_m^\T x+b_m),\qquad \eta_m>0,
+\]
+và phân loại theo $\sgn F(x)$. Khi các bộ phân loại yếu là tuyến tính, biên của AdaBoost là tuyến tính từng phần, nhưng $F$ không liên tục, nên biên không phải là tập không điểm của một hàm PWL liên tục. Huang và cộng sự thay hàm dấu bằng hàm xấp xỉ
+\[
+s_\delta(t)=-1+\frac1\delta(t+\delta)_+-\frac1\delta(t-\delta)_+,\qquad\delta>0,
+\]
+trùng với $\sgn(t)$ khi $|t|\ge\delta$ và tuyến tính trên đoạn $[-\delta,\delta]$.
+
+\begin{proposition}\label{prop:adaboost}
+Hàm $F_\delta(x)=\sum_m\eta_m\,s_\delta(a_m^\T x+b_m)$ là tổ hợp tuyến tính của một hằng số và các đặc trưng dạng siêu phẳng bản lề $\bigl(a_m^\T x+b_m\pm\delta\bigr)_+$, và $F_\delta(x)=F(x)$ với mọi $x$ nằm ngoài hợp các dải $S_m(\delta)=\{x:\ |a_m^\T x+b_m|<\delta\}$. Do đó $\sgn F_\delta$ và $\sgn F$ chỉ có thể khác nhau trên $\bigcup_mS_m(\delta)$, tập mà bề rộng của mỗi dải, $2\delta/\|a_m\|$, dần tới $0$ khi $\delta\to0$.
+\end{proposition}
+
+\begin{proof}
+Khẳng định thứ nhất suy từ định nghĩa của $s_\delta$. Nếu $x\notin\bigcup_mS_m(\delta)$ thì $|a_m^\T x+b_m|\ge\delta$ với mọi $m$, nên $s_\delta(a_m^\T x+b_m)=\sgn(a_m^\T x+b_m)$ và $F_\delta(x)=F(x)$.
+\end{proof}
+
+Vậy PWL-SVM với ánh xạ HH xấp xỉ được biên của AdaBoost tuyến tính với độ chính xác tùy ý, theo nghĩa của \cref{prop:adaboost}.
+
+\subsection{Phương pháp láng giềng gần nhất}
+
+Với $k=1$, phương pháp láng giềng gần nhất~\cite{cover1967} gán cho $x$ nhãn của điểm huấn luyện gần $x$ nhất. Đặt $d_\pm(x)=\min_{k:\,y_k=\pm1}\|x-x_k\|^2$; điểm $x$ được xếp vào lớp $+1$ nếu $d_+(x)<d_-(x)$, và biên là tập $\{x:\ d_+(x)=d_-(x)\}$ (\cref{fig:knn}a).
+
+\begin{proposition}\label{prop:knn}
+Giả sử các điểm huấn luyện đôi một khác nhau. Khi đó $g=d_+-d_-$ là hàm PWL liên tục trên $\R^n$. Do đó biên của phương pháp một láng giềng gần nhất là tập không điểm của một hàm PWL, và theo \cref{cor:boundary} nó biểu diễn được bởi một PWL-SVM với ánh xạ~\eqref{eq:feature-map}.
+\end{proposition}
+
+\begin{proof}
+Với mỗi cặp $(k,l)$ gồm một điểm lớp $+1$ và một điểm lớp $-1$, gọi $R_{kl}$ là tập các $x$ mà $x_k$ là điểm gần nhất trong lớp $+1$ và $x_l$ là điểm gần nhất trong lớp $-1$. Bất đẳng thức $\|x-x_k\|^2\le\|x-x_{k'}\|^2$ tương đương với $2(x_{k'}-x_k)^\T x\le\|x_{k'}\|^2-\|x_k\|^2$, tuyến tính theo $x$; vì vậy $R_{kl}$ là một đa diện. Các tập $R_{kl}$ phủ $\R^n$, và phần trong của chúng rời nhau vì các điểm huấn luyện khác nhau. Trên $R_{kl}$,
+\[
+g(x)=\|x-x_k\|^2-\|x-x_l\|^2=2(x_l-x_k)^\T x+\|x_k\|^2-\|x_l\|^2
+\]
+là một hàm affine: các số hạng bậc hai triệt tiêu. Cuối cùng $g$ liên tục vì $d_+$ và $d_-$ liên tục.
+\end{proof}
+
+Điều thú vị là $d_+$ và $d_-$ là các hàm bậc hai từng phần, nhưng hiệu của chúng là tuyến tính từng phần. \Cref{fig:knn} so sánh biên của 1-NN và của Ik-SVM trên cùng một bộ dữ liệu nhỏ: cả hai đều là đường gấp khúc, nhưng biên của Ik-SVM chỉ đổi hướng tại các đường thẳng song song với trục tọa độ đi qua các điểm dữ liệu, đúng như \cref{prop:iksvm} dự báo.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\linewidth]{fig_knn_iksvm.pdf}
+\caption[Biên của 1-NN và của SVM hạt nhân giao]{Biên quyết định (nét liền) của (a) phương pháp một láng giềng gần nhất và (b) SVM hạt nhân giao trên cùng $26$ điểm dữ liệu. Cả hai biên đều tuyến tính từng phần.}
+\label{fig:knn}
+\end{figure}
+
+\subsection{Ý nghĩa và giới hạn}
+
+Ba kết quả trên cho thấy họ các biên mà PWL-SVM biểu diễn được chứa biên của Ik-SVM (với ánh xạ cộng tính), của AdaBoost tuyến tính (với ánh xạ HH, theo nghĩa xấp xỉ) và của 1-NN (với ánh xạ tổng quát). Huang và cộng sự rút ra rằng PWL-SVM “ít nhất có thể đạt được” hiệu năng của các bộ phân loại này~\cite{huang2013}. Nhận định đó cần được hiểu thận trọng. Các kết quả trên là về khả năng biểu diễn, với những tham số phi tuyến được chọn riêng cho từng trường hợp, chẳng hạn các nút tại mọi điểm dữ liệu; còn trong thực hành, PWL-SVM dùng tham số sinh theo quy tắc cố định ở Mục~\ref{sec:maps}. Khoảng cách giữa khả năng biểu diễn và độ chính xác thực tế sẽ được đo bằng thực nghiệm ở Chương~\ref{chap:3}.
+
+% ----------------------------------------------------------------------------
+\section*{Tiểu kết Chương 2}
+\phantomsection\addcontentsline{toc}{section}{Tiểu kết Chương 2}
+
+Chương 2 đã trình bày SVM từ lề cứng đến lề mềm, thủ thuật hạt nhân và LS-SVM, rồi xây dựng PWL-SVM theo một chuỗi lập luận chặt chẽ: mọi biên tuyến tính từng phần là tập không điểm của một hàm PWL liên tục (\cref{thm:pwl-set}); hàm đó là tổ hợp tuyến tính của các hàm bản lề tổng quát (\cref{thm:ghh-set}); tách phần affine ra, ta được ánh xạ đặc trưng~\eqref{eq:feature-map}, và việc học biên quy về một SVM tuyến tính trên $\varphi(x)$ (\cref{cor:boundary}). Mô hình thu được giữ tính lồi của SVM, có hai dạng PWL-C-SVM và PWL-LS-SVM, trong đó dạng gốc của PWL-LS-SVM chính là hồi quy ridge (\cref{prop:ridge}). Ưu điểm dự kiến nằm ở khâu dự đoán: mô hình chỉ cần lưu $w$ và tham số của ánh xạ (\cref{tab:cost}). Ba dạng ánh xạ cộng tính, HH và GHH đánh đổi giữa khả năng diễn giải, chi phí và độ linh hoạt; dạng cộng tính không biểu diễn được tương tác giữa các biến. Những câu hỏi còn để ngỏ --- chọn dạng ánh xạ nào, bao nhiêu đặc trưng, và độ chính xác, chi phí so với SVM hạt nhân Gauss ra sao --- được trả lời bằng thực nghiệm ở Chương~\ref{chap:3}.

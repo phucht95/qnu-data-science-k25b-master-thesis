@@ -1,0 +1,6 @@
+Spambase (4601, 57)
+  0 {'linear': 0.93, 'rbf': 0.938, 'lssvm': 0.927, 'knn': 0.879, 'iksvm': 0.946, 'mlp': 0.937, 'pwl_c': 0.928, 'pwl_ls': 0.921, 'pwl_hh': 0.4}
+  1 {'linear': 0.934, 'rbf': 0.937, 'lssvm': 0.941, 'knn': 0.883, 'iksvm': 0.944, 'mlp': 0.939, 'pwl_c': 0.934, 'pwl_ls': 0.931, 'pwl_hh': 0.934}
+  2 {'linear': 0.921, 'rbf': 0.928, 'lssvm': 0.936, 'knn': 0.897, 'iksvm': 0.947, 'mlp': 0.94, 'pwl_c': 0.937, 'pwl_ls': 0.925, 'pwl_hh': 0.91}
+  3 {'linear': 0.937, 'rbf': 0.939, 'lssvm': 0.932, 'knn': 0.884, 'iksvm': 0.95, 'mlp': 0.938, 'pwl_c': 0.936, 'pwl_ls': 0.925, 'pwl_hh': 0.937}
+  4 {'linear': 0.93, 'rbf': 0.936, 'lssvm': 0.937, 'knn': 0.896, 'iksvm': 0.944, 'mlp': 0.941, 'pwl_c': 0.935, 'pwl_ls': 0.929, 'pwl_hh': 0.922}

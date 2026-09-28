@@ -1,0 +1,417 @@
+% ============================================================================
+%  CHƯƠNG 1. CƠ SỞ TOÁN HỌC
+% ============================================================================
+\chapter{Cơ sở toán học}\label{chap:1}
+
+Chương này trình bày các công cụ toán học được dùng trong toàn bộ đề án. \Cref{sec:convex,sec:separation} nhắc lại tập lồi, đa diện và các định lý siêu phẳng phân tách, nền tảng hình học của SVM. \Cref{sec:convexopt,sec:duality} trình bày bài toán tối ưu lồi và lý thuyết đối ngẫu Lagrange, công cụ để dẫn ra các bài toán đối ngẫu ở Chương~\ref{chap:2}. \Cref{sec:pwl-functions} giới thiệu hàm tuyến tính từng phần liên tục, đối tượng trung tâm của đề án. Các khái niệm được chọn theo một nguyên tắc: chỉ trình bày những gì sẽ được dùng lại ở hai chương sau. Nội dung các \cref{sec:convex,sec:separation,sec:convexopt,sec:duality} được trình bày theo~\cite{boyd2004,dovanluu2000}; chứng minh chỉ được nêu khi nó ngắn hoặc cho thấy ý tưởng được dùng về sau.
+
+Trong suốt chương, $\R^n$ là không gian Euclid với tích vô hướng $x^\T z$ và chuẩn $\|x\|=\sqrt{x^\T x}$.
+
+% ----------------------------------------------------------------------------
+\section{Tập affine, tập lồi và đa diện}\label{sec:convex}
+
+Với hai điểm $x_1\neq x_2$ của $\R^n$, tập các điểm $\theta x_1+(1-\theta)x_2$ với $\theta\in\R$ là đường thẳng đi qua $x_1$ và $x_2$; khi $\theta$ chạy trong đoạn $[0,1]$, ta được đoạn thẳng nối hai điểm đó, ký hiệu $[x_1,x_2]$. Hai khái niệm cơ bản của mục này được định nghĩa qua đường thẳng và đoạn thẳng.
+
+\begin{definition}\label{def:affine-convex}
+Tập $C\subseteq\R^n$ được gọi là \emph{tập affine} nếu với mọi $x_1,x_2\in C$ và mọi $\theta\in\R$ ta có $\theta x_1+(1-\theta)x_2\in C$, tức là $C$ chứa trọn đường thẳng đi qua hai điểm bất kỳ của nó. Tập $C$ được gọi là \emph{tập lồi} nếu điều đó đúng với mọi $\theta\in[0,1]$, tức là $C$ chứa trọn đoạn thẳng nối hai điểm bất kỳ của nó.
+\end{definition}
+
+Mọi tập affine đều là tập lồi. Không gian con, cả không gian $\R^n$ và tập một điểm là những tập affine; một hình tròn là tập lồi nhưng không affine. \Cref{fig:convex}a,b minh họa một tập lồi và một tập không lồi: với tập không lồi, có hai điểm mà đoạn thẳng nối chúng đi ra ngoài tập.
+
+Một điểm dạng $\theta_1x_1+\dots+\theta_kx_k$ với $\theta_1+\dots+\theta_k=1$ được gọi là một \emph{tổ hợp affine} của $x_1,\dots,x_k$; nếu thêm điều kiện $\theta_i\ge0$ với mọi $i$, ta có một \emph{tổ hợp lồi}. Có thể hiểu tổ hợp lồi như một trung bình có trọng số, với $\theta_i$ là tỉ trọng của $x_i$.
+
+\begin{proposition}\label{prop:convex-comb}
+Tập $C$ là tập lồi khi và chỉ khi $C$ chứa mọi tổ hợp lồi của các điểm thuộc $C$.
+\end{proposition}
+
+\begin{proof}
+Chiều ngược lại là hiển nhiên, vì điểm trên đoạn $[x_1,x_2]$ là tổ hợp lồi của hai điểm. Với chiều thuận, ta quy nạp theo số điểm $k$. Trường hợp $k\le2$ là định nghĩa. Giả sử khẳng định đúng với $k-1$ điểm và xét $x=\sum_{i=1}^k\theta_ix_i$ với $\theta_k<1$ (nếu $\theta_k=1$ thì $x=x_k\in C$). Khi đó
+\[
+x=(1-\theta_k)\sum_{i=1}^{k-1}\frac{\theta_i}{1-\theta_k}\,x_i+\theta_k x_k .
+\]
+Điểm $z=\sum_{i<k}\frac{\theta_i}{1-\theta_k}x_i$ là tổ hợp lồi của $k-1$ điểm nên thuộc $C$ theo giả thiết quy nạp, và $x$ nằm trên đoạn $[z,x_k]$ nên cũng thuộc $C$.
+\end{proof}
+
+\begin{definition}\label{def:hull}
+\emph{Bao lồi} của tập $C\subseteq\R^n$, ký hiệu $\conv C$, là tập mọi tổ hợp lồi của các điểm thuộc $C$.
+\end{definition}
+
+Bao lồi $\conv C$ là một tập lồi (tổ hợp lồi của các tổ hợp lồi lại là một tổ hợp lồi) và chứa $C$; theo \cref{prop:convex-comb}, mọi tập lồi chứa $C$ đều chứa $\conv C$. Vậy $\conv C$ là tập lồi nhỏ nhất chứa $C$. Khi $C=\{x_1,\dots,x_N\}$ là một tập hữu hạn, $\conv C$ là một đa giác (đa diện) lồi với các đỉnh thuộc $C$ (\cref{fig:convex}c). Bao lồi của tập các điểm thuộc cùng một lớp sẽ đóng vai trò then chốt khi ta xét khả năng tách tuyến tính ở Mục~\ref{sec:separation} và hình học của SVM ở Mục~\ref{sec:hardmargin}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_convex_sets.pdf}
+\caption[Tập lồi, tập không lồi và bao lồi]{(a) Một tập lồi: đoạn thẳng nối hai điểm bất kỳ nằm trọn trong tập. (b) Một tập không lồi. (c) Bao lồi của một tập hữu hạn điểm là đa giác lồi nhỏ nhất chứa các điểm đó.}
+\label{fig:convex}
+\end{figure}
+
+\begin{example}\label{ex:convex-sets}
+Một số tập lồi sẽ gặp lại nhiều lần trong đề án:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item \emph{Siêu phẳng} $H=\{x:\ a^\T x=b\}$ với $a\in\R^n\setminus\{0\}$ và $b\in\R$. Đây là một tập affine; vectơ $a$ vuông góc với $H$ và được gọi là vectơ pháp tuyến của $H$.
+\item \emph{Nửa không gian} $\{x:\ a^\T x\le b\}$ với $a\neq0$. Nếu $a^\T x_1\le b$ và $a^\T x_2\le b$ thì $a^\T\bigl(\theta x_1+(1-\theta)x_2\bigr)\le b$ với mọi $\theta\in[0,1]$, nên nửa không gian là tập lồi. Siêu phẳng $a^\T x=b$ chia $\R^n$ thành hai nửa không gian $\{a^\T x\le b\}$ và $\{a^\T x\ge b\}$; bộ phân loại tuyến tính chính là quy tắc xếp mỗi điểm vào một trong hai nửa không gian đó.
+\item \emph{Hình cầu Euclid} $B(x_c,r)=\{x:\ \|x-x_c\|\le r\}$ với $r>0$. Nếu $x_1,x_2\in B(x_c,r)$ và $\theta\in[0,1]$ thì theo bất đẳng thức tam giác
+\[
+\|\theta x_1+(1-\theta)x_2-x_c\|\le\theta\|x_1-x_c\|+(1-\theta)\|x_2-x_c\|\le r,
+\]
+nên hình cầu là tập lồi.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{def:polyhedron}
+\emph{Đa diện} là tập nghiệm của một hệ hữu hạn phương trình và bất phương trình tuyến tính:
+\begin{equation}\label{eq:polyhedron}
+P=\bigl\{x:\ a_j^\T x\le b_j,\ j=1,\dots,m;\ \ c_j^\T x=d_j,\ j=1,\dots,p\bigr\}.
+\end{equation}
+\end{definition}
+
+Như vậy, đa diện là giao của hữu hạn nửa không gian và siêu phẳng (\cref{fig:separation}a). Không gian con, siêu phẳng, nửa không gian, đoạn thẳng và bao lồi của một tập hữu hạn điểm đều là đa diện. Một ví dụ quan trọng về sau: với dữ liệu $\{(x_k,y_k)\}$ cố định, tập các cặp $(w,w_0)\in\R^{n+1}$ thỏa mãn $y_k(w^\T x_k+w_0)\ge1$ với mọi $k$ là một đa diện trong không gian các tham số; đó là miền ràng buộc của bài toán SVM lề cứng ở Mục~\ref{sec:hardmargin}. Tính lồi của đa diện là hệ quả của mệnh đề sau.
+
+\begin{proposition}\label{prop:convex-ops}
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item Giao của một họ tùy ý các tập lồi là tập lồi.
+\item Nếu $f(x)=Ax+b$ là một ánh xạ affine từ $\R^n$ vào $\R^m$ và $S\subseteq\R^n$, $T\subseteq\R^m$ là các tập lồi, thì ảnh $f(S)=\{f(x):\ x\in S\}$ và nghịch ảnh $f^{-1}(T)=\{x:\ f(x)\in T\}$ là các tập lồi.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Nếu $x_1,x_2$ thuộc mọi tập trong họ thì đoạn $[x_1,x_2]$ cũng vậy. (ii) Ánh xạ affine bảo toàn tổ hợp lồi: $f\bigl(\theta x_1+(1-\theta)x_2\bigr)=\theta f(x_1)+(1-\theta)f(x_2)$. Do đó nếu $f(x_1),f(x_2)\in f(S)$ thì mọi điểm của đoạn nối chúng có dạng $f(\theta x_1+(1-\theta)x_2)\in f(S)$; lập luận tương tự cho nghịch ảnh.
+\end{proof}
+
+% ----------------------------------------------------------------------------
+\section{Siêu phẳng phân tách và siêu phẳng tựa}\label{sec:separation}
+
+Bài toán phân loại tuyến tính đặt ra một câu hỏi hình học: khi nào hai tập điểm có thể được tách bởi một siêu phẳng? Với các tập lồi, câu trả lời được cho bởi định lý siêu phẳng phân tách. Công cụ để chứng minh định lý là phép chiếu lên một tập lồi đóng.
+
+\begin{lemma}[Phép chiếu lên tập lồi đóng]\label{lem:projection}
+Cho $C\subseteq\R^n$ là tập lồi, đóng, khác rỗng và $x_0\in\R^n$. Khi đó tồn tại duy nhất một điểm $c^\ast\in C$ gần $x_0$ nhất, ký hiệu $c^\ast=\Pi_C(x_0)$. Hơn nữa, $c^\ast$ được đặc trưng bởi bất đẳng thức
+\begin{equation}\label{eq:projection}
+(x_0-c^\ast)^\T(x-c^\ast)\le0\qquad\text{với mọi } x\in C .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+\emph{Tồn tại.} Lấy một điểm $\bar c\in C$. Điểm gần nhất, nếu có, phải thuộc tập $C\cap B\bigl(x_0,\|x_0-\bar c\|\bigr)$; tập này compact và khác rỗng, nên hàm liên tục $x\mapsto\|x-x_0\|$ đạt cực tiểu trên nó.
+
+\emph{Đặc trưng.} Với $x\in C$ và $t\in(0,1]$, điểm $c^\ast+t(x-c^\ast)$ thuộc $C$, nên
+\[
+0\le\|x_0-c^\ast-t(x-c^\ast)\|^2-\|x_0-c^\ast\|^2=-2t\,(x_0-c^\ast)^\T(x-c^\ast)+t^2\|x-c^\ast\|^2 .
+\]
+Chia cho $t$ rồi cho $t\to0^+$ ta được~\eqref{eq:projection}. Ngược lại, nếu $c^\ast\in C$ thỏa~\eqref{eq:projection} thì với mọi $x\in C$,
+$\|x_0-x\|^2=\|x_0-c^\ast\|^2-2(x_0-c^\ast)^\T(x-c^\ast)+\|x-c^\ast\|^2\ge\|x_0-c^\ast\|^2$, dấu bằng chỉ khi $x=c^\ast$. Điều này đồng thời chứng minh tính duy nhất.
+\end{proof}
+
+\begin{theorem}[Siêu phẳng phân tách]\label{thm:separation}
+Cho $C$ và $D$ là hai tập lồi, khác rỗng và rời nhau trong $\R^n$. Khi đó tồn tại $a\neq0$ và $b\in\R$ sao cho $a^\T x\le b$ với mọi $x\in C$ và $a^\T x\ge b$ với mọi $x\in D$. Nếu thêm giả thiết $C$ và $D$ đóng, trong đó ít nhất một tập compact, thì có thể chọn $a,b$ để phân tách là chặt:
+\begin{equation}\label{eq:strict-sep}
+a^\T x<b<a^\T z\qquad\text{với mọi } x\in C,\ z\in D .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Ta chứng minh trường hợp phân tách chặt, là trường hợp sẽ được dùng; trường hợp tổng quát xem~\cite[Mục~2.5.1]{boyd2004}. Tập $E=D-C=\{z-x:\ x\in C,\ z\in D\}$ là tập lồi (theo \cref{prop:convex-ops}(ii), vì nó là ảnh của tập lồi $C\times D$ qua ánh xạ tuyến tính $(x,z)\mapsto z-x$), đóng (vì một trong hai tập compact) và không chứa $0$ (vì $C\cap D=\emptyset$). Đặt $u=\Pi_E(0)\neq0$. Theo~\eqref{eq:projection} với $x_0=0$, ta có $(0-u)^\T(e-u)\le0$, tức là $u^\T e\ge\|u\|^2$ với mọi $e\in E$. Nói cách khác, $u^\T z-u^\T x\ge\|u\|^2>0$ với mọi $x\in C$, $z\in D$. Chọn $a=u$ và $b=\sup_{x\in C}u^\T x+\tfrac12\|u\|^2$, ta được~\eqref{eq:strict-sep}.
+\end{proof}
+
+Trong chứng minh trên, $u=z^\ast-x^\ast$ với $x^\ast\in C$, $z^\ast\in D$ là cặp điểm gần nhau nhất của hai tập, và siêu phẳng tách có pháp tuyến cùng phương với đoạn nối cặp điểm đó (\cref{fig:separation}b). Hình ảnh này sẽ xuất hiện lại khi ta diễn giải bài toán đối ngẫu của SVM ở Mục~\ref{sec:hardmargin}.
+
+\begin{theorem}[Siêu phẳng tựa]\label{thm:support}
+Cho $C$ là tập lồi và $x_0$ là một điểm biên của $C$. Khi đó tồn tại $a\neq0$ sao cho $a^\T x\le a^\T x_0$ với mọi $x\in C$; siêu phẳng $\{x:\ a^\T x=a^\T x_0\}$ được gọi là siêu phẳng tựa của $C$ tại $x_0$.
+\end{theorem}
+
+Định lý được suy ra bằng cách áp dụng \cref{thm:separation} cho phần trong của $C$ và tập $\{x_0\}$ (khi phần trong khác rỗng), xem~\cite[Mục~2.5.2]{boyd2004}. Về mặt hình học, siêu phẳng tựa chạm vào $C$ tại $x_0$ và để toàn bộ $C$ về một phía (\cref{fig:separation}c).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_separation.pdf}
+\caption[Đa diện, siêu phẳng phân tách và siêu phẳng tựa]{(a) Đa diện $P$ là giao của năm nửa không gian; mũi tên chỉ vectơ pháp tuyến $a_j$ hướng ra ngoài. (b) Siêu phẳng phân tách hai tập lồi rời nhau $C$ và $D$, dựng từ cặp điểm gần nhau nhất $c\in C$, $d\in D$ như trong chứng minh \cref{thm:separation}. (c) Siêu phẳng tựa của tập lồi $C$ tại điểm biên $x_0$.}
+\label{fig:separation}
+\end{figure}
+
+Hệ quả sau chuyển \cref{thm:separation} sang ngôn ngữ của dữ liệu và là cầu nối trực tiếp sang SVM lề cứng. Ta nói hai tập hữu hạn điểm $A$ và $B$ \emph{tách tuyến tính được} nếu tồn tại $(w,w_0)$ sao cho $w^\T x+w_0>0$ với mọi $x\in A$ và $w^\T x+w_0<0$ với mọi $x\in B$.
+
+\begin{corollary}\label{cor:separable}
+Cho dữ liệu $\{(x_k,y_k)\}_{k=1}^N$ với $y_k\in\{-1,+1\}$ và cả hai lớp đều khác rỗng; đặt $A=\{x_k:\ y_k=+1\}$, $B=\{x_k:\ y_k=-1\}$. Ba khẳng định sau là tương đương:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item $A$ và $B$ tách tuyến tính được;
+\item tồn tại $(w,w_0)$ sao cho $y_k(w^\T x_k+w_0)\ge1$ với mọi $k$;
+\item $\conv A\cap\conv B=\emptyset$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i)$\Rightarrow$(ii): đặt $\mu=\min_k y_k(w^\T x_k+w_0)>0$ và thay $(w,w_0)$ bởi $(w,w_0)/\mu$. (ii)$\Rightarrow$(iii): hai nửa không gian $\{x:\ w^\T x+w_0\ge1\}$ và $\{x:\ w^\T x+w_0\le-1\}$ là các tập lồi rời nhau, lần lượt chứa $A$ và $B$, nên cũng chứa $\conv A$ và $\conv B$; do đó hai bao lồi rời nhau. (iii)$\Rightarrow$(i): bao lồi của một tập hữu hạn là ảnh của đơn hình chuẩn (compact) qua một ánh xạ tuyến tính, nên compact; áp dụng phần phân tách chặt của \cref{thm:separation} cho $\conv A$ và $\conv B$ với $w=-a$, $w_0=b$.
+\end{proof}
+
+% ----------------------------------------------------------------------------
+\section{Hàm lồi và bài toán tối ưu lồi}\label{sec:convexopt}
+
+\begin{definition}\label{def:convex-fn}
+Cho $C\subseteq\R^n$ là tập lồi. Hàm $f:C\to\R$ được gọi là \emph{hàm lồi} nếu
+\[
+f\bigl(\theta x+(1-\theta)z\bigr)\le\theta f(x)+(1-\theta)f(z)\qquad\text{với mọi } x,z\in C,\ \theta\in[0,1];
+\]
+$f$ được gọi là \emph{lồi chặt} nếu bất đẳng thức là chặt khi $x\neq z$ và $\theta\in(0,1)$. Hàm $f$ là \emph{lõm} nếu $-f$ lồi.
+\end{definition}
+
+Hàm affine vừa lồi vừa lõm. Mọi chuẩn là hàm lồi, theo bất đẳng thức tam giác; hàm $\|x\|^2$ lồi chặt. Hàm bản lề $t\mapsto\max\{0,t\}$ và hàm mất mát $t\mapsto\max\{0,1-t\}$ dùng trong SVM là hàm lồi. Ba phép toán sau cho phép kiểm tra tính lồi của các hàm mục tiêu trong đề án mà không cần tính toán trực tiếp.
+
+\begin{proposition}\label{prop:convex-fn-ops}
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item Nếu $f_1,\dots,f_m$ lồi và $c_1,\dots,c_m\ge0$ thì $\sum_ic_if_i$ lồi; nếu thêm một $f_i$ lồi chặt với $c_i>0$ thì tổng lồi chặt.
+\item Nếu $f_1,\dots,f_m$ lồi thì $x\mapsto\max_i f_i(x)$ lồi.
+\item Nếu $f$ lồi thì $x\mapsto f(Ax+b)$ lồi.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) và (iii) suy trực tiếp từ định nghĩa. Với (ii), với mỗi $i$ ta có $f_i\bigl(\theta x+(1-\theta)z\bigr)\le\theta f_i(x)+(1-\theta)f_i(z)\le\theta\max_jf_j(x)+(1-\theta)\max_jf_j(z)$; lấy cực đại theo $i$ ở vế trái.
+\end{proof}
+
+Chẳng hạn, với dữ liệu cố định, hàm $(w,w_0)\mapsto\frac12\|w\|^2+\gamma\sum_k\max\{0,\,1-y_k(w^\T x_k+w_0)\}$ là hàm lồi: mỗi số hạng $\max\{0,\,1-y_k(w^\T x_k+w_0)\}$ là cực đại của hai hàm affine theo $(w,w_0)$. Đây là hàm mục tiêu của SVM lề mềm (Mục~\ref{sec:softmargin}).
+
+Đối với hàm khả vi, tính lồi có một đặc trưng hình học đơn giản: đồ thị nằm phía trên mọi tiếp diện. Cụ thể, nếu $C$ mở và $f$ khả vi trên $C$ thì $f$ lồi khi và chỉ khi
+\begin{equation}\label{eq:first-order}
+f(z)\ge f(x)+\nabla f(x)^\T(z-x)\qquad\text{với mọi } x,z\in C
+\end{equation}
+\cite[Mục~3.1.3]{boyd2004}. Hệ quả trực tiếp: nếu $\nabla f(x^\ast)=0$ thì $x^\ast$ là điểm cực tiểu toàn cục của $f$ trên $C$.
+
+\paragraph{Bài toán tối ưu lồi.} Ta xét bài toán dạng chuẩn
+\begin{equation}\label{eq:convex-problem}
+\begin{aligned}
+\min_{x}\quad & f_0(x)\\
+\text{với điều kiện}\quad & f_i(x)\le0,\ \ i=1,\dots,m;\qquad h_j(x)=0,\ \ j=1,\dots,p,
+\end{aligned}
+\end{equation}
+trong đó $f_0,\dots,f_m$ là các hàm lồi và $h_j(x)=g_j^\T x-e_j$ là các hàm affine. Theo \cref{prop:convex-ops}, tập chấp nhận được của~\eqref{eq:convex-problem} là tập lồi. Giá trị tối ưu được ký hiệu là $p^\ast$.
+
+\begin{theorem}\label{thm:local-global}
+Đối với bài toán~\eqref{eq:convex-problem}, mọi điểm cực tiểu địa phương đều là điểm cực tiểu toàn cục. Nếu $f_0$ lồi chặt thì bài toán có không quá một nghiệm.
+\end{theorem}
+
+\begin{proof}
+Giả sử $x$ là cực tiểu địa phương nhưng có điểm chấp nhận được $z$ với $f_0(z)<f_0(x)$. Với $\theta\in(0,1]$, điểm $x_\theta=(1-\theta)x+\theta z$ chấp nhận được và $f_0(x_\theta)\le(1-\theta)f_0(x)+\theta f_0(z)<f_0(x)$. Khi $\theta\to0$, $x_\theta$ tiến tới $x$, mâu thuẫn với tính cực tiểu địa phương. Nếu $x\neq z$ là hai nghiệm và $f_0$ lồi chặt thì trung điểm của chúng chấp nhận được và có giá trị mục tiêu nhỏ hơn $p^\ast$, vô lý.
+\end{proof}
+
+Ba lớp bài toán lồi sẽ xuất hiện trong đề án. \emph{Quy hoạch tuyến tính}: $f_0$ và mọi $f_i$ đều affine. \emph{Quy hoạch toàn phương}: $f_0(x)=\frac12x^\T Qx+c^\T x$ với $Q$ nửa xác định dương và các ràng buộc affine; bài toán gốc và bài toán đối ngẫu của SVM thuộc lớp này. \emph{Bình phương tối thiểu có chính quy hóa}: $\min_x\|Ax-t\|^2+\lambda\|x\|^2$ với $\lambda>0$; hàm mục tiêu lồi chặt, và cho gradient bằng $0$ ta được nghiệm duy nhất $x^\ast=(A^\T A+\lambda I)^{-1}A^\T t$. Lớp thứ ba là dạng của LS-SVM và của hồi quy ridge (Mục~\ref{sec:pwlsvm}).
+
+% ----------------------------------------------------------------------------
+\section{Đối ngẫu Lagrange và điều kiện KKT}\label{sec:duality}
+
+Lý thuyết đối ngẫu gắn với mỗi bài toán tối ưu có ràng buộc một bài toán khác, gọi là bài toán đối ngẫu, mà nghiệm của nó cho một cận dưới của giá trị tối ưu. Với SVM, bài toán đối ngẫu có cấu trúc đặc biệt: nó chỉ phụ thuộc vào dữ liệu qua các tích vô hướng, điều dẫn tới thủ thuật hạt nhân ở Mục~\ref{sec:kernel}.
+
+\begin{definition}\label{def:lagrangian}
+\emph{Hàm Lagrange} của bài toán~\eqref{eq:convex-problem} là
+\[
+L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^{m}\lambda_if_i(x)+\sum_{j=1}^{p}\nu_jh_j(x),\qquad\lambda\in\R^m,\ \nu\in\R^p;
+\]
+$\lambda_i,\nu_j$ được gọi là các \emph{nhân tử Lagrange}. \emph{Hàm đối ngẫu} là $g(\lambda,\nu)=\inf_xL(x,\lambda,\nu)$, và \emph{bài toán đối ngẫu} là $\max\,g(\lambda,\nu)$ với điều kiện $\lambda\ge0$; giá trị tối ưu của nó được ký hiệu là $d^\ast$.
+\end{definition}
+
+Vì $g$ là cận dưới đúng của một họ hàm affine theo $(\lambda,\nu)$, hàm đối ngẫu luôn lõm, và bài toán đối ngẫu luôn là một bài toán lồi, bất kể bài toán gốc có lồi hay không.
+
+\begin{proposition}[Đối ngẫu yếu]\label{prop:weak-duality}
+Với mọi $\lambda\ge0$ và mọi $\nu$, ta có $g(\lambda,\nu)\le p^\ast$. Do đó $d^\ast\le p^\ast$.
+\end{proposition}
+
+\begin{proof}
+Nếu $\tilde x$ chấp nhận được thì $\lambda_if_i(\tilde x)\le0$ và $h_j(\tilde x)=0$, nên $g(\lambda,\nu)\le L(\tilde x,\lambda,\nu)\le f_0(\tilde x)$. Lấy cận dưới đúng theo mọi $\tilde x$ chấp nhận được ta được $g(\lambda,\nu)\le p^\ast$.
+\end{proof}
+
+Hiệu $p^\ast-d^\ast\ge0$ được gọi là \emph{khoảng cách đối ngẫu}. Khi $p^\ast=d^\ast$, ta nói có \emph{đối ngẫu mạnh}. Đối với bài toán lồi, đối ngẫu mạnh xảy ra dưới những điều kiện khá nhẹ; điều kiện thông dụng nhất như sau.
+
+\begin{theorem}[Điều kiện Slater~{\cite[Mục~5.2.3]{boyd2004}}]\label{thm:slater}
+Giả sử bài toán~\eqref{eq:convex-problem} là lồi và có một điểm chấp nhận được $x$ sao cho $f_i(x)<0$ với mọi $i$ mà $f_i$ không phải là hàm affine. Khi đó $d^\ast=p^\ast$, và nếu $p^\ast>-\infty$ thì bài toán đối ngẫu có nghiệm.
+\end{theorem}
+
+Đặc biệt, khi mọi ràng buộc đều affine, như trong các bài toán SVM, chỉ cần bài toán gốc có điểm chấp nhận được là có đối ngẫu mạnh. Khi có đối ngẫu mạnh, nghiệm của hai bài toán liên hệ với nhau qua hệ điều kiện sau.
+
+\begin{definition}[Điều kiện KKT]\label{def:kkt}
+Giả sử $f_0,f_i,h_j$ khả vi. Bộ $(x,\lambda,\nu)$ thỏa mãn \emph{điều kiện Karush--Kuhn--Tucker} nếu
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item $f_i(x)\le0$ và $h_j(x)=0$ với mọi $i,j$ (chấp nhận được đối với bài toán gốc);
+\item $\lambda\ge0$ (chấp nhận được đối với bài toán đối ngẫu);
+\item $\lambda_if_i(x)=0$ với mọi $i$ (điều kiện bù);
+\item $\nabla f_0(x)+\sum_i\lambda_i\nabla f_i(x)+\sum_j\nu_j\nabla h_j(x)=0$ (điều kiện dừng).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}\label{thm:kkt}
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item Nếu có đối ngẫu mạnh, $x^\ast$ là nghiệm của bài toán gốc và $(\lambda^\ast,\nu^\ast)$ là nghiệm của bài toán đối ngẫu, thì $(x^\ast,\lambda^\ast,\nu^\ast)$ thỏa mãn điều kiện KKT.
+\item Ngược lại, nếu bài toán lồi và $(\tilde x,\tilde\lambda,\tilde\nu)$ thỏa mãn điều kiện KKT, thì $\tilde x$ và $(\tilde\lambda,\tilde\nu)$ lần lượt là nghiệm của bài toán gốc và bài toán đối ngẫu, và khoảng cách đối ngẫu bằng $0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Ta chứng minh (ii); chứng minh (i) xem~\cite[Mục~5.5.3]{boyd2004}. Vì $\tilde\lambda\ge0$, hàm $x\mapsto L(x,\tilde\lambda,\tilde\nu)$ lồi, và theo (d) gradient của nó bằng $0$ tại $\tilde x$; do~\eqref{eq:first-order}, $\tilde x$ là điểm cực tiểu toàn cục của nó. Vậy
+\[
+g(\tilde\lambda,\tilde\nu)=L(\tilde x,\tilde\lambda,\tilde\nu)=f_0(\tilde x)+\sum_i\tilde\lambda_if_i(\tilde x)+\sum_j\tilde\nu_jh_j(\tilde x)=f_0(\tilde x),
+\]
+trong đó đẳng thức cuối dùng (a) và (c). Theo \cref{prop:weak-duality}, $f_0(\tilde x)=g(\tilde\lambda,\tilde\nu)\le d^\ast\le p^\ast\le f_0(\tilde x)$, nên mọi bất đẳng thức đều là đẳng thức.
+\end{proof}
+
+Điều kiện bù (c) có một ý nghĩa sẽ được dùng nhiều lần: nếu $\lambda_i^\ast>0$ thì ràng buộc thứ $i$ phải \emph{chặt}, $f_i(x^\ast)=0$. Trong SVM, điều này có nghĩa là chỉ những điểm dữ liệu nằm đúng trên lề mới có nhân tử dương; đó là các vectơ hỗ trợ. Hai ví dụ dưới đây minh họa lý thuyết trên những bài toán nhỏ mà ta sẽ gặp lại.
+
+\begin{example}[Khoảng cách từ một điểm đến một siêu phẳng]\label{ex:distance}
+Cho siêu phẳng $H=\{x:\ w^\T x+b=0\}$ với $w\neq0$ và một điểm $x_0$. Xét bài toán $\min\ \frac12\|x-x_0\|^2$ với điều kiện $w^\T x+b=0$. Hàm Lagrange là $\frac12\|x-x_0\|^2+\nu(w^\T x+b)$; điều kiện dừng cho $x=x_0-\nu w$, và thay vào ràng buộc ta được $\nu=(w^\T x_0+b)/\|w\|^2$. Vì bài toán lồi, theo \cref{thm:kkt}(ii) nghiệm là
+\[
+x^\ast=x_0-\frac{w^\T x_0+b}{\|w\|^2}\,w,\qquad\text{và}\qquad \operatorname{dist}(x_0,H)=\|x_0-x^\ast\|=\frac{|w^\T x_0+b|}{\|w\|}.
+\]
+Công thức này (\cref{fig:duality}a) là cơ sở của khái niệm lề trong SVM.
+\end{example}
+
+\begin{example}[Một bài toán đối ngẫu tường minh]\label{ex:dual-toy}
+Xét bài toán $\min\ x^2$ với điều kiện $1-x\le0$, có nghiệm $x^\ast=1$ và $p^\ast=1$. Hàm Lagrange $L(x,\lambda)=x^2+\lambda(1-x)$ đạt cực tiểu theo $x$ tại $x=\lambda/2$, nên $g(\lambda)=\lambda-\lambda^2/4$. Bài toán đối ngẫu $\max_{\lambda\ge0}g(\lambda)$ có nghiệm $\lambda^\ast=2$ và $d^\ast=1=p^\ast$ (\cref{fig:duality}b). Điều kiện bù $\lambda^\ast(1-x^\ast)=0$ thỏa mãn vì ràng buộc chặt tại nghiệm.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_duality.pdf}
+\caption[Khoảng cách đến siêu phẳng và đối ngẫu yếu]{(a) Hình chiếu $x^\ast$ của điểm $x_0$ lên siêu phẳng $w^\T x+b=0$ (\cref{ex:distance}). (b) Hàm đối ngẫu của \cref{ex:dual-toy} luôn nằm dưới giá trị tối ưu $p^\ast$ và chạm tới $p^\ast$ tại $\lambda^\ast=2$.}
+\label{fig:duality}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\section{Hàm tuyến tính từng phần liên tục}\label{sec:pwl-functions}
+
+Hàm affine $\ell(x)=a^\T x+b$ là loại hàm đơn giản nhất: đồ thị của nó là một siêu phẳng trong $\R^{n+1}$. Bước mở rộng tự nhiên tiếp theo là chia miền xác định thành hữu hạn vùng đa diện và cho phép hàm là affine trên từng vùng, với điều kiện các mảnh được “dán” liền với nhau dọc theo biên chung. Lớp hàm thu được đủ phong phú để xấp xỉ mọi hàm liên tục trên một tập compact, nhưng vẫn giữ được phần lớn sự đơn giản của hàm affine. Đây là đối tượng trung tâm của đề án: biên quyết định của các mô hình PWL-SVM ở Chương~\ref{chap:2} chính là tập không điểm của những hàm như vậy.
+
+\subsection{Định nghĩa và ví dụ}
+
+\begin{definition}[Phân hoạch đa diện]\label{def:partition}
+Cho $\Omega\subseteq\R^n$. Họ hữu hạn các đa diện $\{\Omega_1,\dots,\Omega_K\}$ được gọi là một \emph{phân hoạch đa diện} của $\Omega$ nếu
+\[
+\Omega=\bigcup_{k=1}^{K}\Omega_k \qquad\text{và}\qquad \intr\Omega_k\cap\intr\Omega_l=\emptyset\quad\text{với mọi } k\neq l .
+\]
+\end{definition}
+
+Các vùng của một phân hoạch có thể có chung biên, nhưng phần trong của chúng không giao nhau. Chẳng hạn, ba dải ngang $\{x:\,0\le x(2)\le \tfrac13\}$, $\{x:\,\tfrac13\le x(2)\le\tfrac23\}$ và $\{x:\,\tfrac23\le x(2)\le 1\}$ của hình vuông đơn vị ở \cref{fig:moons} là một phân hoạch đa diện của hình vuông đó.
+
+\begin{definition}[Hàm tuyến tính từng phần liên tục]\label{def:pwl-function}
+Hàm $f:\Omega\to\R$ được gọi là \emph{hàm tuyến tính từng phần liên tục}, gọi tắt là \emph{hàm PWL}, nếu $f$ liên tục trên $\Omega$ và tồn tại một phân hoạch đa diện $\{\Omega_1,\dots,\Omega_K\}$ của $\Omega$ cùng các hàm affine $\ell_k(x)=a_k^\T x+b_k$ sao cho
+\begin{equation}\label{eq:pwl-def}
+f(x)=\ell_k(x)\qquad\text{với mọi } x\in\Omega_k,\quad k=1,\dots,K.
+\end{equation}
+Các hàm $\ell_1,\dots,\ell_K$ được gọi là các \emph{mảnh} (hay các hàm affine cục bộ) của $f$.
+\end{definition}
+
+\begin{remark}\label{rem:terminology}
+Theo nghĩa chặt, các hàm trong \cref{def:pwl-function} nên gọi là \emph{affine} từng phần, vì mỗi mảnh là một hàm affine chứ không nhất thiết là hàm tuyến tính. Đề án dùng thuật ngữ “tuyến tính từng phần” theo thói quen trong tài liệu học máy và theo bài báo gốc~\cite{huang2013}. Điều kiện liên tục là thiết yếu: một hàm bậc thang cũng bằng hằng số trên từng mảnh nhưng không thuộc lớp hàm đang xét. Trong toàn bộ đề án, “hàm PWL” luôn được hiểu là hàm tuyến tính từng phần \emph{liên tục}.
+\end{remark}
+
+\begin{example}\label{ex:pwl}
+Một số hàm PWL sẽ gặp lại nhiều lần trong đề án:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item Hàm giá trị tuyệt đối $|t|=\max\{t,-t\}$ là hàm PWL trên $\R$ với hai mảnh: $-t$ trên $(-\infty,0]$ và $t$ trên $[0,+\infty)$.
+\item Hàm bản lề $h(t)=\max\{0,t\}$, ký hiệu $(t)_+$, có hai mảnh là $0$ và $t$ (\cref{fig:hinge1d}a). Trong mạng nơ-ron, hàm này được gọi là hàm kích hoạt ReLU.
+\item Với $p\in\R^n\setminus\{0\}$ và $q\in\R$, hàm $x\mapsto\max\{0,\,p^\T x+q\}$ là hàm PWL trên $\R^n$ với hai mảnh, ngăn cách bởi siêu phẳng $p^\T x+q=0$. Đồ thị của nó gồm hai nửa siêu phẳng nối với nhau dọc theo một “bản lề”; vì thế Breiman~\cite{breiman1993} gọi nó là \emph{siêu phẳng bản lề} (hinging hyperplane).
+\item Hàm hai biến
+\[
+\begin{aligned}
+f(x)={}&0{,}15+0{,}25\,x(1)+0{,}2\,x(2)+0{,}9\,\bigl(x(1)+x(2)-0{,}9\bigr)_+\\
+&-1{,}2\,\bigl(x(1)-0{,}6\bigr)_+ +0{,}8\,\bigl(0{,}45-x(2)\bigr)_+
+\end{aligned}
+\]
+trên hình vuông đơn vị có bảy mảnh (\cref{fig:pwlsurface}). Ba đường thẳng mà tại đó các số hạng bản lề đổi trạng thái chia hình vuông thành bảy đa giác lồi $\Omega_1,\dots,\Omega_7$; trên mỗi đa giác, $f$ là một hàm affine và đồ thị của $f$ là một mảnh mặt phẳng.
+\end{enumerate}
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_hinge_1d.pdf}
+\caption[Hàm bản lề và biểu diễn một hàm PWL một biến bằng các hàm bản lề]{(a) Hàm bản lề $h(t)=\max\{0,t\}$ và bản dịch chuyển của nó. (b) Hàm PWL một biến $f(t)=0{,}3+0{,}8t-2(t-0{,}35)_+ +2{,}5(t-0{,}7)_+$ là tổng của một hàm affine và hai hàm bản lề đặt tại hai điểm gãy; hệ số của mỗi bản lề bằng độ thay đổi hệ số góc tại điểm gãy đó (\cref{prop:1d}).}
+\label{fig:hinge1d}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_pwl_surface.pdf}
+\caption[Một hàm PWL hai biến và phân hoạch đa diện tương ứng]{Hàm PWL hai biến của \cref{ex:pwl}(d). (a) Đồ thị gồm bảy mảnh mặt phẳng nối liền nhau; các nếp gấp nằm trên ba đường thẳng $x(1)+x(2)=0{,}9$, $x(1)=0{,}6$ và $x(2)=0{,}45$. (b) Phân hoạch đa diện tương ứng của hình vuông đơn vị.}
+\label{fig:pwlsurface}
+\end{figure}
+
+\subsection{Các phép toán bảo toàn tính tuyến tính từng phần}
+
+Kiểm tra trực tiếp một hàm có phải là hàm PWL hay không theo \cref{def:pwl-function} thường khá phiền, vì phải chỉ ra được phân hoạch. Mệnh đề sau cho phép tạo ra các hàm PWL phức tạp từ những hàm đơn giản; nó sẽ được dùng nhiều lần ở Chương~\ref{chap:2}.
+
+\begin{proposition}\label{prop:closure}
+Giả sử $f,g:\R^n\to\R$ là các hàm PWL và $\alpha,\beta\in\R$. Khi đó $\alpha f+\beta g$, $\max\{f,g\}$ và $\min\{f,g\}$ đều là hàm PWL. Do đó, mọi hàm nhận được từ hữu hạn hàm affine bằng hữu hạn lần áp dụng các phép cộng, nhân với hằng số, lấy $\max$, lấy $\min$ và lấy trị tuyệt đối đều là hàm PWL.
+\end{proposition}
+
+\begin{proof}
+Gọi $\{P_i\}_{i=1}^{I}$ và $\{Q_j\}_{j=1}^{J}$ là các phân hoạch đa diện của $\R^n$ ứng với $f$ và $g$, với các mảnh tương ứng là $\ell_i$ và $m_j$. Mỗi tập $R_{ij}=P_i\cap Q_j$ là một đa diện, vì là giao của hữu hạn nửa không gian. Họ $\{R_{ij}\}$ phủ $\R^n$ và có phần trong đôi một rời nhau: nếu $(i,j)\neq(i',j')$ thì hoặc $\intr P_i\cap\intr P_{i'}=\emptyset$, hoặc $\intr Q_j\cap\intr Q_{j'}=\emptyset$. Trên $R_{ij}$ ta có $\alpha f+\beta g=\alpha\ell_i+\beta m_j$ là hàm affine; hơn nữa $\alpha f+\beta g$ liên tục. Vậy $\alpha f+\beta g$ là hàm PWL.
+
+Với $\max\{f,g\}$, ta chia tiếp mỗi $R_{ij}$ thành hai đa diện
+\[
+R_{ij}^{+}=R_{ij}\cap\{x:\ \ell_i(x)\ge m_j(x)\},\qquad R_{ij}^{-}=R_{ij}\cap\{x:\ \ell_i(x)\le m_j(x)\}
+\]
+(nếu $\ell_i\equiv m_j$ thì giữ nguyên $R_{ij}$). Khi $\ell_i-m_j$ không đồng nhất bằng hằng số, hai nửa không gian đóng $\{\ell_i\ge m_j\}$ và $\{\ell_i\le m_j\}$ có phần trong rời nhau; khi $\ell_i-m_j$ là hằng số khác $0$, một trong hai tập là rỗng. Vì vậy họ các tập $R_{ij}^{\pm}$ vẫn là một phân hoạch đa diện của $\R^n$, và trên $R_{ij}^{+}$ (tương ứng $R_{ij}^{-}$) ta có $\max\{f,g\}=\ell_i$ (tương ứng $m_j$). Hàm $\max\{f,g\}$ liên tục vì là cực đại của hai hàm liên tục, nên nó là hàm PWL. Trường hợp $\min\{f,g\}=-\max\{-f,-g\}$ suy ra từ hai trường hợp trên.
+
+Khẳng định cuối có được bằng quy nạp, vì mỗi hàm affine là hàm PWL với phân hoạch tầm thường $\{\R^n\}$ và $|f|=\max\{f,-f\}$.
+\end{proof}
+
+\begin{corollary}\label{cor:forms}
+Các hàm có dạng $\max\limits_{1\le j\le J}\ \min\limits_{i\in S_j}\ \ell_i(x)$, với $\ell_i$ affine và $S_j$ là các tập chỉ số hữu hạn, cũng như các hàm có dạng tổng các bản lề
+\[
+a^\T x+b+\sum_{m=1}^{D} c_m\max\{0,\,p_m^\T x+q_m\},
+\]
+đều là hàm PWL trên $\R^n$.
+\end{corollary}
+
+\subsection{Hàm tuyến tính từng phần một biến}
+
+Khi $n=1$, cấu trúc của hàm PWL đặc biệt đơn giản: phân hoạch của $\R$ gồm các khoảng nối tiếp nhau, ngăn cách bởi các \emph{điểm gãy}. Mệnh đề sau cho thấy mọi hàm như vậy là tổng của một hàm affine và các hàm bản lề đặt tại các điểm gãy.
+
+\begin{proposition}\label{prop:1d}
+Cho $f:\R\to\R$ là hàm PWL với các điểm gãy $t_1<t_2<\dots<t_K$, và gọi $s_0,s_1,\dots,s_K$ lần lượt là hệ số góc của $f$ trên các khoảng $(-\infty,t_1]$, $[t_1,t_2]$, \dots, $[t_K,+\infty)$. Khi đó, với mọi $t\in\R$,
+\begin{equation}\label{eq:1d-hinge}
+f(t)=f(t_1)+s_0\,(t-t_1)+\sum_{j=1}^{K}(s_j-s_{j-1})\,(t-t_j)_+ .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Ký hiệu $g(t)$ là vế phải của~\eqref{eq:1d-hinge}. Trên $(-\infty,t_1]$ mọi số hạng bản lề đều bằng $0$, nên $g(t)=f(t_1)+s_0(t-t_1)=f(t)$, vì trên khoảng này $f$ là hàm affine với hệ số góc $s_0$. Giả sử $f=g$ trên $(-\infty,t_i]$ với một $i\in\{1,\dots,K\}$, và quy ước $t_{K+1}=+\infty$. Trên $[t_i,t_{i+1}]$, các số hạng bản lề với $j\le i$ bằng $t-t_j$, còn các số hạng với $j>i$ bằng $0$. Do đó $g$ là hàm affine trên khoảng này với hệ số góc
+\[
+s_0+\sum_{j=1}^{i}(s_j-s_{j-1})=s_i ,
+\]
+trùng với hệ số góc của $f$. Hai hàm affine có cùng hệ số góc và cùng giá trị tại $t_i$ thì trùng nhau, nên $f=g$ trên $(-\infty,t_{i+1}]$. Theo quy nạp, $f=g$ trên toàn $\R$.
+\end{proof}
+
+\begin{remark}\label{rem:1d}
+Hệ số của hàm bản lề đặt tại $t_j$ chính là độ thay đổi hệ số góc $s_j-s_{j-1}$, tức là “độ gãy” của đồ thị tại $t_j$ (\cref{fig:hinge1d}b). Mệnh đề~\ref{prop:1d} có một hệ quả quan trọng cho học máy: nếu các điểm gãy được cố định trước, thì mọi hàm PWL một biến với các điểm gãy đó là tổ hợp tuyến tính của $K+2$ hàm \emph{cố định} $1,\ t,\ (t-t_1)_+,\dots,(t-t_K)_+$. Khi ấy, học một hàm PWL chỉ còn là tìm các hệ số của một tổ hợp tuyến tính, tức là một bài toán tuyến tính theo tham số. Đây chính là ý tưởng của ánh xạ đặc trưng cộng tính ở Mục~\ref{sec:maps}.
+\end{remark}
+
+\subsection{Biểu diễn hàm tuyến tính từng phần nhiều biến}
+
+Khi $n\ge 2$, phân hoạch đa diện có thể rất phức tạp và các vùng không còn được sắp thứ tự tự nhiên như trên đường thẳng. Dù vậy, hai định lý dưới đây khẳng định rằng mọi hàm PWL vẫn viết được dưới những dạng tường minh và gọn. Chứng minh của chúng khá dài và nằm ngoài phạm vi đề án; ta chỉ phát biểu và phân tích ý nghĩa.
+
+\begin{theorem}[Biểu diễn max--min~\cite{tarela1999,ovchinnikov2002}]\label{thm:lattice}
+Cho $f:\R^n\to\R$ là hàm PWL với các mảnh $\ell_1,\dots,\ell_K$. Khi đó tồn tại các tập chỉ số $S_1,\dots,S_J\subseteq\{1,\dots,K\}$ sao cho
+\begin{equation}\label{eq:lattice}
+f(x)=\max_{1\le j\le J}\ \min_{i\in S_j}\ \ell_i(x)\qquad\text{với mọi } x\in\R^n .
+\end{equation}
+\end{theorem}
+
+\begin{theorem}[Wang và Sun~{\cite[Định lý 1]{wang2005}}]\label{thm:wangsun}
+Với mọi hàm PWL $f:\R^n\to\R$, tồn tại số nguyên dương $D$, các dấu $\sigma_1,\dots,\sigma_D\in\{-1,1\}$ và các hàm affine $\ell_{m,i}$ ($m=1,\dots,D$; $i=0,\dots,n$) sao cho
+\begin{equation}\label{eq:ghh}
+f(x)=\sum_{m=1}^{D}\sigma_m\max\bigl\{\ell_{m,0}(x),\,\ell_{m,1}(x),\dots,\ell_{m,n}(x)\bigr\}\qquad\text{với mọi } x\in\R^n .
+\end{equation}
+\end{theorem}
+
+\begin{remark}\label{rem:ghh}
+Có bốn điểm cần lưu ý về hai định lý trên.
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item Trong~\cite{wang2005}, mỗi số hạng là cực đại của \emph{không quá} $n+1$ hàm affine; lặp lại một hàm nếu cần, ta luôn có thể coi mỗi số hạng có đúng $n+1$ hàm như trong~\eqref{eq:ghh}. Mỗi số hạng là một dạng tổng quát của siêu phẳng bản lề, và Wang cùng Sun gọi mô hình~\eqref{eq:ghh} là \emph{siêu phẳng bản lề tổng quát} (GHH).
+\item Khi $n=1$, mỗi số hạng $\max\{\ell_0,\ell_1\}=\ell_0+(\ell_1-\ell_0)_+$ là một hàm affine cộng một hàm bản lề, và~\eqref{eq:ghh} trở về dạng của \cref{prop:1d}. Khi $n\ge 2$, các số hạng hai mảnh $\max\{\ell_0,\ell_1\}$ của Breiman không còn đủ: tổng các siêu phẳng bản lề xấp xỉ được mọi hàm liên tục trên một tập compact~\cite{breiman1993} nhưng không biểu diễn đúng được mọi hàm PWL~\cite{wang2005}. \Cref{thm:wangsun} cho biết $n+1$ mảnh trong mỗi số hạng là đủ.
+\item Cả hai định lý chỉ khẳng định sự tồn tại; số số hạng $J$ hay $D$ có thể lớn hơn nhiều so với số mảnh $K$. Trong thực hành, điều này trở thành câu hỏi: cần bao nhiêu đặc trưng? Chương~\ref{chap:3} sẽ trả lời câu hỏi này bằng thực nghiệm.
+\item Lớp hàm PWL cũng chính là lớp hàm mà mạng nơ-ron ReLU biểu diễn được: một hàm $\R^n\to\R$ biểu diễn được bởi một mạng ReLU (với số lớp đủ lớn) khi và chỉ khi nó là hàm PWL~\cite{arora2018}.
+\end{enumerate}
+\end{remark}
+
+% ----------------------------------------------------------------------------
+% ----------------------------------------------------------------------------
+\section*{Tiểu kết Chương 1}
+\phantomsection\addcontentsline{toc}{section}{Tiểu kết Chương 1}
+
+Chương 1 đã chuẩn bị ba nhóm công cụ. Thứ nhất là hình học lồi: tập lồi, đa diện và định lý siêu phẳng phân tách, trong đó \cref{cor:separable} cho điều kiện cần và đủ để hai tập điểm tách tuyến tính được. Thứ hai là tối ưu lồi và đối ngẫu: mọi cực tiểu địa phương của bài toán lồi là toàn cục, và khi các ràng buộc là affine, đối ngẫu mạnh cùng điều kiện KKT cho phép chuyển qua lại giữa bài toán gốc và bài toán đối ngẫu. Thứ ba là lớp hàm tuyến tính từng phần liên tục: lớp này đóng với các phép cộng, lấy cực đại và cực tiểu, và mọi hàm trong lớp đều viết được thành tổng các hàm bản lề tổng quát (\cref{thm:wangsun}). Chương~\ref{chap:2} dùng hai nhóm công cụ đầu để xây dựng SVM, và nhóm thứ ba để xây dựng ánh xạ đặc trưng tuyến tính từng phần.

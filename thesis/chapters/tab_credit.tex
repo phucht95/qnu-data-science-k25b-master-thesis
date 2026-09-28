@@ -1,0 +1,27 @@
+\begin{table}[t]
+\centering
+\caption[Kết quả trên dữ liệu vỡ nợ thẻ tín dụng]{Kết quả trên dữ liệu vỡ nợ thẻ tín dụng (trung bình $\pm$ độ lệch chuẩn qua $5$ lần chia $70/30$). AUC: diện tích dưới đường ROC; ĐCX-CB: độ chính xác cân bằng; F1 tính cho lớp vỡ nợ; ngưỡng được chọn trên tập huấn luyện sao cho tỉ lệ dự báo vỡ nợ bằng tỉ lệ vỡ nợ quan sát. Cột cuối: số thực cần lưu (trung vị); thời gian dự đoán được đo riêng ở \cref{sec:cost}.}
+\label{tab:credit}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}l c c c r@{}}
+\toprule
+\textbf{Mô hình} & \textbf{AUC} & \textbf{ĐCX-CB (\%)} & \textbf{F1 (\%)} & \textbf{Số thực}\\
+\midrule
+Hồi quy logistic & $0{,}724\pm0{,}009$ & $68{,}7\pm0{,}6$ & $51{,}2\pm0{,}9$ & 79\\
+Thẻ điểm (logistic, biến rời rạc hóa) & $0{,}773\pm0{,}006$ & $70{,}3\pm0{,}6$ & $53{,}7\pm1{,}0$ & 381\\
+SVM tuyến tính & $0{,}706\pm0{,}008$ & $68{,}5\pm0{,}8$ & $50{,}9\pm1{,}4$ & 79\\
+\midrule
+PWL-LS-SVM, cộng tính, lưới đều & $0{,}772\pm0{,}006$ & $70{,}3\pm0{,}5$ & $53{,}6\pm0{,}9$ & 547\\
+PWL-LS-SVM, cộng tính, phân vị & $0{,}776\pm0{,}006$ & $70{,}4\pm0{,}7$ & $53{,}8\pm1{,}1$ & 349\\
+\quad và ràng buộc đơn điệu (Mục~\ref{sec:monotone}) & $0{,}775\pm0{,}006$ & $70{,}3\pm0{,}8$ & $53{,}7\pm1{,}2$ & 349\\
+PWL-C-SVM, cộng tính, phân vị & $0{,}744\pm0{,}007$ & $67{,}8\pm0{,}8$ & $49{,}9\pm1{,}4$ & 349\\
+PWL-LS-SVM, HH & $0{,}743\pm0{,}007$ & $69{,}5\pm0{,}6$ & $52{,}4\pm1{,}0$ & 6.631\\
+\midrule
+SVM-RBF & $0{,}716\pm0{,}010$ & $69{,}2\pm0{,}6$ & $52{,}0\pm1{,}0$ & 243.134\\
+MLP-ReLU & $0{,}768\pm0{,}005$ & $70{,}0\pm0{,}4$ & $53{,}3\pm0{,}7$ & 6.605\\
+Tổ hợp cây tăng cường & $0{,}779\pm0{,}006$ & $70{,}3\pm0{,}7$ & $53{,}7\pm1{,}1$ & 4.636\\
+\bottomrule
+\end{tabular}
+\end{table}

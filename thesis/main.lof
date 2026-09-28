@@ -1,0 +1,26 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Tập lồi, tập không lồi và bao lồi}}{10}{figure.caption.17}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Đa diện, siêu phẳng phân tách và siêu phẳng tựa}}{13}{figure.caption.18}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Khoảng cách đến siêu phẳng và đối ngẫu yếu}}{18}{figure.caption.20}%
+\contentsline {figure}{\numberline {1.4}{\ignorespaces Hàm bản lề và biểu diễn một hàm PWL một biến bằng các hàm bản lề}}{20}{figure.caption.21}%
+\contentsline {figure}{\numberline {1.5}{\ignorespaces Một hàm PWL hai biến và phân hoạch đa diện tương ứng}}{21}{figure.caption.22}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces SVM lề cứng}}{30}{figure.caption.27}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces SVM lề mềm và các hàm mất mát}}{33}{figure.caption.30}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Ánh xạ đặc trưng biến dữ liệu không tách được thành tách được}}{34}{figure.caption.31}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Biên tuyến tính từng phần cho dữ liệu hai mặt trăng}}{37}{figure.caption.33}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces PWL-SVM nhìn như một mạng nơ-ron hai lớp}}{45}{figure.caption.35}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Phân vùng tuyến tính do ba dạng ánh xạ đặc trưng sinh ra}}{47}{figure.caption.39}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Ba biên phân loại khác nhau sinh bởi cùng một ánh xạ HH}}{49}{figure.caption.40}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Biên của 1-NN và của SVM hạt nhân giao}}{53}{figure.caption.42}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Biên quyết định của năm phương pháp trên dữ liệu hai chiều}}{59}{figure.caption.45}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Tái hiện thí nghiệm Cosexp: ảnh hưởng của số đặc trưng}}{61}{figure.caption.47}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Chênh lệch độ chính xác so với SVM hạt nhân Gauss}}{65}{figure.caption.52}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Ảnh hưởng của số đặc trưng và quy tắc chọn tham số}}{67}{figure.caption.57}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Đánh đổi giữa độ chính xác và thời gian dự đoán}}{70}{figure.caption.60}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Hai đặc điểm của dữ liệu tín dụng}}{72}{figure.caption.63}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Đường cong ROC trên dữ liệu tín dụng}}{75}{figure.caption.65}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Các hàm đóng góp của mô hình PWL-SVM cộng tính}}{77}{figure.caption.66}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Mức độ ảnh hưởng của các biến và giải thích một hồ sơ}}{78}{figure.caption.67}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Hàm đóng góp khi có và không có ràng buộc đơn điệu}}{80}{figure.caption.68}%

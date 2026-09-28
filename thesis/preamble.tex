@@ -1,0 +1,191 @@
+% ============================================================================
+%  Preamble of the thesis sample (pdfLaTeX).  Layout follows Phuc's template:
+%  A4, 14pt, margins 35/20/30/30 mm, page number centred at the top.
+% ============================================================================
+\usepackage[utf8]{vietnam}
+\usepackage[left=35mm,right=20mm,top=30mm,bottom=30mm,headsep=10mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{times}
+\usepackage[varg]{newtxmath}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{indentfirst}
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{3pt plus 1pt}
+\setlength{\emergencystretch}{1.5em}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage[font=small,labelfont=bf,labelsep=period,justification=justified,singlelinecheck=true]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs,multirow,array,tabularx}
+\usepackage[section,above]{placeins}
+\usepackage[output-decimal-marker={,},group-separator={.},detect-all]{siunitx}
+\usepackage[shortlabels]{enumitem}
+\setlist{itemsep=2pt,topsep=4pt,parsep=0pt}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,decorations.pathreplacing}
+\usepackage[most]{tcolorbox}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{titlesec}
+\usepackage[titles]{tocloft}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% ---------------------------------------------------------------- colours
+\definecolor{planframe}{HTML}{2a78d6}
+\definecolor{planback}{HTML}{f3f7fd}
+\definecolor{inktwo}{HTML}{52514e}
+
+% ---------------------------------------------------------------- headings
+\renewcommand{\chaptername}{CHƯƠNG}
+\titleformat{\chapter}[display]
+  {\centering\bfseries\fontsize{16}{20}\selectfont}
+  {CHƯƠNG \thechapter}{4pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+\titleformat{\section}[hang]{\bfseries\fontsize{14.4}{18}\selectfont}{\thesection.}{0.4em}{}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titleformat{\subsection}[hang]{\bfseries\itshape\fontsize{14.4}{18}\selectfont}{\thesubsection.}{0.4em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% un-numbered chapters (Mở đầu, Kết luận, ...) centred in capitals
+\newcommand{\unchapter}[1]{%
+  \chapter*{#1}\addcontentsline{toc}{chapter}{#1}\markboth{#1}{#1}}
+
+% ---------------------------------------------------------------- page style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---------------------------------------------------------------- lists (TOC, LOF, LOT)
+\AtBeginDocument{%
+  \renewcommand{\contentsname}{MỤC LỤC}%
+  \renewcommand{\listfigurename}{DANH MỤC CÁC HÌNH}%
+  \renewcommand{\listtablename}{DANH MỤC CÁC BẢNG}%
+  \renewcommand{\figurename}{Hình}%
+  \renewcommand{\tablename}{Bảng}%
+  \renewcommand{\chaptername}{CHƯƠNG}%
+  \renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}%
+  \renewcommand{\proofname}{Chứng minh}}
+\renewcommand{\cftchappresnum}{Chương }
+\settowidth{\cftchapnumwidth}{\bfseries Chương 3.\ }
+\renewcommand{\cftchapaftersnum}{.}
+\renewcommand{\cftsecaftersnum}{.}
+\renewcommand{\cftsubsecaftersnum}{.}
+\renewcommand{\cftfigpresnum}{Hình }
+\renewcommand{\cftfigaftersnum}{.}
+\settowidth{\cftfignumwidth}{Hình 3.10.\ }
+\renewcommand{\cfttabpresnum}{Bảng }
+\renewcommand{\cfttabaftersnum}{.}
+\settowidth{\cfttabnumwidth}{Bảng 3.10.\ }
+\setlength{\cftbeforechapskip}{6pt}
+
+% ---------------------------------------------------------------- numbering
+\numberwithin{equation}{chapter}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}
+
+% ---------------------------------------------------------------- theorems
+\newtheoremstyle{vnplain}{6pt}{6pt}{\itshape}{}{\bfseries}{.}{0.5em}{}
+\newtheoremstyle{vndef}{6pt}{6pt}{\normalfont}{}{\bfseries}{.}{0.5em}{}
+\newtheoremstyle{vnrem}{6pt}{6pt}{\normalfont}{}{\bfseries\itshape}{.}{0.5em}{}
+\theoremstyle{vnplain}
+\newtheorem{theorem}{Định lý}[chapter]
+\newtheorem{lemma}[theorem]{Bổ đề}
+\newtheorem{proposition}[theorem]{Mệnh đề}
+\newtheorem{corollary}[theorem]{Hệ quả}
+\theoremstyle{vndef}
+\newtheorem{definition}[theorem]{Định nghĩa}
+\newtheorem{example}[theorem]{Ví dụ}
+\theoremstyle{vnrem}
+\newtheorem{remark}[theorem]{Nhận xét}
+\renewcommand{\proofname}{Chứng minh}
+\renewcommand{\qedsymbol}{$\square$}
+
+\crefname{theorem}{Định lý}{Định lý}
+\crefname{lemma}{Bổ đề}{Bổ đề}
+\crefname{proposition}{Mệnh đề}{Mệnh đề}
+\crefname{corollary}{Hệ quả}{Hệ quả}
+\crefname{definition}{Định nghĩa}{Định nghĩa}
+\crefname{example}{Ví dụ}{Ví dụ}
+\crefname{remark}{Nhận xét}{Nhận xét}
+\crefname{figure}{Hình}{Hình}
+\crefname{table}{Bảng}{Bảng}
+\crefname{chapter}{Chương}{Chương}
+\crefname{section}{Mục}{Mục}
+\crefname{subsection}{Mục}{Mục}
+\crefname{equation}{}{}
+\crefname{algorithm}{Thuật toán}{Thuật toán}
+\creflabelformat{equation}{(#2#1#3)}
+% \Cref would upper-case the first letter itself (loops on T5 "Đ"): give explicit names
+\Crefname{theorem}{Định lý}{Định lý}
+\Crefname{lemma}{Bổ đề}{Bổ đề}
+\Crefname{proposition}{Mệnh đề}{Mệnh đề}
+\Crefname{corollary}{Hệ quả}{Hệ quả}
+\Crefname{definition}{Định nghĩa}{Định nghĩa}
+\Crefname{example}{Ví dụ}{Ví dụ}
+\Crefname{remark}{Nhận xét}{Nhận xét}
+\Crefname{figure}{Hình}{Hình}
+\Crefname{table}{Bảng}{Bảng}
+\Crefname{chapter}{Chương}{Chương}
+\Crefname{section}{Mục}{Mục}
+\Crefname{subsection}{Mục}{Mục}
+\Crefname{equation}{}{}
+\Crefname{algorithm}{Thuật toán}{Thuật toán}
+\newcommand{\crefpairconjunction}{ và }
+\newcommand{\crefmiddleconjunction}{, }
+\newcommand{\creflastconjunction}{ và }
+\newcommand{\crefrangeconjunction}{--}
+
+
+% ---------------------------------------------------------------- algorithms
+\floatname{algorithm}{Thuật toán}
+\renewcommand{\thealgorithm}{\thechapter.\arabic{algorithm}}
+\algrenewcommand\algorithmicrequire{\textbf{Đầu vào:}}
+\algrenewcommand\algorithmicensure{\textbf{Đầu ra:}}
+\algrenewcommand\algorithmicfor{\textbf{với}}
+\algrenewcommand\algorithmicdo{\textbf{thực hiện}}
+\algrenewcommand\algorithmicif{\textbf{nếu}}
+\algrenewcommand\algorithmicthen{\textbf{thì}}
+\algrenewcommand\algorithmicelse{\textbf{ngược lại}}
+\algrenewcommand\algorithmicreturn{\textbf{trả về}}
+
+% ---------------------------------------------------------------- "planned content" box
+\newtcolorbox{dukien}[1][]{enhanced,breakable,colback=planback,colframe=planframe,
+  boxrule=0.6pt,arc=2pt,left=7pt,right=7pt,top=5pt,bottom=5pt,
+  fonttitle=\bfseries\small,coltitle=white,title={Nội dung dự kiến#1},
+  fontupper=\small\setstretch{1.15}}
+\newcommand{\trang}[1]{\hfill{\normalfont\itshape(khoảng #1 trang)}}
+
+% ---------------------------------------------------------------- notation
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\Om}{\Omega}
+\newcommand{\T}{\top}
+\newcommand{\pos}[1]{\left(#1\right)_{+}}
+\newcommand{\sgn}{\operatorname{sign}}
+\DeclareMathOperator{\intr}{int}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\bphi}{\bm{\varphi}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+% ---------------------------------------------------------------- code listings
+\usepackage{listings}
+\lstset{language=Python,basicstyle=\ttfamily\footnotesize\setstretch{1.0},
+  keywordstyle=\bfseries\color{planframe},commentstyle=\itshape\color{inktwo},
+  stringstyle=\color{inktwo},frame=single,rulecolor=\color{black!25},framesep=4pt,
+  xleftmargin=6pt,xrightmargin=6pt,showstringspaces=false,columns=fullflexible,
+  keepspaces=true,backgroundcolor=\color{planback},aboveskip=6pt,belowskip=6pt}
