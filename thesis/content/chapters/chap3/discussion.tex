@@ -1,0 +1,17 @@
+\section{Thảo luận}\label{sec:discussion}
+
+Các kết quả của chương trả lời bốn câu hỏi nghiên cứu như sau.
+\begin{itemize}
+\item \emph{CH1 (độ chính xác).} Trên mười bộ dữ liệu chuẩn, PWL-SVM cộng tính hơn SVM tuyến tính trung bình 1{,}7 điểm phần trăm nhưng kém SVM hạt nhân Gauss 1{,}4 điểm (cả hai khác biệt đều có ý nghĩa thống kê ở mức $5\%$ sau hiệu chỉnh Holm); nhận định “tương đương SVM hạt nhân Gauss” của bài báo gốc vì vậy không được xác nhận khi thực nghiệm được lặp lại. Trên dữ liệu tín dụng, PWL-LS-SVM cộng tính thuộc nhóm mô hình tốt nhất.
+\item \emph{CH2 (chi phí).} Với ánh xạ cộng tính, mô hình nhỏ hơn SVM hạt nhân Gauss từ $2{,}5$ đến $36$ lần trên dữ liệu chuẩn và khoảng 690 lần trên dữ liệu tín dụng, và dự đoán nhanh hơn khoảng 200 đến 430 lần. PWL-LS-SVM còn là mô hình phi tuyến huấn luyện nhanh nhất.
+\item \emph{CH3 (cấu hình).} Ánh xạ cộng tính với nút phân vị và $M/n=5$--$10$ là lựa chọn mặc định tốt cho dữ liệu dạng bảng; ánh xạ HH chỉ có lợi khi tương tác giữa các biến đáng kể, và quy tắc $|p(1)|=1$ của bài báo gốc nên được thay bằng $\|p\|_2=1$ để tránh sự cố số trên dữ liệu thưa.
+\item \emph{CH4 (ứng dụng).} Trên dữ liệu tín dụng, PWL-LS-SVM cộng tính đạt AUC 0{,}776, chỉ kém một chút so với tổ hợp cây tăng cường (0{,}779) và nhỉnh hơn thẻ điểm (0{,}773), với một mô hình chỉ gồm 349 số thực đọc được như một thẻ điểm; khi thêm ràng buộc đơn điệu, AUC hầu như không đổi (0{,}775 so với 0{,}776).
+\end{itemize}
+
+Như vậy, PWL-SVM cộng tính phù hợp với dữ liệu dạng bảng có số chiều vừa phải khi mô hình cần nhỏ, dự đoán nhanh hoặc phải giải thích được, chẳng hạn trong chấm điểm tín dụng hay các hệ thống nhúng. Khi chỉ cần độ chính xác, SVM hạt nhân Gauss, mạng nơ-ron hay tổ hợp cây thường là lựa chọn tốt hơn; với dữ liệu nhiều chiều hoặc có tương tác phức tạp, nên học cả các siêu phẳng, tức là chuyển sang mạng nơ-ron ReLU. Các kết luận trên bị giới hạn bởi số bộ dữ liệu (nên lực của các kiểm định thống kê còn thấp), bởi cách xây dựng đơn giản của các lưới tham số và của thẻ điểm đối chứng, và bởi tính đại diện của dữ liệu tín dụng, vốn được thu thập ở Đài Loan năm 2005.
+
+% ----------------------------------------------------------------------------
+\section*{Tiểu kết Chương 3}
+\phantomsection\addcontentsline{toc}{section}{Tiểu kết Chương 3}
+
+Chương 3 đã cài đặt và kiểm chứng PWL-SVM, rồi đánh giá phương pháp trên dữ liệu hai chiều, mười bộ dữ liệu chuẩn và bài toán dự báo vỡ nợ thẻ tín dụng. PWL-SVM không chính xác hơn các mô hình phi tuyến mạnh như SVM hạt nhân Gauss, nhưng cho những mô hình nhỏ hơn từ vài lần đến hàng trăm lần, dự đoán nhanh hơn nhiều, được huấn luyện bằng một bài toán lồi và, với ánh xạ cộng tính, đọc được từng thành phần. Trên dữ liệu tín dụng, nơi các tính chất đó được coi trọng, PWL-LS-SVM cộng tính với nút phân vị đạt độ chính xác ngang những mô hình tốt nhất và, với ràng buộc đơn điệu, nhất quán với tri thức nghiệp vụ mà không mất độ chính xác.

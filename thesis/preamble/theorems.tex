@@ -1,0 +1,70 @@
+% ---------------------------------------------------------------- theorems
+\newtheoremstyle{vnplain}{6pt}{6pt}{\itshape}{}{\bfseries}{.}{0.5em}{}
+\newtheoremstyle{vndef}{6pt}{6pt}{\normalfont}{}{\bfseries}{.}{0.5em}{}
+\newtheoremstyle{vnrem}{6pt}{6pt}{\normalfont}{}{\bfseries\itshape}{.}{0.5em}{}
+\theoremstyle{vnplain}
+\newtheorem{theorem}{Định lý}[chapter]
+% \newtheorem{lemma}[theorem]{Bổ đề}
+% \newtheorem{proposition}[theorem]{Mệnh đề}
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Mệnh đề}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Bổ đề}
+\aliascntresetthe{lemma}
+% \newtheorem{proposition}{Mệnh đề}[chapter]
+% \newtheorem{corollary}[theorem]{Hệ quả}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Hệ quả}
+\aliascntresetthe{corollary}
+\theoremstyle{vndef}
+% \newtheorem{definition}[theorem]{Định nghĩa}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Định nghĩa}
+\aliascntresetthe{definition}
+% \newtheorem{example}[theorem]{Ví dụ}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Ví dụ}
+\aliascntresetthe{example}
+\theoremstyle{vnrem}
+% \newtheorem{remark}[theorem]{Nhận xét}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Nhận xét}
+\aliascntresetthe{remark}
+\renewcommand{\proofname}{Chứng minh}
+\renewcommand{\qedsymbol}{$\square$}
+
+\crefname{theorem}{Định lý}{Định lý}
+\crefname{lemma}{Bổ đề}{Bổ đề}
+\crefname{proposition}{Mệnh đề}{Mệnh đề}
+\crefname{corollary}{Hệ quả}{Hệ quả}
+\crefname{definition}{Định nghĩa}{Định nghĩa}
+\crefname{example}{Ví dụ}{Ví dụ}
+\crefname{remark}{Nhận xét}{Nhận xét}
+\crefname{figure}{Hình}{Hình}
+\crefname{table}{Bảng}{Bảng}
+\crefname{chapter}{Chương}{Chương}
+\crefname{section}{Mục}{Mục}
+\crefname{subsection}{Mục}{Mục}
+\crefname{equation}{}{}
+\crefname{algorithm}{Thuật toán}{Thuật toán}
+\creflabelformat{equation}{(#2#1#3)}
+% \Cref would upper-case the first letter itself (loops on T5 "Đ"): give explicit names
+\Crefname{theorem}{Định lý}{Định lý}
+\Crefname{lemma}{Bổ đề}{Bổ đề}
+\Crefname{proposition}{Mệnh đề}{Mệnh đề}
+\Crefname{corollary}{Hệ quả}{Hệ quả}
+\Crefname{definition}{Định nghĩa}{Định nghĩa}
+\Crefname{example}{Ví dụ}{Ví dụ}
+\Crefname{remark}{Nhận xét}{Nhận xét}
+\Crefname{figure}{Hình}{Hình}
+\Crefname{table}{Bảng}{Bảng}
+\Crefname{chapter}{Chương}{Chương}
+\Crefname{section}{Mục}{Mục}
+\Crefname{subsection}{Mục}{Mục}
+\Crefname{equation}{}{}
+\Crefname{algorithm}{Thuật toán}{Thuật toán}
+\newcommand{\crefpairconjunction}{ và }
+\newcommand{\crefmiddleconjunction}{, }
+\newcommand{\creflastconjunction}{ và }
+\newcommand{\crefrangeconjunction}{--}

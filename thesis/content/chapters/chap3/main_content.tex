@@ -1,0 +1,82 @@
+% ============================================================================
+%  CHƯƠNG 3. CÀI ĐẶT, THỰC NGHIỆM VÀ ỨNG DỤNG
+% ============================================================================
+\chapter{Cài đặt, thực nghiệm và ứng dụng}\label{chap:3}
+
+Chương này kiểm nghiệm bằng thực nghiệm các kết quả của Chương~\ref{chap:2} và trả lời bốn câu hỏi nghiên cứu nêu ở Mở đầu. Sau phần cài đặt (\cref{sec:impl}), dữ liệu hai chiều được dùng để quan sát trực tiếp biên quyết định (\cref{sec:exp2d}). \Cref{sec:benchmark} tái hiện một thí nghiệm của bài báo gốc và so sánh PWL-SVM với sáu phương pháp khác trên mười bộ dữ liệu chuẩn; \cref{sec:cost} đo chi phí tính toán; \cref{sec:application} áp dụng PWL-SVM cho bài toán dự báo vỡ nợ thẻ tín dụng; \cref{sec:discussion} thảo luận các kết quả.
+
+% ----------------------------------------------------------------------------
+\section{Cài đặt}\label{sec:impl}
+
+Toàn bộ thực nghiệm được cài đặt bằng Python~3 với NumPy~\cite{harris2020}, SciPy~\cite{virtanen2020} và scikit-learn~\cite{pedregosa2011}. Mô-đun chính \texttt{pwlsvm.py} gồm hai lớp theo giao diện \texttt{fit}/\texttt{predict} của scikit-learn, nhờ đó dùng được trực tiếp các công cụ kiểm định chéo và tìm kiếm tham số của thư viện này. Lớp \texttt{PWLFeatures} tính ánh xạ~\eqref{eq:feature-map} cho ba dạng cộng tính, HH và GHH theo Mục~\ref{sec:maps}, với hai tùy chọn bổ sung: đặt nút theo phân vị (\cref{rem:quantile}) và chuẩn hóa $\|p\|_2=1$ (\cref{rem:scale}). Lớp \texttt{PWLSVM} chuẩn hóa từng thành phần về $[0,1]$, tính $\varphi(x)$ rồi giải bài toán tuyến tính trên $\varphi(x)$ (\cref{alg:pwlsvm}). PWL-LS-SVM được giải trực tiếp ở dạng gốc theo \cref{prop:ridge}. PWL-C-SVM có hai bộ giải: LIBSVM~\cite{chang2011} giải đúng bài toán đối ngẫu~\eqref{eq:pwl-c-dual} và được dùng cho các thí nghiệm nhỏ ở \cref{sec:exp2d,sec:cosexp}; LIBLINEAR~\cite{fan2008} giải bài toán trên đặc trưng tường minh bằng phương pháp hạ theo tọa độ, nhanh hơn nhiều khi $N$ hoặc $\gamma$ lớn, nên được dùng cho mọi thí nghiệm còn lại, với cái giá là hệ số chặn bị chính quy hóa nhẹ (nó được đưa vào như trọng số của một đặc trưng hằng bằng $10$, tương đương phạt thêm $w_0^2/200$). Mô-đun \texttt{pwlsvm\_monotone.py} bổ sung ràng buộc đơn điệu (Mục~\ref{sec:monotone}). Mọi phương pháp đối chứng được đặt trong cùng một khung, dùng chung cách chuẩn hóa, cách chia dữ liệu và cách chọn tham số.
+
+\begin{algorithm}[t]
+\caption{Huấn luyện và dự đoán với PWL-SVM}\label{alg:pwlsvm}
+\begin{algorithmic}[1]
+\Require dữ liệu $\{(x_k,y_k)\}_{k=1}^{N}$; dạng ánh xạ (cộng tính, HH hoặc GHH); số đặc trưng trên mỗi chiều $M/n$; hằng số $\gamma$
+\Ensure trọng số $w\in\R^M$, hệ số chặn $w_0$, tham số của ánh xạ và của phép chuẩn hóa
+\State Chuẩn hóa từng thành phần của $x_k$ về $[0,1]$; lưu giá trị nhỏ nhất và lớn nhất
+\If{dạng cộng tính}
+  \State đặt $S=M/n$ và các nút $q=s/S$ ($s=1,\dots,S-1$), hoặc các phân vị mức $s/S$, trên mỗi trục
+\Else
+  \For{$m=n+1,\dots,M$}
+    \State sinh $1$ siêu phẳng (HH) hoặc $n$ siêu phẳng (GHH) theo~\eqref{eq:random-plane}
+  \EndFor
+\EndIf
+\State Lập ma trận $\Phi\in\R^{N\times M}$ có hàng thứ $k$ là $\varphi(x_k)^\T$, theo~\eqref{eq:feature-map}
+\State Giải~\eqref{eq:pwl-c-dual} rồi tính $w=\sum_k\alpha_ky_k\varphi(x_k)$ (PWL-C-SVM), hoặc giải~\eqref{eq:ridge} (PWL-LS-SVM)
+\State \textbf{Dự đoán} điểm mới $x$: chuẩn hóa $x$ bằng các giá trị đã lưu, trả về $\sgn\bigl(w^\T\varphi(x)+w_0\bigr)$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Kiểm chứng tính đúng đắn.} Trên dữ liệu hai mặt trăng ($N=400$, $M=20$, $\gamma=10$), với cả ba dạng ánh xạ, hai hệ thức của Chương~\ref{chap:2} được kiểm tra bằng số. Với PWL-LS-SVM, nghiệm của dạng gốc (\cref{prop:ridge}) và nghiệm của hệ đối ngẫu~\eqref{eq:pwl-ls-dual} sai khác không quá $7\cdot10^{-12}$. Với PWL-C-SVM, vectơ $w=\sum_k\alpha_ky_k\varphi(x_k)$ khôi phục từ nghiệm đối ngẫu với hạt nhân hữu hạn hạng~\eqref{eq:kernel} trùng với vectơ thu được khi giải trực tiếp trên $\varphi(x)$ (sai khác dưới $2\cdot10^{-12}$), và hai bộ phân loại dự đoán giống hệt nhau trên toàn bộ tập kiểm tra. Ví dụ hai mặt trăng ở Mục~\ref{sec:maps} cũng tái hiện đúng hiện tượng mà bài báo gốc mô tả: bốn đặc trưng cộng tính cho một biên ba đoạn với các điểm gãy nằm trên hai đường $x(2)=\tfrac13$ và $x(2)=\tfrac23$.
+
+% ----------------------------------------------------------------------------
+\section{Thực nghiệm minh họa trên dữ liệu hai chiều}\label{sec:exp2d}
+
+Dữ liệu hai chiều cho phép nhìn trực tiếp biên quyết định. Đề án dùng bốn bộ dữ liệu tổng hợp có độ khó tăng dần (\cref{fig:demo2d}): hai mặt trăng (nhiễu Gauss với độ lệch chuẩn $0{,}15$), hai vòng tròn đồng tâm (tỉ số bán kính $0{,}5$, nhiễu $0{,}08$), bàn cờ $4\times4$ và hai xoắn ốc lồng nhau ($1{,}6$ vòng, nhiễu $0{,}06$); mỗi bộ gồm $500$ điểm huấn luyện và $500$ điểm kiểm tra như trong bài báo gốc. Năm phương pháp được so sánh: SVM tuyến tính; PWL-C-SVM với ánh xạ cộng tính ($M/n=10$), HH ($M/n=50$, tức $98$ siêu phẳng) và GHH ($M/n=25$, tức $48$ đặc trưng với tổng cộng $96$ siêu phẳng); và SVM hạt nhân Gauss. Hằng số $\gamma$ được chọn trong $\{2^{-3},2^{-1},\dots,2^{11}\}$ bằng kiểm định chéo $5$ phần trên tập huấn luyện (với SVM hạt nhân Gauss, $1/\sigma^2$ được chọn đồng thời trong $\{2^{-3},2^{-1},\dots,2^{9}\}$), và toàn bộ quy trình được lặp lại $10$ lần (\cref{tab:exp2d}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{fig_demo_2d.pdf}
+\caption[Biên quyết định của năm phương pháp trên dữ liệu hai chiều]{Biên quyết định của năm phương pháp trên bốn bộ dữ liệu hai chiều (lần lặp đầu tiên). Chấm xanh và dấu nhân cam là các điểm kiểm tra của hai lớp; con số ở góc là độ chính xác trên $500$ điểm kiểm tra.}
+\label{fig:demo2d}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption[Độ chính xác trên dữ liệu hai chiều]{Độ chính xác trên tập kiểm tra (\%, trung bình $\pm$ độ lệch chuẩn qua $10$ lần lặp) trên dữ liệu hai chiều; in đậm là giá trị trung bình cao nhất mỗi hàng.}
+\label{tab:exp2d}
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}l c c c c c@{}}
+\toprule
+\textbf{Dữ liệu} & \textbf{SVM tuyến tính} & \textbf{PWL cộng tính} & \textbf{PWL-HH} & \textbf{PWL-GHH} & \textbf{SVM-RBF}\\
+\midrule
+Hai mặt trăng & $87{,}3\pm2{,}0$ & $98{,}8\pm0{,}7$ & $98{,}7\pm0{,}7$ & $98{,}6\pm0{,}8$ & $\mathbf{98{,}9}\pm0{,}6$\\
+Hai vòng tròn & $52{,}7\pm3{,}5$ & $\mathbf{99{,}9}\pm0{,}1$ & $99{,}8\pm0{,}2$ & $99{,}8\pm0{,}2$ & $99{,}8\pm0{,}2$\\
+Bàn cờ $4\times4$ & $50{,}0\pm2{,}4$ & $55{,}5\pm3{,}4$ & $90{,}6\pm2{,}2$ & $85{,}7\pm2{,}5$ & $\mathbf{94{,}8}\pm1{,}2$\\
+Hai xoắn ốc & $64{,}8\pm2{,}7$ & $89{,}2\pm1{,}5$ & $98{,}2\pm0{,}6$ & $96{,}7\pm1{,}4$ & $\mathbf{99{,}2}\pm0{,}4$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kết quả phù hợp với phân tích ở Mục~\ref{sec:maps}. SVM tuyến tính thất bại trên cả bốn bộ, với độ chính xác xấp xỉ $50\%$ trên hai vòng tròn và bàn cờ; cả ba dạng PWL-SVM đều cải thiện rõ rệt và ngang SVM hạt nhân Gauss trên hai mặt trăng và hai vòng tròn. Ánh xạ cộng tính gần như tuyệt đối trên hai vòng tròn ($99{,}9\%$) nhưng gần như thất bại trên bàn cờ ($55{,}5\%$). Nguyên nhân nằm ở cấu trúc của mô hình chứ không ở số đặc trưng: biên $x(1)^2+x(2)^2=r^2$ của hai vòng tròn là tổng của hai hàm một biến, còn cấu trúc kiểu bàn cờ thì không mô hình cộng tính nào xử lý được, như mệnh đề sau chỉ ra.
+
+\begin{proposition}\label{prop:xor}
+Cho $a\neq b$ và $c\neq d$. Giả sử hai điểm $(a,c)$ và $(b,d)$ thuộc lớp $+1$, còn hai điểm $(a,d)$ và $(b,c)$ thuộc lớp $-1$. Khi đó không tồn tại hai hàm $g_1,g_2:\R\to\R$ nào sao cho hàm cộng tính $f(x)=g_1\bigl(x(1)\bigr)+g_2\bigl(x(2)\bigr)$ phân loại đúng cả bốn điểm.
+\end{proposition}
+
+\begin{proof}
+Nếu có, thì $f(a,c)+f(b,d)>0$ và $f(a,d)+f(b,c)<0$. Nhưng cả hai tổng đều bằng $g_1(a)+g_1(b)+g_2(c)+g_2(d)$, mâu thuẫn.
+\end{proof}
+
+Bàn cờ $4\times4$ chứa rất nhiều bộ bốn điểm như vậy, nên mọi bộ phân loại cộng tính, dù dùng bao nhiêu đặc trưng, đều mắc nhiều lỗi. Kết luận này áp dụng cả cho SVM hạt nhân giao, vốn cũng là một mô hình cộng tính (Mục~\ref{sec:relations}), và giải thích vì sao trong bài báo gốc, SVM hạt nhân giao chỉ đạt $48{,}8\%$ trên dữ liệu bàn cờ~\cite[Bảng~1]{huang2013}. Hai dạng HH và GHH, với các siêu phẳng có hướng tùy ý, xử lý được cả bàn cờ lẫn xoắn ốc, dù vẫn kém SVM hạt nhân Gauss vài điểm phần trăm và cho biên gấp khúc thay vì trơn. Với cùng số siêu phẳng, GHH kém HH một chút vì số trọng số được học chỉ bằng một nửa ($50$ so với $100$): khả năng biểu diễn tổng quát của GHH (\cref{cor:boundary}) không tự động chuyển thành độ chính xác khi các siêu phẳng được sinh ngẫu nhiên.
+
+% ----------------------------------------------------------------------------
+\section{Thực nghiệm trên dữ liệu chuẩn}\label{sec:benchmark}
+\input{content/chapters/chap3/benchmark}
+\input{content/chapters/chap3/cost}
+\input{content/chapters/chap3/credit}
+\input{content/chapters/chap3/discussion}

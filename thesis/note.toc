@@ -1,0 +1,83 @@
+\contentsline {chapter}{Lời cam đoan}{i}{chapter*.1}%
+\contentsline {chapter}{Lời cảm ơn}{ii}{chapter*.2}%
+\contentsline {chapter}{Danh mục ký hiệu và chữ viết tắt}{vi}{chapter*.4}%
+\contentsline {chapter}{Danh mục các bảng}{viii}{section*.5}%
+\contentsline {chapter}{Danh mục các hình}{ix}{section*.7}%
+\contentsline {chapter}{MỞ ĐẦU}{1}{chapter*.9}%
+\contentsline {section}{1. Tính cấp thiết của đề tài}{1}{section*.10}%
+\contentsline {section}{2. Tổng quan tình hình nghiên cứu}{3}{section*.11}%
+\contentsline {section}{3. Mục đích và nhiệm vụ nghiên cứu}{5}{section*.12}%
+\contentsline {section}{4. Đối tượng và phạm vi nghiên cứu}{5}{section*.13}%
+\contentsline {section}{5. Phương pháp nghiên cứu}{6}{section*.14}%
+\contentsline {section}{6. Đóng góp của đề án}{6}{section*.15}%
+\contentsline {section}{7. Cấu trúc của đề án}{7}{section*.16}%
+\contentsline {chapter}{\numberline {1}Cơ sở toán học}{8}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Tập affine, tập lồi và đa diện}{8}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Siêu phẳng phân tách và siêu phẳng tựa}{11}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Hàm lồi và bài toán tối ưu lồi}{13}{section.1.3}%
+\contentsline {paragraph}{Bài toán tối ưu lồi.}{15}{paragraph*.19}%
+\contentsline {section}{\numberline {1.4}Đối ngẫu Lagrange và điều kiện KKT}{16}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Hàm tuyến tính từng phần liên tục}{19}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Định nghĩa và ví dụ}{19}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Các phép toán bảo toàn tính tuyến tính từng phần}{21}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Hàm tuyến tính từng phần một biến}{23}{subsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.5.4}Biểu diễn hàm tuyến tính từng phần nhiều biến}{24}{subsection.1.5.4}%
+\contentsline {section}{Tiểu kết Chương 1}{25}{section*.23}%
+\contentsline {chapter}{\numberline {2}SVM và SVM với ánh xạ đặc trưng tuyến tính từng phần}{27}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Bài toán phân loại nhị phân và SVM lề cứng}{27}{section.2.1}%
+\contentsline {paragraph}{Lề và bài toán tối ưu.}{27}{paragraph*.24}%
+\contentsline {paragraph}{Bài toán đối ngẫu.}{29}{paragraph*.25}%
+\contentsline {paragraph}{Diễn giải hình học của bài toán đối ngẫu.}{30}{paragraph*.26}%
+\contentsline {section}{\numberline {2.2}SVM lề mềm và hàm mất mát bản lề}{31}{section.2.2}%
+\contentsline {paragraph}{Bài toán đối ngẫu.}{32}{paragraph*.28}%
+\contentsline {paragraph}{Ba loại điểm dữ liệu.}{33}{paragraph*.29}%
+\contentsline {section}{\numberline {2.3}Ánh xạ đặc trưng, hạt nhân và LS-SVM}{34}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Ánh xạ đặc trưng và thủ thuật hạt nhân}{34}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}SVM bình phương tối thiểu}{36}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Tập tuyến tính từng phần và phương trình tuyến tính từng phần}{37}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Ánh xạ đặc trưng tuyến tính từng phần và PWL-SVM}{41}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Từ định lý biểu diễn đến ánh xạ đặc trưng}{41}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}PWL-C-SVM}{42}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}PWL-LS-SVM}{44}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Một cách nhìn khác: PWL-SVM như một mạng nơ-ron hai lớp}{45}{subsection.2.5.4}%
+\contentsline {section}{\numberline {2.6}Các dạng ánh xạ đặc trưng và cách chọn tham số}{46}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Ba dạng ánh xạ}{47}{subsection.2.6.1}%
+\contentsline {paragraph}{Dạng cộng tính.}{47}{paragraph*.36}%
+\contentsline {paragraph}{Dạng siêu phẳng bản lề (HH).}{47}{paragraph*.37}%
+\contentsline {paragraph}{Dạng siêu phẳng bản lề tổng quát (GHH).}{47}{paragraph*.38}%
+\contentsline {subsection}{\numberline {2.6.2}Chọn tham số}{48}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Hai ví dụ}{49}{subsection.2.6.3}%
+\contentsline {section}{\numberline {2.7}Quan hệ với các bộ phân loại tuyến tính từng phần khác}{51}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}SVM hạt nhân giao}{51}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}AdaBoost với bộ phân loại yếu tuyến tính}{52}{subsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.7.3}Phương pháp láng giềng gần nhất}{53}{subsection.2.7.3}%
+\contentsline {subsection}{\numberline {2.7.4}Ý nghĩa và giới hạn}{54}{subsection.2.7.4}%
+\contentsline {section}{Tiểu kết Chương 2}{55}{section*.43}%
+\contentsline {chapter}{\numberline {3}Cài đặt, thực nghiệm và ứng dụng}{56}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Cài đặt}{56}{section.3.1}%
+\contentsline {paragraph}{Kiểm chứng tính đúng đắn.}{57}{paragraph*.44}%
+\contentsline {section}{\numberline {3.2}Thực nghiệm minh họa trên dữ liệu hai chiều}{58}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Thực nghiệm trên dữ liệu chuẩn}{60}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Tái hiện thí nghiệm trên dữ liệu Cosexp}{60}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Mười bộ dữ liệu chuẩn}{61}{subsection.3.3.2}%
+\contentsline {paragraph}{Dữ liệu và giao thức.}{61}{paragraph*.48}%
+\contentsline {paragraph}{Kết quả.}{61}{paragraph*.52}%
+\contentsline {paragraph}{So với bài báo gốc.}{63}{paragraph*.53}%
+\contentsline {paragraph}{Ánh xạ HH.}{63}{paragraph*.54}%
+\contentsline {subsection}{\numberline {3.3.3}Ảnh hưởng của số đặc trưng và của quy tắc chọn tham số}{64}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Chi phí tính toán và bộ nhớ}{65}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Ứng dụng: dự báo vỡ nợ thẻ tín dụng}{67}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Bài toán và dữ liệu}{67}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Thiết kế thực nghiệm}{68}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Kết quả}{69}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Diễn giải mô hình}{71}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Ràng buộc đơn điệu}{73}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Khả năng triển khai}{75}{subsection.3.5.6}%
+\contentsline {section}{\numberline {3.6}Thảo luận}{75}{section.3.6}%
+\contentsline {section}{Tiểu kết Chương 3}{76}{section*.61}%
+\contentsline {chapter}{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{77}{chapter*.62}%
+\contentsline {chapter}{Tài liệu tham khảo}{80}{chapter*.63}%
+\contentsline {chapter}{PHỤ LỤC}{84}{chapter*.64}%
+\contentsline {section}{A. Mã nguồn chính}{84}{section*.65}%
+\contentsline {section}{B. Kết quả đầy đủ trên mười bộ dữ liệu chuẩn}{86}{section*.66}%
+\contentsline {section}{C. Nguồn dữ liệu}{88}{section*.68}%

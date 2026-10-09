@@ -1,0 +1,47 @@
+% ============================================================================
+%  Preamble of the thesis sample (pdfLaTeX).  Layout follows  template:
+%  A4, 14pt, margins 35/20/30/30 mm, page number centred at the top.
+% ============================================================================
+\usepackage[utf8]{vietnam}
+\usepackage[left=35mm,right=20mm,top=30mm,bottom=30mm,headsep=10mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{times}
+\usepackage[varg]{newtxmath}
+\usepackage{bm}
+\usepackage[protrusion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{indentfirst}
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{3pt plus 1pt}
+\setlength{\emergencystretch}{1.5em}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage[font=small,labelfont=bf,labelsep=period,justification=justified,singlelinecheck=true]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs,multirow,array,tabularx}
+\usepackage[section,above]{placeins}
+\usepackage[output-decimal-marker={,},group-separator={.},detect-all]{siunitx}
+\usepackage[shortlabels]{enumitem}
+\setlist{itemsep=2pt,topsep=4pt,parsep=0pt}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,decorations.pathreplacing}
+\usepackage[most]{tcolorbox}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{titlesec}
+\usepackage[titles]{tocloft}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{aliascnt}
+
+% ---------------------------------------------------------------- code listings
+\usepackage{listings}
+\lstset{language=Python,basicstyle=\ttfamily\footnotesize\setstretch{1.0},
+  keywordstyle=\bfseries\color{planframe},commentstyle=\itshape\color{inktwo},
+  stringstyle=\color{inktwo},frame=single,rulecolor=\color{black!25},framesep=4pt,
+  xleftmargin=6pt,xrightmargin=6pt,showstringspaces=false,columns=fullflexible,
+  keepspaces=true,backgroundcolor=\color{planback},aboveskip=6pt,belowskip=6pt}

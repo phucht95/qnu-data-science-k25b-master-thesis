@@ -1,0 +1,83 @@
+% ----------------------------------------------------------------------------
+\section{Ứng dụng: dự báo vỡ nợ thẻ tín dụng}\label{sec:application}
+
+\subsection{Bài toán và dữ liệu}
+
+Ngân hàng phát hành thẻ tín dụng cần ước lượng khả năng một khách hàng không thanh toán được dư nợ trong kỳ tới để điều chỉnh hạn mức, ưu tiên nhắc nợ hoặc trích lập dự phòng rủi ro. Đây là một bài toán phân loại nhị phân điển hình của chấm điểm tín dụng~\cite{thomas2002}, và cả ba yêu cầu nêu ở Mở đầu đều có mặt: độ chính xác quyết định trực tiếp chi phí rủi ro; số hồ sơ lớn và được chấm điểm định kỳ; và quyết định phải giải thích được với khách hàng cũng như với cơ quan quản lý.
+
+Đề án dùng dữ liệu của Yeh và Lien~\cite{yeh2009} về $30.000$ chủ thẻ tín dụng của một ngân hàng ở Đài Loan, từ tháng 4 đến tháng 9 năm 2005. Nhãn cho biết khách hàng có vỡ nợ trong tháng tiếp theo hay không; có $6.636$ khách hàng vỡ nợ, tức $22{,}1\%$. Hai mươi ba biến giải thích gồm hạn mức tín dụng (LIMIT\_BAL), bốn biến nhân khẩu học (SEX, EDUCATION, MARRIAGE, AGE), trạng thái trả nợ của sáu tháng gần nhất (PAY\_0, PAY\_2, \dots, PAY\_6) cùng các số tiền sao kê (BILL\_AMT1--6) và đã thanh toán (PAY\_AMT1--6) tương ứng; ý nghĩa và cách mã hóa từng biến được cho ở \cref{tab:credit-vars} (Phụ lục~C). Sau khi mã hóa các biến định danh, mỗi khách hàng được mô tả bởi $n=26$ đặc trưng số.
+
+Hai đặc điểm của dữ liệu quyết định thiết kế mô hình (\cref{fig:credit-overview}). Thứ nhất, quan hệ giữa lịch sử trả nợ và rủi ro là phi tuyến rõ rệt: tỉ lệ vỡ nợ gần như không đổi, khoảng $13$--$17\%$, với các trạng thái $-2$, $-1$ và $0$, rồi tăng vọt lên $34\%$ khi chậm một tháng và gần $70\%$ khi chậm hai tháng --- một bước nhảy mà mô hình tuyến tính theo PAY\_0 không mô tả được, nhưng một hàm tuyến tính từng phần với vài điểm gãy thì có thể. Thứ hai, các biến tiền tệ lệch rất mạnh: hạn mức trải từ $10$ nghìn đến $1$ triệu Đài tệ, nhưng một nửa số khách hàng có hạn mức không vượt quá $140$ nghìn. Lưới nút đều của bài báo gốc vì vậy đặt phần lớn các nút ở vùng gần như không có dữ liệu, còn lưới theo phân vị (\cref{rem:quantile}) đặt nút theo mật độ dữ liệu.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.84\linewidth]{fig_credit_overview.pdf}
+\caption[Hai đặc điểm của dữ liệu tín dụng]{(a) Tỉ lệ vỡ nợ theo trạng thái trả nợ tháng 9 (PAY\_0); cột nhạt ứng với các nhóm có ít hơn $100$ khách hàng. (b) Phân bố hạn mức tín dụng cùng vị trí $9$ nút của lưới đều (nét đứt) và của lưới theo phân vị (nét liền).}
+\label{fig:credit-overview}
+\end{figure}
+
+\subsection{Thiết kế thực nghiệm}
+
+Dữ liệu được chia ngẫu nhiên có phân tầng theo tỉ lệ $70/30$, thành $21.000$ khách hàng huấn luyện và $9.000$ khách hàng kiểm tra, lặp lại $5$ lần. Độ đo chính là diện tích dưới đường cong ROC (AUC)~\cite{fawcett2006}, tức xác suất để một khách hàng vỡ nợ chọn ngẫu nhiên bị mô hình chấm điểm rủi ro cao hơn một khách hàng không vỡ nợ chọn ngẫu nhiên; AUC không phụ thuộc vào ngưỡng quyết định và được dùng phổ biến trong chấm điểm tín dụng~\cite{lessmann2015}. Ngoài ra, với ngưỡng chọn trên tập huấn luyện sao cho tỉ lệ khách hàng bị dự báo vỡ nợ bằng tỉ lệ vỡ nợ quan sát được, đề án tính độ chính xác cân bằng (trung bình của độ nhạy và độ đặc hiệu) và độ đo F1 của lớp vỡ nợ trên tập kiểm tra.
+
+Mười mô hình được so sánh. Ba mô hình tuyến tính đóng vai trò chuẩn so sánh của ngành: hồi quy logistic trên các biến gốc, SVM tuyến tính, và \emph{thẻ điểm} --- hồi quy logistic trên các biến đã được rời rạc hóa theo cách xây dựng thẻ điểm truyền thống~\cite{thomas2002}, trong đó mỗi biến liên tục được chia thành mười khoảng theo thập phân vị và mỗi giá trị của các biến PAY là một hạng mục riêng. Bốn biến thể PWL-SVM, đều với $M/n=10$, gồm PWL-LS-SVM cộng tính với lưới đều (quy tắc của bài báo gốc) và với lưới phân vị, PWL-C-SVM cộng tính với lưới phân vị, và PWL-LS-SVM với ánh xạ HH. Ba mô hình phi tuyến làm đối chứng: SVM hạt nhân Gauss; mạng nơ-ron một lớp ẩn với $9n=234$ nơ-ron ReLU, huấn luyện bằng L-BFGS~\cite{liu1989}; và tổ hợp cây tăng cường theo gradient~\cite{friedman2001} với thiết lập mặc định của scikit-learn (có dừng sớm), đại diện cho các mô hình tổ hợp --- nhóm phương pháp cho kết quả tốt nhất trong nghiên cứu so sánh của Lessmann và cộng sự~\cite{lessmann2015}. Tham số được chọn bằng kiểm định chéo $5$ phần trên tập huấn luyện với tiêu chí AUC, trên các lưới cho ở Phụ lục~C; riêng SVM hạt nhân Gauss và mạng nơ-ron, vì chi phí huấn luyện lớn, được tinh chỉnh bằng kiểm định chéo $3$ phần trên mẫu con phân tầng gồm $5.000$ và $7.000$ khách hàng, rồi huấn luyện lại trên toàn bộ tập huấn luyện.
+
+
+\subsection{Kết quả}\label{sec:credit-results}
+
+\input{content/chapters/chap3/tab_credit}
+
+\Cref{tab:credit} cho thấy các mô hình chia thành hai nhóm rõ rệt. Nhóm dẫn đầu gồm tổ hợp cây tăng cường (AUC trung bình 0{,}779), PWL-LS-SVM cộng tính với nút phân vị (0{,}776), thẻ điểm logistic trên các biến đã rời rạc hóa (0{,}773) và PWL-LS-SVM cộng tính với lưới đều (0{,}772); nhóm còn lại gồm hồi quy logistic trên các biến gốc (0{,}724), SVM tuyến tính (0{,}706) và SVM hạt nhân Gauss (0{,}716), còn mạng nơ-ron (0{,}768) đứng giữa hai nhóm. Độ chính xác cân bằng và độ đo F1 ở ngưỡng đã chọn dẫn tới cùng kết luận, và kết quả ổn định giữa các lần chia (độ lệch chuẩn của AUC khoảng 0{,}006).
+
+Khoảng cách 0{,}052 đơn vị AUC giữa PWL-LS-SVM và hồi quy logistic trên các biến gốc chủ yếu đến từ quan hệ phi tuyến giữa trạng thái trả nợ và rủi ro (\cref{fig:credit-overview}a). Đối chứng công bằng nhất cho PWL-SVM cộng tính là thẻ điểm: cả hai đều là mô hình cộng tính dựa trên các khoảng của từng biến, chỉ khác ở chỗ đóng góp của mỗi biến là hàm bậc thang trong thẻ điểm và là đường gấp khúc liên tục trong PWL-SVM. PWL-LS-SVM cao hơn thẻ điểm ở bốn trong năm lần chia, nhưng chênh lệch trung bình chỉ là 0{,}002 đơn vị AUC, với kích thước mô hình tương đương (349 và 381 số thực).
+
+Ba quan sát khác củng cố các kết luận ở \cref{sec:benchmark}. Lưới phân vị tốt hơn lưới đều (0{,}776 so với 0{,}772) với mô hình nhỏ hơn (349 so với 547 số thực). Với cùng ánh xạ, PWL-C-SVM cho AUC thấp hơn hẳn PWL-LS-SVM (0{,}744): mất mát bản lề chỉ quan tâm đến các điểm nằm gần hoặc vi phạm lề, nên giá trị hàm quyết định ở xa biên ít mang thông tin về mức độ rủi ro, còn mất mát bình phương của LS-SVM, tương đương hồi quy trên nhãn $\pm1$ (\cref{prop:ridge}), buộc điểm số của mọi khách hàng phản ánh nhãn của họ và vì thế cho thứ hạng tốt hơn; SVM hạt nhân Gauss, cũng dùng mất mát bản lề, gặp cùng hạn chế. Cuối cùng, ánh xạ HH (0{,}743) kém ánh xạ cộng tính, vì trên dữ liệu này ảnh hưởng riêng của từng biến quan trọng hơn tương tác giữa các biến.
+
+\subsection{Diễn giải mô hình}\label{sec:credit-interp}
+
+Vì ánh xạ là cộng tính, hàm quyết định của PWL-LS-SVM tách thành tổng các đóng góp của từng biến,
+\begin{equation}\label{eq:additive-decomp}
+f(x)=w_0+\sum_{i=1}^{n}h_i\bigl(x(i)\bigr),
+\end{equation}
+trong đó mỗi $h_i$ là một hàm tuyến tính từng phần một biến, có không quá chín điểm gãy đặt tại các phân vị của biến đó (\cref{prop:1d}). Mỗi $h_i$ đọc được trực tiếp như một thẻ điểm, trong đó số điểm cộng thêm cho mỗi khách hàng là một đường gấp khúc theo giá trị của biến. \Cref{fig:credit-shapes} vẽ sáu hàm $h_i$ có ảnh hưởng lớn nhất, sau khi trừ đi giá trị trung bình trên tập huấn luyện; giá trị dương nghĩa là rủi ro cao hơn một khách hàng trung bình.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\linewidth]{fig_credit_shapes.pdf}
+\caption[Các hàm đóng góp của mô hình PWL-SVM cộng tính]{Sáu hàm đóng góp $h_i$ có ảnh hưởng lớn nhất của PWL-LS-SVM cộng tính (nút phân vị) trên dữ liệu tín dụng, đã trừ giá trị trung bình. Nét đậm: mô hình của lần chia đầu tiên, nét chấm dọc là vị trí các nút của nó; nét mảnh: mô hình của bốn lần chia còn lại. Giá trị dương ứng với rủi ro vỡ nợ cao hơn.}
+\label{fig:credit-shapes}
+\end{figure}
+
+Hàm đóng góp của PAY\_0 tái hiện đúng cấu trúc mà hồi quy logistic trên biến gốc bỏ lỡ (so sánh với \cref{fig:credit-overview}a): ba mã không chậm trả ($-2$, $-1$ và $0$) có đóng góp thấp và gần nhau, đóng góp tăng mạnh khi khách hàng chậm trả một tháng (tỉ lệ vỡ nợ 33{,}9\%) và đạt cực đại khi chậm hai tháng (69{,}1\%); chênh lệch giữa mã $0$ và mã $2$ là $0{,}86$ đơn vị điểm, lớn hơn toàn bộ biên độ của bất kỳ biến nào khác. Đóng góp của hạn mức tín dụng giảm dần theo hạn mức --- điều hợp lý, vì hạn mức do chính ngân hàng xác định dựa trên đánh giá tín nhiệm --- và khoảng 60\% mức giảm diễn ra ở vùng hạn mức dưới $100$ nghìn Đài tệ; trạng thái trả nợ của các tháng trước có hình dạng tương tự PAY\_0 nhưng biên độ nhỏ hơn nhiều. Ở vùng có nhiều dữ liệu, các hàm này gần như không đổi giữa các lần chia (nét mảnh ở \cref{fig:credit-shapes}): giữa phân vị $5\%$ và $95\%$ của hạn mức, đóng góp của LIMIT\_BAL ở bốn lần chia còn lại lệch khỏi lần chia đầu tiên không quá 15\% biên độ của nó, và ở các trạng thái từ $-2$ đến $2$, đóng góp của PAY\_0 lệch không quá 10\% biên độ. Thứ hạng của các biến, đo bằng độ lệch chuẩn của đóng góp $h_i$ trên tập huấn luyện, cũng ổn định: ở cả năm lần chia, PAY\_0 là biến có ảnh hưởng lớn nhất và LIMIT\_BAL đứng thứ hai; thứ tự của các biến tiếp theo, vốn có mức ảnh hưởng gần nhau, thì thay đổi giữa các lần chia; các biến nhân khẩu học (học vấn, hôn nhân, giới tính, tuổi) có ảnh hưởng nhỏ.
+
+Hai đặc điểm khác cần được đọc thận trọng. Thứ nhất, sau mức chậm hai tháng, đóng góp của PAY\_0 và nhất là của PAY\_4 lại giảm, trái với trực giác. Đây là hệ quả của việc có quá ít dữ liệu chứ không phải quy luật thật: chỉ 1{,}5\% khách hàng có PAY\_0 từ $3$ trở lên, tỉ lệ vỡ nợ của nhóm này (71{,}9\%) không thấp hơn của nhóm chậm hai tháng, và các lần chia cho những đường rất khác nhau ở vùng này (độ lệch chuẩn giữa các lần chia lớn gấp khoảng 8 lần so với ở các trạng thái từ $-2$ đến $2$); Mục~\ref{sec:monotone} sẽ khắc phục hiện tượng này. Thứ hai, các biến dư nợ sao kê BILL\_AMT1--6 tương quan rất mạnh với nhau (hệ số tương quan giữa hai tháng liền kề từ $0{,}92$ đến $0{,}95$), nên mô hình có thể chuyển ảnh hưởng qua lại giữa chúng --- đóng góp của BILL\_AMT3 tăng theo dư nợ, còn của BILL\_AMT4 lại giảm --- và chỉ tổng đóng góp của cả nhóm mới nên được diễn giải. Đây là hạn chế chung của mọi mô hình cộng tính khi các biến tương quan mạnh, không riêng gì PWL-SVM.
+
+Vì hàm quyết định~\eqref{eq:additive-decomp} là một tổng, mỗi quyết định của mô hình được giải thích một cách chính xác chứ không phải xấp xỉ: điểm của một khách hàng bằng điểm trung bình trên tập huấn luyện cộng với tổng các đóng góp của từng biến so với khách hàng trung bình. Chẳng hạn, khách hàng có điểm rủi ro cao nhất trong số những người vỡ nợ ở tập kiểm tra có điểm $0{,}96$, so với điểm trung bình $-0{,}56$ và ngưỡng phân loại $-0{,}44$; trong phần chênh lệch $1{,}51$, việc chậm trả hai tháng ở tháng 9 đóng góp $0{,}71$, lịch sử chậm trả ở năm tháng trước đó đóng góp thêm $0{,}63$, và hạn mức thấp ($20.000$ Đài tệ) đóng góp $0{,}13$. Một lời giải thích như vậy có thể được trình bày trực tiếp cho cán bộ tín dụng hay cho khách hàng; với SVM hạt nhân Gauss hay tổ hợp cây, nó đòi hỏi những kỹ thuật bổ sung được tính sau khi huấn luyện, chẳng hạn giá trị SHAP~\cite{lundberg2017}.
+
+\subsection{Ràng buộc đơn điệu}\label{sec:monotone}
+
+Người làm tín dụng kỳ vọng rằng rủi ro không giảm khi số tháng chậm trả tăng và không tăng khi hạn mức tín dụng tăng. Mô hình không ràng buộc vi phạm kỳ vọng này ở chính những đoạn được ước lượng từ rất ít dữ liệu: ở cả năm lần chia, ít nhất một trong sáu hàm $h_i$ của các biến PAY có đoạn với hệ số góc âm từ trạng thái $0$ trở đi, và hàm của LIMIT\_BAL có đoạn đi lên ở cả năm lần chia. Một mô hình trái với tri thức nghiệp vụ khó được chấp nhận khi thẩm định, dù độ chính xác của nó cao; vì vậy ta đưa kỳ vọng đơn điệu vào chính bài toán huấn luyện.
+
+Với PWL-SVM cộng tính, điều này có thể làm mà vẫn giữ tính lồi. Gọi $t_{i1}<\dots<t_{iK}$ là các nút của biến thứ $i$ và $s_{i0},\dots,s_{iK}$ là hệ số góc của $h_i$ trên $K+1$ đoạn mà các nút chia ra. Khi đó
+\begin{equation}\label{eq:slope-param}
+h_i(t)=\sum_{j=0}^{K}s_{ij}\,G_{ij}(t),\qquad
+G_{ij}(t)=\min\bigl\{(t-t_{ij})_+,\ t_{i,j+1}-t_{ij}\bigr\},
+\end{equation}
+với quy ước $t_{i0}=-\infty$, $t_{i,K+1}=+\infty$ (tức $G_{i0}(t)=\min\{t,t_{i1}\}$ và $G_{iK}(t)=(t-t_{iK})_+$): $G_{ij}(t)$ là độ dài phần đoạn thứ $j$ nằm bên trái $t$. Theo \cref{prop:1d}, hệ số của $x(i)$ trong ánh xạ~\eqref{eq:feature-map} bằng $s_{i0}$ và hệ số của $\bigl(x(i)-t_{ij}\bigr)_+$ bằng $s_{ij}-s_{i,j-1}$, nên~\eqref{eq:slope-param} chỉ là một cách tham số hóa khác của cùng một mô hình, và bài toán~\eqref{eq:ridge} trở thành
+\[
+\min_{s,\,w_0}\ \frac12\sum_{i=1}^{n}\Bigl[s_{i0}^2+\sum_{j=1}^{K}\bigl(s_{ij}-s_{i,j-1}\bigr)^2\Bigr]+\frac\gamma2\sum_{k=1}^{N}\Bigl(y_k-w_0-\sum_{i=1}^{n}h_i\bigl(x_k(i)\bigr)\Bigr)^2 .
+\]
+Hàm $h_i$ không giảm khi và chỉ khi $s_{ij}\ge0$ với mọi $j$, và không tăng khi và chỉ khi $s_{ij}\le0$ với mọi $j$; muốn $h_i$ đơn điệu chỉ trên một phần của trục, ta chỉ cần áp các bất đẳng thức đó cho những đoạn nằm trong phần ấy. Thêm các ràng buộc này, ta được một bài toán bình phương tối thiểu với ràng buộc cận trên các biến --- một bài toán lồi, giải được chính xác bằng thuật toán BVLS~\cite{stark1995} có sẵn trong SciPy~\cite{virtanen2020}. Khi không có ràng buộc nào, lời giải trùng với lời giải của \cref{prop:ridge} (sai khác dưới $10^{-9}$), điều được dùng để kiểm tra cài đặt.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.84\linewidth]{fig_credit_monotone.pdf}
+\caption[Hàm đóng góp khi có và không có ràng buộc đơn điệu]{Hàm đóng góp của PAY\_0, PAY\_4 và LIMIT\_BAL trong mô hình không ràng buộc (nét liền) và mô hình có ràng buộc đơn điệu (nét đứt), lần chia đầu tiên. Vùng tô xám: các trạng thái chậm trả từ ba tháng trở lên, chỉ chiếm chưa tới 2\% số khách hàng.}
+\label{fig:credit-monotone}
+\end{figure}
+
+Ta ràng buộc sáu hàm của các biến PAY không giảm từ trạng thái $0$ trở đi --- ba mã $-2$, $-1$ và $0$ chỉ những tình trạng không chậm trả khác nhau, không có thứ tự tự nhiên, nên được để tự do --- và hàm của LIMIT\_BAL không tăng trên toàn miền, giữ nguyên các biến khác, các nút và hằng số $\gamma$ của mô hình không ràng buộc. \Cref{fig:credit-monotone} cho thấy sau mức chậm hai tháng, đóng góp của PAY\_0 và PAY\_4 giữ nguyên thay vì giảm, và đường của LIMIT\_BAL trở thành đơn điệu giảm, trong khi hình dạng ở vùng có nhiều dữ liệu hầu như không đổi. Độ chính xác hầu như không thay đổi: AUC trung bình là 0{,}775, so với 0{,}776 của mô hình không ràng buộc, và mô hình có ràng buộc vẫn cao hơn thẻ điểm (0{,}773) (\cref{tab:credit}).
+
+\subsection{Khả năng triển khai}
+
+Mô hình PWL-LS-SVM cộng tính trên dữ liệu tín dụng gồm 349 số thực: các nút và hệ số của $20$ đường gấp khúc cho các biến số, hệ số của $6$ biến chỉ báo, hệ số chặn và hai vectơ chuẩn hóa; ràng buộc đơn điệu không làm thay đổi cấu trúc này. Để chấm điểm một hồ sơ, với mỗi biến chỉ cần xác định giá trị rơi vào đoạn nào giữa các nút rồi tính một hàm bậc nhất, nên mô hình có thể được cài đặt bằng vài câu lệnh SQL trong kho dữ liệu của ngân hàng, bằng một bảng tính, hoặc trên thiết bị có tài nguyên rất hạn chế, mà không cần thư viện học máy nào; việc huấn luyện lại khi có dữ liệu mới chỉ mất chưa tới một giây (\cref{tab:cost-measured}). Để so sánh, SVM hạt nhân Gauss cần lưu khoảng 243.134 số thực, và tổ hợp cây tăng cường gồm từ 34 đến 47 cây quyết định với khoảng 4.636 tham số (\cref{tab:credit}); cả hai đều khó kiểm tra và giải thích hơn nhiều.

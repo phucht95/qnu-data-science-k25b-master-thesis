@@ -1,0 +1,15 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces So sánh C-SVM và LS-SVM}}{37}{table.caption.32}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Chi phí lưu trữ và chi phí dự đoán của các mô hình}}{44}{table.caption.34}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Ba vectơ trọng số cho cùng một ánh xạ HH}}{50}{table.caption.41}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Độ chính xác trên dữ liệu hai chiều}}{59}{table.caption.46}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Mười bộ dữ liệu chuẩn}}{62}{table.caption.49}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Độ chính xác trên mười bộ dữ liệu chuẩn}}{63}{table.caption.50}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces So sánh theo cặp với PWL-C-SVM cộng tính}}{64}{table.caption.51}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Chi phí huấn luyện, dự đoán và bộ nhớ}}{66}{table.caption.56}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Kết quả trên dữ liệu vỡ nợ thẻ tín dụng}}{70}{table.caption.58}%
+\contentsline {table}{\numberline {PL.1}{\ignorespaces Độ chính xác đầy đủ trên mười bộ dữ liệu chuẩn}}{87}{table.caption.67}%
+\contentsline {table}{\numberline {PL.2}{\ignorespaces Mã số OpenML của các bộ dữ liệu}}{88}{table.caption.69}%
+\contentsline {table}{\numberline {PL.3}{\ignorespaces Các biến của dữ liệu vỡ nợ thẻ tín dụng}}{89}{table.caption.70}%
